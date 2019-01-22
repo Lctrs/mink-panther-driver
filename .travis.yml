@@ -1,0 +1,48 @@
+language: php
+
+addons:
+    chrome: stable
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+php:
+    - 7.2
+    - 7.3
+    - nightly
+
+env:
+    - DEPENDENCIES=""
+    - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
+matrix:
+    allow_failures:
+        - php: 7.3
+        - php: nightly
+
+install:
+    - composer update --prefer-dist --no-progress --no-suggest --ansi $DEPENDENCIES
+
+before_script:
+    - vendor/bin/mink-test-server > /dev/null 2>&1 &
+
+script:
+    - vendor/bin/phpunit -v
+
+jobs:
+    include:
+        - stage: Static Analysis
+          script: vendor/bin/phpstan analyse
+          php: 7.2
+          env: DEPENDENCIES=""
+
+        - stage: Code Style
+          script: vendor/bin/phpcs
+          php: 7.2
+          env: DEPENDENCIES=""
+
+        - stage: Dependencies Check
+          script: vendor/bin/composer-require-checker
+          php: 7.2
+          env: DEPENDENCIES=""
