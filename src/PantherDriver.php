@@ -844,7 +844,7 @@ final class PantherDriver extends CoreDriver
      *
      * @throws UnsupportedDriverActionException
      */
-    private function executeScriptOn(WebDriverElement $element, string $script, ... $args)
+    private function executeScriptOn(WebDriverElement $element, string $script, ...$args)
     {
         try {
             return $this->client->executeScript($script, array_merge([$element], $args));

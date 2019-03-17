@@ -21,7 +21,7 @@
         "symfony/panther": "^0.2.0 || ^0.3.0"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^5.0",
+        "doctrine/coding-standard": "^6.0",
         "maglnet/composer-require-checker": "^1.1",
         "mink/driver-testsuite": "dev-integration-branch",
         "phpstan/phpstan": "^0.11.1",
