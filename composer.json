@@ -18,7 +18,7 @@
         "facebook/webdriver": "^1.6",
         "symfony/config": "^3.4 || ^4.0",
         "symfony/dependency-injection": "^3.4 || ^4.0",
-        "symfony/panther": "^0.2.0"
+        "symfony/panther": "^0.2.0 || ^0.3.0"
     },
     "require-dev": {
         "doctrine/coding-standard": "^5.0",
