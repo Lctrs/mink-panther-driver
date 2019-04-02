@@ -38,7 +38,9 @@ jobs:
           env: DEPENDENCIES=""
 
         - stage: Code Style
-          script: vendor/bin/phpcs
+          script:
+              - vendor/bin/phpcs
+              - composer normalize --dry-run
           php: 7.2
           env: DEPENDENCIES=""
 
