@@ -574,9 +574,13 @@ final class PantherDriver extends CoreDriver
     {
         $element = $this->findElement($xpath);
 
-        $this->createWebDriverAction()->moveToElement($element)->perform();
+        if ($element->getTagName() === 'input') {
+            $element->sendKeys('');
 
-        $this->executeScriptOn($element, 'arguments[0].focus();');
+            return;
+        }
+
+        $this->createWebDriverAction()->moveToElement($element)->perform();
     }
 
     /**
@@ -584,7 +588,7 @@ final class PantherDriver extends CoreDriver
      */
     public function blur($xpath) : void
     {
-        $this->executeScriptOn($this->findElement($xpath), 'arguments[0].blur();');
+        $this->findElement($xpath)->sendKeys(WebDriverKeys::TAB);
     }
 
     /**
