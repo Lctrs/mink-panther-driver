@@ -29,8 +29,9 @@ use function array_map;
 use function array_merge;
 use function chr;
 use function in_array;
-use function is_numeric;
+use function is_int;
 use function is_string;
+use function ord;
 use function preg_match;
 use function preg_replace;
 use function sprintf;
@@ -574,9 +575,13 @@ final class PantherDriver extends CoreDriver
     {
         $element = $this->findElement($xpath);
 
-        $this->createWebDriverAction()->moveToElement($element)->perform();
+        if ($element->getTagName() === 'input') {
+            $element->sendKeys('');
 
-        $this->executeScriptOn($element, 'arguments[0].focus();');
+            return;
+        }
+
+        $this->createWebDriverAction()->moveToElement($element)->perform();
     }
 
     /**
@@ -584,7 +589,7 @@ final class PantherDriver extends CoreDriver
      */
     public function blur($xpath) : void
     {
-        $this->executeScriptOn($this->findElement($xpath), 'arguments[0].blur();');
+        $this->findElement($xpath)->sendKeys(WebDriverKeys::TAB);
     }
 
     /**
@@ -594,7 +599,7 @@ final class PantherDriver extends CoreDriver
      */
     public function keyPress($xpath, $char, $modifier = null) : void
     {
-        $this->sendKey($xpath, $char, $modifier);
+        $this->dispatchKeyboardEventOn($xpath, 'keypress', $char, $modifier);
     }
 
     /**
@@ -604,7 +609,7 @@ final class PantherDriver extends CoreDriver
      */
     public function keyDown($xpath, $char, $modifier = null) : void
     {
-        $this->sendKey($xpath, $char, $modifier);
+        $this->dispatchKeyboardEventOn($xpath, 'keydown', $char, $modifier);
     }
 
     /**
@@ -614,7 +619,7 @@ final class PantherDriver extends CoreDriver
      */
     public function keyUp($xpath, $char, $modifier = null) : void
     {
-        $this->sendKey($xpath, $char, $modifier);
+        $this->dispatchKeyboardEventOn($xpath, 'keyup', $char, $modifier);
     }
 
     /**
@@ -754,32 +759,6 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @param string|int $char
-     *
-     * @throws DriverException
-     */
-    private function sendKey(string $xpath, $char, ?string $modifier = null) : void
-    {
-        $element = $this->findElement($xpath);
-
-        $char = self::decodeChar($char);
-
-        if ($modifier !== null) {
-            $modifier = self::modifierToWebDriverKey($modifier);
-
-            $this->createWebDriverAction()
-                ->keyDown($element, $modifier)
-                ->sendKeys($element, $char)
-                ->keyUp($element, $modifier)
-                ->perform();
-
-            return;
-        }
-
-        $element->sendKeys($char);
-    }
-
-    /**
      * @throws UnsupportedDriverActionException
      */
     private function createWebDriverAction() : WebDriverActions
@@ -794,33 +773,35 @@ final class PantherDriver extends CoreDriver
 
     /**
      * @param string|int $char
+     *
+     * @throws DriverException
+     * @throws UnsupportedDriverActionException
      */
-    private static function decodeChar($char) : string
+    private function dispatchKeyboardEventOn(string $xpath, string $type, $char, ?string $modifier) : void
     {
-        if (is_numeric($char)) {
-            return chr((int) $char);
-        }
-
-        return $char;
+        $this->executeScriptOn(
+            $this->findElement($xpath),
+            'arguments[0].dispatchEvent(new KeyboardEvent(arguments[1], arguments[2]));',
+            $type,
+            self::keyboardEventsOptions($char, $modifier)
+        );
     }
 
     /**
-     * @throws DriverException
+     * @param string|int $char
+     *
+     * @return mixed[]
      */
-    private static function modifierToWebDriverKey(string $modifier) : string
+    private static function keyboardEventsOptions($char, ?string $modifier) : array
     {
-        switch ($modifier) {
-            case 'ctrl':
-                return WebDriverKeys::CONTROL;
-            case 'alt':
-                return WebDriverKeys::ALT;
-            case 'shift':
-                return WebDriverKeys::SHIFT;
-            case 'meta':
-                return WebDriverKeys::META;
-            default:
-                throw new DriverException(sprintf('Unknown modifier %s.', $modifier));
-        }
+        return [
+            'key' => is_int($char) ? chr($char) : $char,
+            'keyCode' => is_string($char) ? ord($char) : $char,
+            'ctrlKey' => $modifier === 'ctrl',
+            'shiftKey' => $modifier === 'shift',
+            'altKey' => $modifier === 'alt',
+            'metaKey' => $modifier === 'meta',
+        ];
     }
 
     /**

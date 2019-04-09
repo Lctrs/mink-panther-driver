@@ -19,13 +19,14 @@ env:
 
 matrix:
     allow_failures:
+        - php: 7.4snapshot
         - php: nightly
 
 install:
     - composer update --prefer-dist --no-progress --no-suggest --ansi $DEPENDENCIES
 
 before_script:
-    - vendor/bin/mink-test-server > /dev/null 2>&1 &
+    - bin/mink-test-server > /dev/null 2>&1 &
 
 script:
     - vendor/bin/phpunit -v
