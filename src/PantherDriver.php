@@ -51,9 +51,21 @@ final class PantherDriver extends CoreDriver
     /** @var bool */
     private $isStarted = false;
 
-    public function __construct()
+    public function __construct(Client $client)
     {
-        $this->client = Client::createChromeClient();
+        $this->client = $client;
+    }
+
+    /**
+     * @param string[]|null $arguments
+     * @param mixed[]       $options
+     */
+    public static function createChromeDriver(
+        ?string $chromeDriverBinary = null,
+        ?array $arguments = null,
+        array $options = []
+    ) : self {
+        return new self(Client::createChromeClient($chromeDriverBinary, $arguments, $options));
     }
 
     /**

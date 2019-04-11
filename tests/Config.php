@@ -28,7 +28,7 @@ final class Config extends AbstractConfig
      */
     public function createDriver() : PantherDriver
     {
-        return new PantherDriver();
+        return PantherDriver::createChromeDriver();
     }
 
     /**
