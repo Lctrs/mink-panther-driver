@@ -5,3 +5,11 @@ parameters:
         - %currentWorkingDirectory%/src/
         - %currentWorkingDirectory%/tests/
     level: 5
+    ignoreErrors:
+        -
+            message: '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface::variableNode\(\)#'
+            path: src/Extension/Driver/PantherFactory.php
+
+        -
+            message: '#Parameter \#1 \$builder of method Lctrs\\MinkPantherDriver\\Extension\\Driver\\PantherFactory::configure\(\) expects Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition, Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition given#'
+            path: tests/Extension/Driver/PantherFactoryTest.php
