@@ -10,7 +10,7 @@ use Lctrs\MinkPantherDriver\Extension\Driver\PantherFactory;
 use Lctrs\MinkPantherDriver\Extension\PantherExtension;
 use PHPUnit\Framework\TestCase;
 
-class PantherExtensionTest extends TestCase
+final class PantherExtensionTest extends TestCase
 {
     /** @var PantherExtension */
     private $extension;
