@@ -16,6 +16,7 @@ use Facebook\WebDriver\JavaScriptExecutor;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverCapabilities;
 use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverElement;
 use Facebook\WebDriver\WebDriverHasInputDevices;
@@ -66,6 +67,13 @@ final class PantherDriver extends CoreDriver
         array $options = []
     ) : self {
         return new self(Client::createChromeClient($chromeDriverBinary, $arguments, $options));
+    }
+
+    public static function createSeleniumDriver(
+        ?string $host = null,
+        ?WebDriverCapabilities $capabilities = null
+    ) : self {
+        return new self(Client::createSeleniumClient($host, $capabilities));
     }
 
     /**

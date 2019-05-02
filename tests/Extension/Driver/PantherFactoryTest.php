@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace Lctrs\MinkPantherDriver\Tests\Extension\Driver;
 
+use Behat\Mink\Driver\DriverInterface;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\WebDriverCapabilities;
 use Lctrs\MinkPantherDriver\Extension\Driver\PantherFactory;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
-use PHPUnit\Framework\TestCase;
+use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use function method_exists;
 
-class PantherFactoryTest extends TestCase
+final class PantherFactoryTest extends AbstractExtensionTestCase
 {
     use ConfigurationTestCaseTrait;
 
@@ -22,16 +29,18 @@ class PantherFactoryTest extends TestCase
     protected function setUp() : void
     {
         $this->factory = new PantherFactory();
+
+        parent::setUp();
     }
 
     public function testDriverName() : void
     {
-        $this->assertSame('panther', $this->factory->getDriverName());
+        self::assertSame('panther', $this->factory->getDriverName());
     }
 
     public function testItSupportsJavascript() : void
     {
-        $this->assertTrue($this->factory->supportsJavascript());
+        self::assertTrue($this->factory->supportsJavascript());
     }
 
     /**
@@ -55,23 +64,9 @@ class PantherFactoryTest extends TestCase
         $this->assertConfigurationIsInvalid($config, $expectedMessage);
     }
 
-    public function testItBuildsDriver() : void
+    public function testItBuildsChromeDriver() : void
     {
-        $definition = $this->factory->buildDriver([
-            'chrome' => [
-                'binary' => null,
-                'arguments' => null,
-                'options' => [],
-            ],
-        ]);
-
-        $this->assertSame([PantherDriver::class, 'createChromeDriver'], $definition->getFactory());
-        $this->assertCount(3, $definition->getArguments());
-        $this->assertNull($definition->getArgument(0));
-        $this->assertNull($definition->getArgument(1));
-        $this->assertSame([], $definition->getArgument(2));
-
-        $definition = $this->factory->buildDriver([
+        $this->load([
             'chrome' => [
                 'binary' => '/usr/lib/chromium/chromedriver',
                 'arguments' => ['--no-sandbox'],
@@ -84,16 +79,40 @@ class PantherFactoryTest extends TestCase
             ],
         ]);
 
-        $this->assertSame([PantherDriver::class, 'createChromeDriver'], $definition->getFactory());
-        $this->assertCount(3, $definition->getArguments());
-        $this->assertSame('/usr/lib/chromium/chromedriver', $definition->getArgument(0));
-        $this->assertSame(['--no-sandbox'], $definition->getArgument(1));
-        $this->assertSame([
+        $this->assertContainerBuilderHasService(DriverInterface::class, PantherDriver::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 0, '/usr/lib/chromium/chromedriver');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 1, ['--no-sandbox']);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 2, [
             'scheme' => 'http',
             'host' => '127.0.0.1',
             'port' => 9515,
             'path' => '/status',
-        ], $definition->getArgument(2));
+        ]);
+
+        $definition = $this->container->getDefinition(DriverInterface::class);
+        $this->assertSame([PantherDriver::class, 'createChromeDriver'], $definition->getFactory());
+    }
+
+    public function testItBuildsSeleniumDriver() : void
+    {
+        $this->load([
+            'selenium' => [
+                'host' => 'http://127.0.0.1:4444/wd/hub',
+                'browser' => 'firefox',
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasService(DriverInterface::class, PantherDriver::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 0, 'http://127.0.0.1:4444/wd/hub');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
+            DriverInterface::class,
+            1,
+            (new Definition(WebDriverCapabilities::class))
+                ->setFactory([DesiredCapabilities::class, 'firefox'])
+        );
+
+        $definition = $this->container->getDefinition(DriverInterface::class);
+        $this->assertSame([PantherDriver::class, 'createSeleniumDriver'], $definition->getFactory());
     }
 
     /**
@@ -187,6 +206,33 @@ class PantherFactoryTest extends TestCase
                 ],
             ],
         ];
+
+        yield [
+            [['selenium' => null]],
+            [
+                'selenium' => [
+                    'host' => null,
+                    'browser' => 'chrome',
+                ],
+            ],
+        ];
+
+        yield [
+            [
+                [
+                    'selenium' => [
+                        'host' => 'http://127.0.0.1:4444/wd/hub',
+                        'browser' => 'firefox',
+                    ],
+                ],
+            ],
+            [
+                'selenium' => [
+                    'host' => 'http://127.0.0.1:4444/wd/hub',
+                    'browser' => 'firefox',
+                ],
+            ],
+        ];
     }
 
     /**
@@ -201,6 +247,15 @@ class PantherFactoryTest extends TestCase
                 ],
             ],
             '"arguments" must be an array of strings or null.',
+        ];
+
+        yield [
+            [
+                [
+                    'selenium' => ['browser' => 'invalid-browser'],
+                ],
+            ],
+            '"invalid-browser" is not a valid or supported browser.',
         ];
     }
 
@@ -238,5 +293,49 @@ class PantherFactoryTest extends TestCase
                 return $treeBuilder;
             }
         };
+    }
+
+    /**
+     * Return an array of container extensions you need to be registered for each test (usually just the container
+     * extension you are testing.
+     *
+     * @return ExtensionInterface[]
+     */
+    protected function getContainerExtensions() : array
+    {
+        $extension = new class($this->getConfiguration(), $this->factory) extends Extension
+        {
+            /** @var ConfigurationInterface */
+            private $configuration;
+
+            /** @var PantherFactory */
+            private $factory;
+
+            public function __construct(ConfigurationInterface $configuration, PantherFactory $factory)
+            {
+                $this->configuration = $configuration;
+                $this->factory       = $factory;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function load(array $configs, ContainerBuilder $container) : void
+            {
+                $configs = $this->processConfiguration($this->configuration, $configs);
+
+                $container->setDefinition(DriverInterface::class, $this->factory->buildDriver($configs));
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function getAlias() : string
+            {
+                return 'panther';
+            }
+        };
+
+        return [$extension];
     }
 }
