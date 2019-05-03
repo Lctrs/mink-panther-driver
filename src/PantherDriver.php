@@ -264,7 +264,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getTagName($xpath) : string
     {
-        return $this->findElement($xpath)->getTagName();
+        return $this->findElementOrThrow($xpath)->getTagName();
     }
 
     /**
@@ -275,7 +275,7 @@ final class PantherDriver extends CoreDriver
         return str_replace(
             ["\r", "\r\n", "\n"],
             ' ',
-            $this->findElement($xpath)->getText()
+            $this->findElementOrThrow($xpath)->getText()
         );
     }
 
@@ -284,7 +284,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getHtml($xpath) : string
     {
-        return $this->executeScriptOn($this->findElement($xpath), 'return arguments[0].innerHTML;');
+        return $this->executeScriptOn($this->findElementOrThrow($xpath), 'return arguments[0].innerHTML;');
     }
 
     /**
@@ -292,7 +292,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getOuterHtml($xpath) : string
     {
-        return $this->executeScriptOn($this->findElement($xpath), 'return arguments[0].outerHTML;');
+        return $this->executeScriptOn($this->findElementOrThrow($xpath), 'return arguments[0].outerHTML;');
     }
 
     /**
@@ -300,7 +300,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getAttribute($xpath, $name) : ?string
     {
-        $element = $this->findElement($xpath);
+        $element = $this->findElementOrThrow($xpath);
 
         /**
          * If attribute is present but does not have value, it's considered as Boolean Attributes https://html.spec.whatwg.org/#boolean-attributes
@@ -328,7 +328,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getValue($xpath)
     {
-        $element = $this->findElement($xpath);
+        $element = $this->findElementOrThrow($xpath);
         $tagName = $element->getTagName();
 
         if ($tagName === 'input') {
@@ -373,7 +373,7 @@ final class PantherDriver extends CoreDriver
      */
     public function setValue($xpath, $value) : void
     {
-        $element = $this->findElement($xpath);
+        $element = $this->findElementOrThrow($xpath);
         $tagName = $element->getTagName();
 
         if ($tagName === 'select') {
@@ -447,7 +447,7 @@ final class PantherDriver extends CoreDriver
      */
     public function check($xpath) : void
     {
-        $element = $this->findElement($xpath);
+        $element = $this->findElementOrThrow($xpath);
 
         $this->ensureInputType($element, $xpath, 'checkbox', 'check');
 
@@ -463,7 +463,7 @@ final class PantherDriver extends CoreDriver
      */
     public function uncheck($xpath) : void
     {
-        $element = $this->findElement($xpath);
+        $element = $this->findElementOrThrow($xpath);
 
         $this->ensureInputType($element, $xpath, 'checkbox', 'uncheck');
 
@@ -487,7 +487,7 @@ final class PantherDriver extends CoreDriver
      */
     public function selectOption($xpath, $value, $multiple = false) : void
     {
-        $element = $this->findElement($xpath);
+        $element = $this->findElementOrThrow($xpath);
         $tagName = $element->getTagName();
 
         if ($tagName === 'input' && strtolower($element->getAttribute('type')) === 'radio') {
@@ -528,7 +528,7 @@ final class PantherDriver extends CoreDriver
      */
     public function isSelected($xpath) : bool
     {
-        return $this->findElement($xpath)->isSelected();
+        return $this->findElementOrThrow($xpath)->isSelected();
     }
 
     /**
@@ -536,7 +536,7 @@ final class PantherDriver extends CoreDriver
      */
     public function click($xpath) : void
     {
-        $this->findElement($xpath)->click();
+        $this->findElementOrThrow($xpath)->click();
     }
 
     /**
@@ -545,7 +545,7 @@ final class PantherDriver extends CoreDriver
     public function doubleClick($xpath) : void
     {
         $this->createWebDriverAction()->doubleClick(
-            $this->findElement($xpath)
+            $this->findElementOrThrow($xpath)
         )->perform();
     }
 
@@ -555,7 +555,7 @@ final class PantherDriver extends CoreDriver
     public function rightClick($xpath) : void
     {
         $this->createWebDriverAction()->contextClick(
-            $this->findElement($xpath)
+            $this->findElementOrThrow($xpath)
         )->perform();
     }
 
@@ -564,7 +564,7 @@ final class PantherDriver extends CoreDriver
      */
     public function attachFile($xpath, $path) : void
     {
-        $fileInput = $this->findElement($xpath);
+        $fileInput = $this->findElementOrThrow($xpath);
         $this->ensureInputType($fileInput, $xpath, 'file', 'attach a file on');
 
         $this->attachFileTo($fileInput, $path);
@@ -575,7 +575,7 @@ final class PantherDriver extends CoreDriver
      */
     public function isVisible($xpath) : bool
     {
-        return $this->findElement($xpath)->isDisplayed();
+        return $this->findElementOrThrow($xpath)->isDisplayed();
     }
 
     /**
@@ -584,7 +584,7 @@ final class PantherDriver extends CoreDriver
     public function mouseOver($xpath) : void
     {
         $this->createWebDriverAction()->moveToElement(
-            $this->findElement($xpath)
+            $this->findElementOrThrow($xpath)
         )->perform();
     }
 
@@ -593,7 +593,7 @@ final class PantherDriver extends CoreDriver
      */
     public function focus($xpath) : void
     {
-        $element = $this->findElement($xpath);
+        $element = $this->findElementOrThrow($xpath);
 
         if ($element->getTagName() === 'input') {
             $element->sendKeys('');
@@ -609,7 +609,7 @@ final class PantherDriver extends CoreDriver
      */
     public function blur($xpath) : void
     {
-        $this->findElement($xpath)->sendKeys(WebDriverKeys::TAB);
+        $this->findElementOrThrow($xpath)->sendKeys(WebDriverKeys::TAB);
     }
 
     /**
@@ -648,8 +648,8 @@ final class PantherDriver extends CoreDriver
     public function dragTo($sourceXpath, $destinationXpath) : void
     {
         $this->createWebDriverAction()->dragAndDrop(
-            $this->findElement($sourceXpath),
-            $this->findElement($destinationXpath)
+            $this->findElementOrThrow($sourceXpath),
+            $this->findElementOrThrow($destinationXpath)
         )->perform();
     }
 
@@ -751,13 +751,13 @@ final class PantherDriver extends CoreDriver
      */
     public function submitForm($xpath) : void
     {
-        $this->findElement($xpath)->submit();
+        $this->findElementOrThrow($xpath)->submit();
     }
 
     /**
      * @throws DriverException
      */
-    private function findElement(string $xpath) : WebDriverElement
+    private function findElementOrThrow(string $xpath) : WebDriverElement
     {
         try {
             return $this->client->findElement(WebDriverBy::xpath($xpath));
@@ -800,7 +800,7 @@ final class PantherDriver extends CoreDriver
     private function dispatchKeyboardEventOn(string $xpath, string $type, $char, ?string $modifier) : void
     {
         $this->executeScriptOn(
-            $this->findElement($xpath),
+            $this->findElementOrThrow($xpath),
             'arguments[0].dispatchEvent(new KeyboardEvent(arguments[1], arguments[2]));',
             $type,
             self::keyboardEventsOptions($char, $modifier)
