@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Lctrs\MinkPantherDriver\Tests;
 
 use Behat\Mink\Tests\Driver\AbstractConfig;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use const PHP_OS;
 use function getenv;
@@ -28,6 +31,31 @@ final class Config extends AbstractConfig
      */
     public function createDriver() : PantherDriver
     {
+        if ($_SERVER['SELENIUM'] ?? false) {
+            $browser = $_SERVER['BROWSER_NAME'] ?? WebDriverBrowserType::FIREFOX;
+
+            if ($browser === WebDriverBrowserType::FIREFOX) {
+                $desiredCapabilities = DesiredCapabilities::firefox();
+            } elseif ($browser === WebDriverBrowserType::CHROME) {
+                $options = new ChromeOptions();
+                $options->addArguments([
+                    '--headless',
+                    '--window-size=1200,1100',
+                    '--disable-gpu',
+                    '--no-sandbox',
+                ]);
+
+                $desiredCapabilities = $options->toCapabilities();
+            } else {
+                $desiredCapabilities = new DesiredCapabilities();
+            }
+
+            return PantherDriver::createSeleniumDriver(
+                'http://localhost:4444/wd/hub',
+                $desiredCapabilities
+            );
+        }
+
         return PantherDriver::createChromeDriver();
     }
 

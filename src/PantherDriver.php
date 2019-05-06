@@ -7,7 +7,6 @@ namespace Lctrs\MinkPantherDriver;
 use Behat\Mink\Driver\CoreDriver;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
-use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeOutException;
 use Facebook\WebDriver\Exception\WebDriverException;
@@ -22,6 +21,7 @@ use Facebook\WebDriver\WebDriverElement;
 use Facebook\WebDriver\WebDriverHasInputDevices;
 use Facebook\WebDriver\WebDriverKeys;
 use Facebook\WebDriver\WebDriverSelect;
+use Lctrs\MinkPantherDriver\Bridge\Facebook\WebDriver\Cookie;
 use Lctrs\MinkPantherDriver\Bridge\Facebook\WebDriver\WebDriverRadios;
 use RuntimeException;
 use Symfony\Component\Panther\Client;
@@ -817,6 +817,7 @@ final class PantherDriver extends CoreDriver
         return [
             'key' => is_int($char) ? chr($char) : $char,
             'keyCode' => is_string($char) ? ord($char) : $char,
+            'which' => is_string($char) ? ord($char) : $char,
             'ctrlKey' => $modifier === 'ctrl',
             'shiftKey' => $modifier === 'shift',
             'altKey' => $modifier === 'alt',
