@@ -817,6 +817,7 @@ final class PantherDriver extends CoreDriver
         return [
             'key' => is_int($char) ? chr($char) : $char,
             'keyCode' => is_string($char) ? ord($char) : $char,
+            'which' => is_string($char) ? ord($char) : $char,
             'ctrlKey' => $modifier === 'ctrl',
             'shiftKey' => $modifier === 'shift',
             'altKey' => $modifier === 'alt',
