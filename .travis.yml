@@ -1,51 +1,175 @@
 language: php
 
-addons:
-    chrome: stable
-
 cache:
     directories:
         - $HOME/.composer/cache
-
-php:
-    - 7.2
-    - 7.3
-    - 7.4snapshot
-    - nightly
-
-env:
-    - DEPENDENCIES=""
-    - DEPENDENCIES="--prefer-lowest --prefer-stable"
 
 matrix:
     allow_failures:
         - php: 7.4snapshot
         - php: nightly
 
-install:
-    - composer update --prefer-dist --no-progress --no-suggest --ansi $DEPENDENCIES
+_install_scripts: &install_scripts
+    install:
+        - travis_retry sh .travis.install.sh
 
-before_script:
-    - bin/mink-test-server > /dev/null 2>&1 &
+_test_scripts: &test_scripts
+    <<: *install_scripts
+    before_script:
+        - bin/mink-test-server > /dev/null 2>&1 &
+    script:
+        - vendor/bin/phpunit -v
 
-script:
-    - vendor/bin/phpunit -v
+_browsers:
+    chrome: &chrome
+        addons:
+            chrome: stable
+    selenium-chrome: &selenium-chrome
+        before_install:
+            - docker run -d --network=host selenium/standalone-chrome:latest
+            - |
+                while ! curl -sSL "http://localhost:4444/wd/hub/status" 2>&1 \
+                        | jq -r '.value.ready' 2>&1 | grep "true" >/dev/null; do
+                    echo 'Waiting for Selenium'
+                    sleep 1
+                done
+    selenium-firefox: &selenium-firefox
+        before_install:
+            # do not use newer version, firefox is following w3c much faster then drivers
+            - docker run -d --network=host selenium/standalone-firefox:2.53.1
 
 jobs:
     include:
-        - stage: Static Analysis
-          script: vendor/bin/phpstan analyse
-          php: 7.2
-          env: DEPENDENCIES=""
+# Chromedriver builds
+        -   stage: Test
+            php: 7.2
+            env: DEPENDENCIES="high"
+            <<: *chrome
+            <<: *test_scripts
 
-        - stage: Code Style
+        -   stage: Test
+            php: 7.2
+            env: DEPENDENCIES="low"
+            <<: *chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.3
+            env: DEPENDENCIES="high"
+            <<: *chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.3
+            env: DEPENDENCIES="low"
+            <<: *chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.4snapshot
+            env: DEPENDENCIES="high"
+            <<: *chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.4snapshot
+            env: DEPENDENCIES="low"
+            <<: *chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: nightly
+            env: DEPENDENCIES="high"
+            <<: *chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: nightly
+            env: DEPENDENCIES="low"
+            <<: *chrome
+            <<: *test_scripts
+
+# Selenium firefox builds
+        -   stage: Test
+            php: 7.2
+            env:
+                - DEPENDENCIES="high"
+                - SELENIUM=1
+                - BROWSER_NAME="firefox"
+            <<: *selenium-firefox
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.2
+            env:
+                - DEPENDENCIES="low"
+                - SELENIUM=1
+                - BROWSER_NAME="firefox"
+            <<: *selenium-firefox
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.3
+            env:
+                - DEPENDENCIES="high"
+                - SELENIUM=1
+                - BROWSER_NAME="firefox"
+            <<: *selenium-firefox
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.3
+            env:
+                - DEPENDENCIES="low"
+                - SELENIUM=1
+                - BROWSER_NAME="firefox"
+            <<: *selenium-firefox
+            <<: *test_scripts
+    
+# Selenium chrome builds
+        -   stage: Test
+            php: 7.2
+            env:
+                - DEPENDENCIES="high"
+                - SELENIUM=1
+                - BROWSER_NAME="chrome"
+            <<: *selenium-chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.2
+            env:
+                - DEPENDENCIES="low"
+                - SELENIUM=1
+                - BROWSER_NAME="chrome"
+            <<: *selenium-chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.3
+            env:
+                - DEPENDENCIES="high"
+                - SELENIUM=1
+                - BROWSER_NAME="chrome"
+            <<: *selenium-chrome
+            <<: *test_scripts
+
+        -   stage: Test
+            php: 7.3
+            env:
+                - DEPENDENCIES="low"
+                - SELENIUM=1
+                - BROWSER_NAME="chrome"
+            <<: *selenium-chrome
+            <<: *test_scripts
+
+# Code health builds
+        - stage: Code Health
+          php: 7.2
+          <<: *install_scripts
           script:
+              - vendor/bin/phpstan analyse
               - vendor/bin/phpcs
+              - vendor/bin/composer-require-checker
               - composer normalize --dry-run
-          php: 7.2
-          env: DEPENDENCIES=""
-
-        - stage: Dependencies Check
-          script: vendor/bin/composer-require-checker
-          php: 7.2
-          env: DEPENDENCIES=""
+          env: DEPENDENCIES="high"
