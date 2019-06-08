@@ -81,7 +81,7 @@ final class PantherDriver extends CoreDriver
         }
 
         if ($capabilities instanceof DesiredCapabilities && $capabilities->getBrowserName() === WebDriverBrowserType::CHROME) {
-            $options = $capabilities->getCapability(ChromeOptions::class);
+            $options = $capabilities->getCapability(ChromeOptions::CAPABILITY);
 
             if (! $options instanceof ChromeOptions) {
                 $options = new ChromeOptions();
