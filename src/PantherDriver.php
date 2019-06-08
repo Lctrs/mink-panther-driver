@@ -7,13 +7,16 @@ namespace Lctrs\MinkPantherDriver;
 use Behat\Mink\Driver\CoreDriver;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
+use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeOutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\JavaScriptExecutor;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverCapabilities;
 use Facebook\WebDriver\WebDriverDimension;
@@ -73,6 +76,21 @@ final class PantherDriver extends CoreDriver
         ?string $host = null,
         ?WebDriverCapabilities $capabilities = null
     ) : self {
+        if ($capabilities === null) {
+            $capabilities = (new ChromeOptions())->toCapabilities();
+        }
+
+        if ($capabilities instanceof DesiredCapabilities && $capabilities->getBrowserName() === WebDriverBrowserType::CHROME) {
+            $options = $capabilities->getCapability(ChromeOptions::class);
+
+            if (! $options instanceof ChromeOptions) {
+                $options = new ChromeOptions();
+            }
+
+            $options->setExperimentalOption('w3c', false);
+            $capabilities->setCapability('goog:chromeOptions', $options);
+        }
+
         return new self(Client::createSeleniumClient($host, $capabilities));
     }
 
