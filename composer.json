@@ -21,7 +21,7 @@
         "matthiasnoback/symfony-dependency-injection-test": "^3.1",
         "mink/driver-testsuite": "dev-master",
         "phpstan/phpstan": "^0.11.1",
-        "phpstan/phpstan-phpunit": "^0.11.0",
+        "phpstan/phpstan-phpunit": "^0.11.2",
         "phpunit/phpunit": "^7.0"
     },
     "config": {
