@@ -1,5 +1,7 @@
 language: php
 
+if: type != push OR branch = master OR branch =~ /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+
 cache:
     directories:
         - $HOME/.composer/cache
@@ -24,6 +26,9 @@ _browsers:
     chrome: &chrome
         addons:
             chrome: stable
+        before_install:
+            - curl -OLsS https://chromedriver.storage.googleapis.com/$(google-chrome --product-version)/chromedriver_linux64.zip
+            - unzip chromedriver_linux64.zip
     selenium-chrome: &selenium-chrome
         before_install:
             - docker run -d --network=host selenium/standalone-chrome:latest
@@ -43,49 +48,65 @@ jobs:
 # Chromedriver builds
         -   stage: Test
             php: 7.2
-            env: DEPENDENCIES="high"
+            env:
+                - DEPENDENCIES="high"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
         -   stage: Test
             php: 7.2
-            env: DEPENDENCIES="low"
+            env:
+                - DEPENDENCIES="low"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
         -   stage: Test
             php: 7.3
-            env: DEPENDENCIES="high"
+            env:
+                - DEPENDENCIES="high"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
         -   stage: Test
             php: 7.3
-            env: DEPENDENCIES="low"
+            env:
+                - DEPENDENCIES="low"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
         -   stage: Test
             php: 7.4snapshot
-            env: DEPENDENCIES="high"
+            env:
+                - DEPENDENCIES="high"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
         -   stage: Test
             php: 7.4snapshot
-            env: DEPENDENCIES="low"
+            env:
+                - DEPENDENCIES="low"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
         -   stage: Test
             php: nightly
-            env: DEPENDENCIES="high"
+            env:
+                - DEPENDENCIES="high"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
         -   stage: Test
             php: nightly
-            env: DEPENDENCIES="low"
+            env:
+                - DEPENDENCIES="low"
+                - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
             <<: *chrome
             <<: *test_scripts
 
