@@ -183,14 +183,3 @@ jobs:
                 - BROWSER_NAME="chrome"
             <<: *selenium-chrome
             <<: *test_scripts
-
-# Code health builds
-        - stage: Code Health
-          php: 7.2
-          <<: *install_scripts
-          script:
-              - vendor/bin/phpstan analyse
-              - vendor/bin/phpcs
-              - vendor/bin/composer-require-checker
-              - composer normalize --dry-run
-          env: DEPENDENCIES="high"

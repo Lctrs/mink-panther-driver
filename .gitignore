@@ -1,2 +1,5 @@
-/composer.lock
+/.build
 /vendor/
+/phpcs.xml
+/phpstan.neon
+/phpunit.xml
