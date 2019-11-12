@@ -1,18 +1,22 @@
 includes:
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-parameters:
-    paths:
-        - %currentWorkingDirectory%/src/
-        - %currentWorkingDirectory%/tests/
-    level: 5
-    ignoreErrors:
-        -
-            message: '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface::variableNode\(\)#'
-            path: src/Extension/Driver/PantherFactory.php
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+	- vendor/phpstan/phpstan/conf/config.level5.neon
 
-        -
-            message: '#Parameter \#1 \$builder of method Lctrs\\MinkPantherDriver\\Extension\\Driver\\PantherFactory::configure\(\) expects Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition, Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition given#'
-            path: tests/Extension/Driver/PantherFactoryTest.php
+parameters:
+	inferPrivatePropertyTypeFromConstructor: true
+	paths:
+		- src
+		- tests
+	tmpDir: %currentWorkingDirectory%/.build/phpstan
+	ignoreErrors:
+		-
+			message: '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface::variableNode\(\)#'
+			path: src/Extension/Driver/PantherFactory.php
+
+		-
+			message: '#Parameter \#1 \$builder of method Lctrs\\MinkPantherDriver\\Extension\\Driver\\PantherFactory::configure\(\) expects Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition, Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition given#'
+			path: tests/Extension/Driver/PantherFactoryTest.php
 
 # Wrong PHPDoc of Behat\Mink\Driver\DriverInterface#getValue()
-        - '#Method Lctrs\\MinkPantherDriver\\PantherDriver::getValue\(\) should return array\|bool\|string but returns null\.#'
+		- '#Method Lctrs\\MinkPantherDriver\\PantherDriver::getValue\(\) should return array\|bool\|string but returns null\.#'
