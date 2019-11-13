@@ -186,3 +186,13 @@ jobs:
         - BROWSER_NAME="chrome"
       <<: *selenium-chrome
       <<: *test_scripts
+    
+    # Test against latest Symfony 4.4 beta
+    - stage: Test
+      php: 7.3
+      env:
+        - SYMFONY_VERSION="4.4.*@beta"
+        - DEPENDENCIES="high"
+        - PANTHER_CHROME_DRIVER_BINARY="./chromedriver"
+      <<: *chrome
+      <<: *test_scripts
