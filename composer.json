@@ -22,7 +22,7 @@
     "mink/driver-testsuite": "dev-master",
     "phpstan/phpstan": "^0.11.19",
     "phpstan/phpstan-phpunit": "^0.11.2",
-    "phpunit/phpunit": "^7.5.17"
+    "phpunit/phpunit": "^8.4.3"
   },
   "config": {
     "platform": {
