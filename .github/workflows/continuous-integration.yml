@@ -13,19 +13,19 @@ name: "Continuous Integration"
 jobs:
   coding-standards:
     name: "Coding Standards"
-    
+
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
-      
+
       - name: "Disable Xdebug"
         run: php7.2 --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
-      
+
       - name: "Validate composer.json and composer.lock"
         run: php7.2 $(which composer) validate --strict
-      
+
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1.0.1
         with:
@@ -33,31 +33,31 @@ jobs:
           key: php7.2-composer-locked-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             php7.2-composer-locked-
-      
+
       - name: "Install locked dependencies with composer"
         run: php7.2 $(which composer) install --no-interaction --no-progress --no-suggest
-      
+
       - name: "Run localheinz/composer-normalize"
         run: php7.2 $(which composer) normalize --dry-run
-      
+
       - name: "Run doctrine/coding-standard"
         run: php7.2 vendor/bin/phpcs
-      
+
       - name: "Run maglnet/composer-require-checker"
         run: php7.2 vendor/bin/composer-require-checker
-  
+
   static-code-analysis:
     name: "Static Code Analysis"
-    
+
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
-      
+
       - name: "Disable Xdebug"
         run: php7.3 --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
-      
+
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1.0.1
         with:
@@ -65,9 +65,238 @@ jobs:
           key: php7.3-composer-locked-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             php7.3-composer-locked-
-      
+
       - name: "Install locked dependencies with composer"
         run: php7.3 $(which composer) install --no-interaction --no-progress --no-suggest
-      
+
       - name: "Run phpstan/phpstan"
         run: php7.3 vendor/bin/phpstan analyse
+
+  tests-chrome-chromedriver:
+    name: "Tests on Chrome stable with chromedriver"
+
+    runs-on: ubuntu-latest
+
+    env:
+      PANTHER_CHROME_DRIVER_BINARY: .build/chromedriver/chromedriver
+
+    strategy:
+      matrix:
+        php-binary:
+          - php7.2
+          - php7.3
+
+        dependencies:
+          - lowest
+          - locked
+          - highest
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v1.1.0
+
+      - name: "Disable Xdebug"
+        run: ${{ matrix.php-binary }} --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+
+      - name: "Install chromedriver"
+        run: |
+          mkdir -p .build/chromedriver
+          chromeversion=$(google-chrome --product-version)
+          chromeversion=${chromeversion%.*}
+          curl -LsS -o .build/chromedriver/chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -L https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${chromeversion})/chromedriver_linux64.zip
+          unzip .build/chromedriver/chromedriver.zip -d .build/chromedriver
+
+      - name: "Cache dependencies installed with composer"
+        uses: actions/cache@v1.0.0
+        with:
+          path: ~/.composer/cache
+          key: ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-
+
+      - name: "Install lowest dependencies with composer"
+        if: matrix.dependencies == 'lowest'
+        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest --prefer-lowest
+
+      - name: "Install locked dependencies with composer"
+        if: matrix.dependencies == 'locked'
+        run: ${{ matrix.php-binary }} $(which composer) install --no-interaction --no-progress --no-suggest
+
+      - name: "Install highest dependencies with composer"
+        if: matrix.dependencies == 'highest'
+        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest
+
+      - name: "Run unit tests with phpunit/phpunit"
+        run: |
+          vendor/bin/mink-test-server > /dev/null 2>&1 &
+          ${{ matrix.php-binary }} vendor/bin/phpunit
+
+  tests-chrome-selenium:
+    name: "Tests on Chrome stable with Selenium"
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-binary:
+          - php7.2
+          - php7.3
+
+        dependencies:
+          - lowest
+          - locked
+          - highest
+
+    steps:
+      - name: "Initialize containers"
+        run: |
+          set -eux
+
+          docker pull selenium/standalone-chrome:latest
+          container_id=$(docker create \
+            --name selenium \
+            --network host \
+            --health-cmd /opt/bin/check-grid.sh \
+            --health-interval 10s \
+            --health-timeout 5s \
+            --health-retries 5 \
+            -e GITHUB_ACTIONS=true \
+            selenium/standalone-chrome:latest)
+
+          echo ::set-env name=container_id::${container_id}
+
+          docker start ${container_id}
+
+          docker ps --all --filter id=${container_id} --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+
+          while status=$(docker inspect --format="{{print .State.Health.Status}}" ${container_id}); \
+            [ $status = "starting" ]; do
+            echo ${status}
+            echo "selenium service is starting, waiting 2 secondes before checking again."
+            sleep 2
+          done
+
+          if [ $status != "healthy" ]; then
+            echo "::error ::Failed to initialize, selenium service is unhealthy."
+            exit 1
+          fi
+
+          echo "selenium service is healthy."
+
+      - name: "Checkout"
+        uses: actions/checkout@v1.1.0
+
+      - name: "Disable Xdebug"
+        run: ${{ matrix.php-binary }} --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+
+      - name: "Cache dependencies installed with composer"
+        uses: actions/cache@v1.0.0
+        with:
+          path: ~/.composer/cache
+          key: ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-
+
+      - name: "Install lowest dependencies with composer"
+        if: matrix.dependencies == 'lowest'
+        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest --prefer-lowest
+
+      - name: "Install locked dependencies with composer"
+        if: matrix.dependencies == 'locked'
+        run: ${{ matrix.php-binary }} $(which composer) install --no-interaction --no-progress --no-suggest
+
+      - name: "Install highest dependencies with composer"
+        if: matrix.dependencies == 'highest'
+        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest
+
+      - name: "Run unit tests with phpunit/phpunit"
+        env:
+          BROWSER_NAME: chrome
+          SELENIUM_HOST: localhost
+          SELENIUM_PORT: 4444
+        run: |
+          vendor/bin/mink-test-server > /dev/null 2>&1 &
+          ${{ matrix.php-binary }} vendor/bin/phpunit
+
+      - name: "Stop containers"
+        if: always()
+        run: docker rm --force ${container_id}
+
+  tests-firefox-selenium:
+    name: "Tests on legacy Firefox with Selenium"
+
+    runs-on: ubuntu-latest
+
+    services:
+      selenium:
+        image: selenium/standalone-firefox:2.53.1
+        ports:
+          - 4444/tcp
+
+    strategy:
+      matrix:
+        php-binary:
+          - php7.2
+          - php7.3
+
+        dependencies:
+          - lowest
+          - locked
+          - highest
+
+    steps:
+      - name: "Initialize containers"
+        run: |
+          set -eux
+
+          docker pull selenium/standalone-firefox:2.53.1
+          container_id=$(docker create \
+            --name selenium \
+            --network host \
+            -e GITHUB_ACTIONS=true \
+            selenium/standalone-firefox:2.53.1)
+
+          echo ::set-env name=container_id::${container_id}
+
+          docker start ${container_id}
+
+          sleep 10
+
+      - name: "Checkout"
+        uses: actions/checkout@v1.1.0
+
+      - name: "Disable Xdebug"
+        run: ${{ matrix.php-binary }} --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+
+      - name: "Cache dependencies installed with composer"
+        uses: actions/cache@v1.0.0
+        with:
+          path: ~/.composer/cache
+          key: ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-
+
+      - name: "Install lowest dependencies with composer"
+        if: matrix.dependencies == 'lowest'
+        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest --prefer-lowest
+
+      - name: "Install locked dependencies with composer"
+        if: matrix.dependencies == 'locked'
+        run: ${{ matrix.php-binary }} $(which composer) install --no-interaction --no-progress --no-suggest
+
+      - name: "Install highest dependencies with composer"
+        if: matrix.dependencies == 'highest'
+        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest
+
+      - name: "Run unit tests with phpunit/phpunit"
+        env:
+          BROWSER_NAME: firefox
+          SELENIUM_HOST: localhost
+          SELENIUM_PORT: 4444
+        run: |
+          vendor/bin/mink-test-server > /dev/null 2>&1 &
+          ${{ matrix.php-binary }} vendor/bin/phpunit
+
+      - name: "Stop containers"
+        if: always()
+        run: docker rm --force ${container_id}

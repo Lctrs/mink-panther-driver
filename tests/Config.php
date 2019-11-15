@@ -11,6 +11,7 @@ use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use const PHP_OS;
 use function getenv;
+use function sprintf;
 use function strpos;
 
 final class Config extends AbstractConfig
@@ -31,7 +32,7 @@ final class Config extends AbstractConfig
      */
     public function createDriver() : PantherDriver
     {
-        if ($_SERVER['SELENIUM'] ?? false) {
+        if ($_SERVER['SELENIUM_HOST'] ?? false) {
             $browser = $_SERVER['BROWSER_NAME'] ?? WebDriverBrowserType::FIREFOX;
 
             if ($browser === WebDriverBrowserType::FIREFOX) {
@@ -51,7 +52,7 @@ final class Config extends AbstractConfig
             }
 
             return PantherDriver::createSeleniumDriver(
-                'http://localhost:4444/wd/hub',
+                sprintf('http://%s:%s/wd/hub', $_SERVER['SELENIUM_HOST'], $_SERVER['SELENIUM_PORT']),
                 $desiredCapabilities
             );
         }

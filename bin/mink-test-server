@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# see why USE_ZEND_ALLOC=0 is required, https://bugs.php.net/bug.php?id=71443
-export USE_ZEND_ALLOC=0
-
-base_dir=$(dirname "$(dirname "$(readlink -f "$0")")")
-
-exec "$base_dir/vendor/bin/mink-test-server" "$@"
