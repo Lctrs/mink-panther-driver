@@ -338,7 +338,7 @@ final class PantherDriver extends CoreDriver
         $tagName = $element->getTagName();
 
         if ($tagName === 'input') {
-            $type = strtolower($element->getAttribute('type'));
+            $type = strtolower($element->getAttribute('type') ?? '');
 
             if ($type === 'checkbox') {
                 return $element->isSelected() ? $element->getAttribute('value') : null;
@@ -367,7 +367,7 @@ final class PantherDriver extends CoreDriver
             }
 
             return array_map(static function (WebDriverElement $element) : string {
-                return $element->getAttribute('value');
+                return $element->getAttribute('value') ?? '';
             }, $select->getAllSelectedOptions());
         }
 
@@ -397,7 +397,7 @@ final class PantherDriver extends CoreDriver
         }
 
         if ($tagName === 'input') {
-            $type = strtolower($element->getAttribute('type'));
+            $type = strtolower($element->getAttribute('type') ?? '');
 
             if (in_array($type, ['submit', 'image', 'button', 'reset'])) {
                 throw new DriverException(sprintf('Impossible to set value an element with XPath "%s" as it is not a select, textarea or textbox', $xpath));
@@ -431,7 +431,7 @@ final class PantherDriver extends CoreDriver
         $value = (string) $value;
 
         if (in_array($tagName, ['input', 'textarea'])) {
-            $existingValueLength = strlen($element->getAttribute('value'));
+            $existingValueLength = strlen($element->getAttribute('value') ?? '');
             // Add the TAB key to ensure we unfocus the field as browsers are triggering the change event only
             // after leaving the field.
             $value = str_repeat(WebDriverKeys::BACKSPACE . WebDriverKeys::DELETE, $existingValueLength) . $value;
@@ -497,7 +497,7 @@ final class PantherDriver extends CoreDriver
         $element = $this->findElementOrThrow($xpath);
         $tagName = $element->getTagName();
 
-        if ($tagName === 'input' && strtolower($element->getAttribute('type')) === 'radio') {
+        if ($tagName === 'input' && strtolower($element->getAttribute('type') ?? '') === 'radio') {
             try {
                 (new WebDriverRadios($element))->selectByValue($value);
             } catch (WebDriverException $e) {
@@ -786,7 +786,9 @@ final class PantherDriver extends CoreDriver
      */
     private function ensureInputType(WebDriverElement $element, string $xpath, string $type, string $action) : void
     {
-        if (strtolower($element->getTagName()) !== 'input' || $type !== strtolower($element->getAttribute('type'))) {
+        if (strtolower($element->getTagName()) !== 'input'
+            || $type !== strtolower($element->getAttribute('type') ?? '')
+        ) {
             $message = 'Impossible to %s the element with XPath "%s" as it is not a %s input';
 
             throw new DriverException(sprintf($message, $action, $xpath, $type));
