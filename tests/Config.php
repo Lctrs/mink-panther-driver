@@ -9,12 +9,13 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Lctrs\MinkPantherDriver\PantherDriver;
+use PHPUnit\Runner\AfterLastTestHook;
 use const PHP_OS;
 use function getenv;
 use function sprintf;
 use function strpos;
 
-final class Config extends AbstractConfig
+final class Config extends AbstractConfig implements AfterLastTestHook
 {
     /**
      * Creates an instance of the config.
@@ -51,13 +52,13 @@ final class Config extends AbstractConfig
                 $desiredCapabilities = new DesiredCapabilities();
             }
 
-            return PantherDriver::createSeleniumDriver(
+            return DriverRegistry::register(PantherDriver::createSeleniumDriver(
                 sprintf('http://%s:%s/wd/hub', $_SERVER['SELENIUM_HOST'], $_SERVER['SELENIUM_PORT']),
                 $desiredCapabilities
-            );
+            ));
         }
 
-        return PantherDriver::createChromeDriver();
+        return DriverRegistry::register(PantherDriver::createChromeDriver());
     }
 
     /**
@@ -95,5 +96,10 @@ final class Config extends AbstractConfig
     protected function supportsCss() : bool
     {
         return true;
+    }
+
+    public function executeAfterLastTest() : void
+    {
+        DriverRegistry::stop();
     }
 }
