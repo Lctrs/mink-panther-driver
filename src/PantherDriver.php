@@ -14,7 +14,9 @@ use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\JavaScriptExecutor;
 use Facebook\WebDriver\Remote\LocalFileDetector;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverCapabilities;
 use Facebook\WebDriver\WebDriverDimension;
@@ -114,6 +116,12 @@ final class PantherDriver extends CoreDriver
         }
 
         $this->client->manage()->deleteAllCookies();
+
+        $history = $this->client->getHistory();
+        if ($history === null) {
+            return;
+        }
+        $history->clear();
     }
 
     /**
@@ -191,7 +199,11 @@ final class PantherDriver extends CoreDriver
             return;
         }
 
-        $manager->addCookie(new Cookie($name, urlencode((string) $value)));
+        $manager->addCookie(Cookie::createFromArray([
+            'name' => $name,
+            'value' => urlencode((string) $value),
+            'secure' => false,
+        ]));
     }
 
     /**
@@ -431,15 +443,16 @@ final class PantherDriver extends CoreDriver
             $value = str_repeat(WebDriverKeys::BACKSPACE . WebDriverKeys::DELETE, $existingValueLength) . $value;
         }
 
-        $element->sendKeys($value);
-        // Remove the focus from the element if the field still has focus in
-        // order to trigger the change event. By doing this instead of simply
-        // triggering the change event for the given xpath we ensure that the
-        // change event will not be triggered twice for the same element if it
-        // has lost focus in the meanwhile. If the element has lost focus
-        // already then there is nothing to do as this will already have caused
-        // the triggering of the change event for that element.
-        $element->sendKeys(WebDriverKeys::TAB);
+        $this->createWebDriverAction()
+            ->sendKeys(
+                $element,
+                $value
+            )
+            ->sendKeys(
+                $element,
+                WebDriverKeys::TAB
+            )
+            ->perform();
     }
 
     /**
@@ -593,15 +606,9 @@ final class PantherDriver extends CoreDriver
      */
     public function focus($xpath) : void
     {
-        $element = $this->findElementOrThrow($xpath);
-
-        if ($element->getTagName() === 'input') {
-            $element->sendKeys('');
-
-            return;
-        }
-
-        $this->createWebDriverAction()->moveToElement($element)->perform();
+        $this->createWebDriverAction()->click(
+            $this->findElementOrThrow($xpath)
+        )->perform();
     }
 
     /**
@@ -609,7 +616,21 @@ final class PantherDriver extends CoreDriver
      */
     public function blur($xpath) : void
     {
-        $this->findElementOrThrow($xpath)->sendKeys(WebDriverKeys::TAB);
+        $webDriver = $this->client->getWebDriver();
+
+        if ($webDriver instanceof RemoteWebDriver
+            && $webDriver->getCapabilities()->getBrowserName() === WebDriverBrowserType::FIREFOX
+        ) {
+            $this->executeScriptOn(
+                $this->findElementOrThrow($xpath),
+                'arguments[0].focus(); arguments[0].focus(); arguments[0].blur(); return true;'
+            );
+        }
+
+        $this->createWebDriverAction()->sendKeys(
+            $this->findElementOrThrow($xpath),
+            WebDriverKeys::TAB
+        )->perform();
     }
 
     /**

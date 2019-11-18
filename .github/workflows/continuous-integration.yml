@@ -77,9 +77,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    env:
-      PANTHER_CHROME_DRIVER_BINARY: .build/chromedriver/chromedriver
-
     strategy:
       matrix:
         php-binary:
@@ -127,6 +124,8 @@ jobs:
         run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest
 
       - name: "Run unit tests with phpunit/phpunit"
+        env:
+          PANTHER_CHROME_DRIVER_BINARY: .build/chromedriver/chromedriver
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
           ${{ matrix.php-binary }} vendor/bin/phpunit
@@ -226,12 +225,6 @@ jobs:
     name: "Tests on legacy Firefox with Selenium"
 
     runs-on: ubuntu-latest
-
-    services:
-      selenium:
-        image: selenium/standalone-firefox:2.53.1
-        ports:
-          - 4444/tcp
 
     strategy:
       matrix:
