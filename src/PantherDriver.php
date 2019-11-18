@@ -116,12 +116,6 @@ final class PantherDriver extends CoreDriver
         }
 
         $this->client->manage()->deleteAllCookies();
-
-        $history = $this->client->getHistory();
-        if ($history === null) {
-            return;
-        }
-        $history->clear();
     }
 
     /**
