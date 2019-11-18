@@ -22,19 +22,29 @@ final class PantherExtensionTest extends TestCase
 
     public function testConfigKey() : void
     {
-        $this->assertSame('panther', $this->extension->getConfigKey());
+        self::assertSame('panther', $this->extension->getConfigKey());
     }
 
     public function testItRegistersMinkDriver() : void
     {
         $minkExtension = $this->createMock(MinkExtension::class);
-        $minkExtension->expects($this->once())->method('getConfigKey')->willReturn('mink');
+        $minkExtension->expects(self::once())->method('getConfigKey')->willReturn('mink');
         $extensionManager = new ExtensionManager([$minkExtension]);
 
-        $minkExtension->expects($this->once())->method('registerDriverFactory')
-            ->with($this->callback(static function ($factory) {
+        $minkExtension->expects(self::once())->method('registerDriverFactory')
+            ->with(self::callback(static function ($factory) {
                 return $factory instanceof PantherFactory;
             }));
+        $this->extension->initialize($extensionManager);
+    }
+
+    public function testItDoesNotRegisterMinkDriverWhenMinkExtensionIsNotPresent() : void
+    {
+        $extensionManager = new ExtensionManager([]);
+
+        $minkExtension = $this->createMock(MinkExtension::class);
+        $minkExtension->expects(self::never())->method('registerDriverFactory');
+
         $this->extension->initialize($extensionManager);
     }
 }

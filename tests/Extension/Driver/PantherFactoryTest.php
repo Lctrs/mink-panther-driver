@@ -116,6 +116,17 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     }
 
     /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Unable to build a Lctrs\MinkPantherDriver\PantherDriver instance with the given config.
+     */
+    public function testItThrowsExceptionWhenBuildingDriverWithInvalidConfiguration() : void
+    {
+        $this->factory->buildDriver([
+            'invalid' => [],
+        ]);
+    }
+
+    /**
      * @return iterable|mixed[]
      */
     public function validConfigurationProvider() : iterable
@@ -244,6 +255,15 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
             [
                 [
                     'chrome' => ['arguments' => '--test'],
+                ],
+            ],
+            '"arguments" must be an array of strings or null.',
+        ];
+
+        yield [
+            [
+                [
+                    'chrome' => ['arguments' => ['--no-sandbox', 1]],
                 ],
             ],
             '"arguments" must be an array of strings or null.',

@@ -49,10 +49,6 @@ final class PantherFactory implements DriverFactory
                             ->defaultNull()
                             ->validate()
                                 ->ifTrue(static function ($v) {
-                                    if ($v === null) {
-                                        return false;
-                                    }
-
                                     if (! is_array($v)) {
                                         return true;
                                     }

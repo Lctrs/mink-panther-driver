@@ -18,7 +18,5 @@ parameters:
 			message: '#Parameter \#1 \$builder of method Lctrs\\MinkPantherDriver\\Extension\\Driver\\PantherFactory::configure\(\) expects Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition, Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition given#'
 			path: tests/Extension/Driver/PantherFactoryTest.php
 
-		- '#Strict comparison using === between Symfony\\Component\\BrowserKit\\History and null will always evaluate to false#'
-
 # Wrong PHPDoc of Behat\Mink\Driver\DriverInterface#getValue()
 		- '#Method Lctrs\\MinkPantherDriver\\PantherDriver::getValue\(\) should return array\|bool\|string but returns null\.#'
