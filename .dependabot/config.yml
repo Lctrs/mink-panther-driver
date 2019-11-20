@@ -9,15 +9,15 @@ update_configs:
       - "Lctrs"
     directory: "/"
     package_manager: "github_actions"
-    update_schedule: "daily"
-  
+    update_schedule: "weekly"
+
   - default_assignees:
       - "Lctrs"
     default_reviewers:
       - "Lctrs"
     directory: "/"
     package_manager: "php:composer"
-    update_schedule: "live"
+    update_schedule: "weekly"
     version_requirement_updates: "increase_versions"
     ignored_updates:
       - match:
