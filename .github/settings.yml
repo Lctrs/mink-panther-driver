@@ -11,6 +11,7 @@ branches:
       required_status_checks:
         contexts:
           - "Coding Standards"
+          - "Dependency Analysis"
           - "Static Code Analysis"
           - "Tests on Chrome stable with chromedriver (php7.2, lowest)"
           - "Tests on Chrome stable with chromedriver (php7.2, locked)"
@@ -39,13 +40,13 @@ branches:
 labels:
   - name: bug
     color: ee0701
-  
+
   - name: dependencies
     color: 0366d6
-  
+
   - name: enhancement
     color: 0e8a16
-  
+
   - name: stale
     color: eeeeee
 
