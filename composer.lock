@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "260e549d7e5602b06d0e378f8736a856",
+    "content-hash": "9925d2d740ba04b67ab2108c2ac5ef75",
     "packages": [
         {
             "name": "behat/behat",
@@ -333,6 +333,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -5144,10 +5145,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2.9"
+        "php": "^7.2"
     },
-    "platform-dev": [],
-    "platform-overrides": {
-        "php": "7.2.24"
-    }
+    "platform-dev": []
 }
