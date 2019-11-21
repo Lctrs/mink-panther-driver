@@ -2,14 +2,15 @@
 
 A [Symfony Panther](https://github.com/symfony/panther) driver for [Mink framework](http://mink.behat.org/en/latest/) .
 
-[![License](https://img.shields.io/github/license/Lctrs/mink-panther-driver.svg?style=flat-square)](https://github.com/Lctrs/mink-panther-driver/blob/master/LICENSE)
-[![Current release](https://img.shields.io/packagist/v/lctrs/mink-panther-driver.svg?style=flat-square)](https://packagist.org/packages/lctrs/mink-panther-driver)
-[![Travis-CI build status](https://img.shields.io/travis/Lctrs/mink-panther-driver.svg?style=flat-square)](https://travis-ci.org/Lctrs/mink-panther-driver)
+[![Continuous Integration](https://github.com/Lctrs/mink-panther-driver/workflows/Continuous%20Integration/badge.svg)](https://github.com/Lctrs/mink-panther-driver/actions)
+[![Code Coverage](https://img.shields.io/codecov/c/github/Lctrs/mink-panther-driver?style=flat-square)](https://codecov.io/gh/Lctrs/mink-panther-driver)
+[![Latest Stable Version](https://img.shields.io/packagist/v/Lctrs/mink-panther-driver?style=flat-square)](https://packagist.org/packages/Lctrs/mink-panther-driver)
+[![Total Downloads](https://img.shields.io/packagist/dt/Lctrs/mink-panther-driver?style=flat-square)](https://packagist.org/packages/Lctrs/mink-panther-driver)
 
 ## Installation
 
-```sh
-composer require lctrs/mink-panther-driver
+```
+$ composer require localheinz/php-library-template
 ```
 
 ## Usage
@@ -74,3 +75,7 @@ mink-panther-driver is juste a glue betweek Mink and Symfony Panther, see their 
 * For `Mink`, read [Mink's documentation](http://mink.behat.org/en/latest/)
 * For `Panther`, read [Symfony Panther's documentation](https://github.com/symfony/panther)
 * For usage with `Behat`, read [Behat's documentation](http://behat.org/en/latest/guides.html)
+
+## License
+
+This package is licensed using the MIT License.
