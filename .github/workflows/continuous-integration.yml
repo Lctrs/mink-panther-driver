@@ -27,7 +27,7 @@ jobs:
         run: php7.2 $(which composer) validate --strict
 
       - name: "Cache dependencies installed with composer"
-        uses: actions/cache@v1.0.1
+        uses: actions/cache@v1.0.2
         with:
           path: ~/.composer/cache
           key: php7.2-composer-locked-${{ hashFiles('**/composer.lock') }}
@@ -56,7 +56,7 @@ jobs:
         run: php7.3 --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
 
       - name: "Cache dependencies installed with composer"
-        uses: actions/cache@v1.0.1
+        uses: actions/cache@v1.0.2
         with:
           path: ~/.composer/cache
           key: php7.3-composer-locked-${{ hashFiles('**/composer.lock') }}
@@ -82,7 +82,7 @@ jobs:
         run: php7.3 --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
 
       - name: "Cache dependencies installed with composer"
-        uses: actions/cache@v1.0.1
+        uses: actions/cache@v1.0.2
         with:
           path: ~/.composer/cache
           key: php7.3-composer-locked-${{ hashFiles('**/composer.lock') }}
@@ -343,7 +343,7 @@ jobs:
           unzip .build/chromedriver/chromedriver.zip -d .build/chromedriver
 
       - name: "Cache dependencies installed with composer"
-        uses: actions/cache@v1.0.1
+        uses: actions/cache@v1.0.2
         with:
           path: ~/.composer/cache
           key: php7.3-composer-locked-${{ hashFiles('**/composer.lock') }}
