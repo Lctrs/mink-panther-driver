@@ -23,3 +23,7 @@ update_configs:
       - match:
           dependency_name: "phpunit/phpunit"
           version_requirement: ">= 8.0.0"
+      - match:
+          dependency_name: "symfony/config"
+      - match:
+          dependency_name: "symfony/dependency-injection"
