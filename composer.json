@@ -10,7 +10,7 @@
     "behat/mink-extension": "^2.3.1",
     "facebook/webdriver": "^1.7.1",
     "symfony/config": "~3.4.35 || ~4.3.8 || ~4.4.0",
-    "symfony/dependency-injection": "~3.4.35 || ~4.3.8 || ~4.4.0",
+    "symfony/dependency-injection": "^4.4.0",
     "symfony/panther": "^0.6.0"
   },
   "require-dev": {
