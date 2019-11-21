@@ -66,12 +66,6 @@ final class Config extends AbstractConfig implements AfterLastTestHook
      */
     public function skipMessage($testCase, $test) : ?string
     {
-        if ($testCase === 'Behat\Mink\Tests\Driver\Form\Html5Test'
-            && $test === 'testHtml5Types'
-        ) {
-            return 'WebDriver does not support setting value in color inputs. See https://code.google.com/p/selenium/issues/detail?id=7650';
-        }
-
         $headless = ! ($_SERVER['PANTHER_NO_HEADLESS'] ?? false);
         if ($testCase === 'Behat\Mink\Tests\Driver\Js\WindowTest'
             && (strpos($test, 'testWindowMaximize') === 0)

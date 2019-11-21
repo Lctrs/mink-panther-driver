@@ -403,28 +403,47 @@ final class PantherDriver extends CoreDriver
                 throw new DriverException(sprintf('Impossible to set value an element with XPath "%s" as it is not a select, textarea or textbox', $xpath));
             }
 
-            if ($type === 'checkbox') {
-                if ($element->isSelected() xor (bool) $value) {
-                    $element->click();
-                }
+            switch ($type) {
+                case 'checkbox':
+                    if ($element->isSelected() xor (bool) $value) {
+                        $element->click();
+                    }
 
-                return;
-            }
+                    return;
+                case 'radio':
+                    try {
+                        (new WebDriverRadios($element))->selectByValue($value);
+                    } catch (WebDriverException $e) {
+                        throw new DriverException($e->getMessage(), 0, $e);
+                    }
 
-            if ($type === 'radio') {
-                try {
-                    (new WebDriverRadios($element))->selectByValue($value);
-                } catch (WebDriverException $e) {
-                    throw new DriverException($e->getMessage(), 0, $e);
-                }
+                    return;
+                case 'file':
+                    $this->attachFileTo($element, $value);
 
-                return;
-            }
+                    return;
+                case 'color':
+                case 'date':
+                case 'datetime-local':
+                case 'month':
+                    $this->executeScriptOn(
+                        $element,
+                        <<<'JS'
+if (arguments[0].readOnly) { return; }
+if (document.activeElement !== arguments[0]){
+    arguments[0].focus();
+}
+if (arguments[0].value !== arguments[1]) {
+    arguments[0].value = arguments[1];
+    arguments[0].dispatchEvent(new InputEvent('input'));
+    arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+}
+JS
+                        ,
+                        $value
+                    );
 
-            if ($type === 'file') {
-                $this->attachFileTo($element, $value);
-
-                return;
+                    return;
             }
         }
 
@@ -432,9 +451,7 @@ final class PantherDriver extends CoreDriver
 
         if (in_array($tagName, ['input', 'textarea'])) {
             $existingValueLength = strlen($element->getAttribute('value') ?? '');
-            // Add the TAB key to ensure we unfocus the field as browsers are triggering the change event only
-            // after leaving the field.
-            $value = str_repeat(WebDriverKeys::BACKSPACE . WebDriverKeys::DELETE, $existingValueLength) . $value;
+            $value               = str_repeat(WebDriverKeys::BACKSPACE . WebDriverKeys::DELETE, $existingValueLength) . $value;
         }
 
         $this->createWebDriverAction()
@@ -442,6 +459,8 @@ final class PantherDriver extends CoreDriver
                 $element,
                 $value
             )
+            // Add the TAB key to ensure we unfocus the field as browsers are triggering the change event only
+            // after leaving the field.
             ->sendKeys(
                 $element,
                 WebDriverKeys::TAB
