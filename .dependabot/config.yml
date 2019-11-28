@@ -11,7 +11,7 @@ update_configs:
       - "Lctrs"
     directory: "/"
     package_manager: "github_actions"
-    update_schedule: "weekly"
+    update_schedule: "daily"
 
   - automerged_updates:
       - match:
@@ -24,7 +24,7 @@ update_configs:
       - "Lctrs"
     directory: "/"
     package_manager: "php:composer"
-    update_schedule: "weekly"
+    update_schedule: "daily"
     version_requirement_updates: "increase_versions"
     ignored_updates:
       - match:
