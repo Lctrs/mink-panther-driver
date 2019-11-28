@@ -14,9 +14,7 @@ use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\JavaScriptExecutor;
 use Facebook\WebDriver\Remote\LocalFileDetector;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\RemoteWebElement;
-use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverCapabilities;
 use Facebook\WebDriver\WebDriverDimension;
@@ -629,17 +627,6 @@ JS
      */
     public function blur($xpath) : void
     {
-        $webDriver = $this->client->getWebDriver();
-
-        if ($webDriver instanceof RemoteWebDriver
-            && $webDriver->getCapabilities()->getBrowserName() === WebDriverBrowserType::FIREFOX
-        ) {
-            $this->executeScriptOn(
-                $this->findElementOrThrow($xpath),
-                'arguments[0].focus(); arguments[0].focus(); arguments[0].blur(); return true;'
-            );
-        }
-
         $this->createWebDriverAction()->sendKeys(
             $this->findElementOrThrow($xpath),
             WebDriverKeys::TAB
