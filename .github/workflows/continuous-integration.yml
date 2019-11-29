@@ -20,11 +20,15 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
 
-      - name: "Disable Xdebug"
-        run: php7.2 --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+      - name: "Install PHP with extensions"
+        uses: shivammathur/setup-php@1.5.5
+        with:
+          coverage: none
+          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          php-version: 7.2
 
       - name: "Validate composer.json and composer.lock"
-        run: php7.2 $(which composer) validate --strict
+        run: $(which composer) validate --strict
 
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1.0.2
@@ -35,13 +39,13 @@ jobs:
             php7.2-composer-locked-
 
       - name: "Install locked dependencies with composer"
-        run: php7.2 $(which composer) install --no-interaction --no-progress --no-suggest
+        run: $(which composer) install --no-interaction --no-progress --no-suggest
 
       - name: "Run localheinz/composer-normalize"
-        run: php7.2 $(which composer) normalize --dry-run
+        run: $(which composer) normalize --dry-run
 
       - name: "Run doctrine/coding-standard"
-        run: php7.2 vendor/bin/phpcs
+        run: vendor/bin/phpcs
 
   dependency-analysis:
     name: "Dependency Analysis"
@@ -52,8 +56,12 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
 
-      - name: "Disable Xdebug"
-        run: php7.3 --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+      - name: "Install PHP with extensions"
+        uses: shivammathur/setup-php@1.5.5
+        with:
+          coverage: none
+          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          php-version: 7.3
 
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1.0.2
@@ -64,10 +72,10 @@ jobs:
             php7.3-composer-locked-
 
       - name: "Install locked dependencies with composer"
-        run: php7.3 $(which composer) install --no-interaction --no-progress --no-suggest
+        run: $(which composer) install --no-interaction --no-progress --no-suggest
 
       - name: "Run maglnet/composer-require-checker"
-        run: php7.3 vendor/bin/composer-require-checker
+        run: vendor/bin/composer-require-checker
 
   static-code-analysis:
     name: "Static Code Analysis"
@@ -78,22 +86,26 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
 
-      - name: "Disable Xdebug"
-        run: php7.3 --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+      - name: "Install PHP with extensions"
+        uses: shivammathur/setup-php@1.5.5
+        with:
+          coverage: none
+          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          php-version: 7.4
 
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1.0.2
         with:
           path: ~/.composer/cache
-          key: php7.3-composer-locked-${{ hashFiles('**/composer.lock') }}
+          key: php7.4-composer-locked-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            php7.3-composer-locked-
+            php7.4-composer-locked-
 
       - name: "Install locked dependencies with composer"
-        run: php7.3 $(which composer) install --no-interaction --no-progress --no-suggest
+        run: $(which composer) install --no-interaction --no-progress --no-suggest
 
       - name: "Run phpstan/phpstan"
-        run: php7.3 vendor/bin/phpstan analyse
+        run: vendor/bin/phpstan analyse
 
   tests-chrome-chromedriver:
     name: "Tests on Chrome stable with chromedriver"
@@ -102,9 +114,10 @@ jobs:
 
     strategy:
       matrix:
-        php-binary:
-          - php7.2
-          - php7.3
+        php-version:
+          - 7.2
+          - 7.3
+          - 7.4
 
         dependencies:
           - lowest
@@ -113,15 +126,19 @@ jobs:
 
         exclude:
           # Covered by the "Code Coverage" job
-          - php-binary: php7.3
+          - php-version: 7.4
             dependencies: locked
 
     steps:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
 
-      - name: "Disable Xdebug"
-        run: ${{ matrix.php-binary }} --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+      - name: "Install PHP with extensions"
+        uses: shivammathur/setup-php@1.5.5
+        with:
+          coverage: none
+          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          php-version: ${{ matrix.php-version }}
 
       - name: "Install chromedriver"
         run: |
@@ -135,28 +152,28 @@ jobs:
         uses: actions/cache@v1.0.0
         with:
           path: ~/.composer/cache
-          key: ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+          key: php${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-
+            php${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-
 
       - name: "Install lowest dependencies with composer"
         if: matrix.dependencies == 'lowest'
-        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest --prefer-lowest
+        run: $(which composer) update --no-interaction --no-progress --no-suggest --prefer-lowest
 
       - name: "Install locked dependencies with composer"
         if: matrix.dependencies == 'locked'
-        run: ${{ matrix.php-binary }} $(which composer) install --no-interaction --no-progress --no-suggest
+        run: $(which composer) install --no-interaction --no-progress --no-suggest
 
       - name: "Install highest dependencies with composer"
         if: matrix.dependencies == 'highest'
-        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest
+        run: $(which composer) update --no-interaction --no-progress --no-suggest
 
       - name: "Run unit tests with phpunit/phpunit"
         env:
           PANTHER_CHROME_DRIVER_BINARY: .build/chromedriver/chromedriver
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
-          ${{ matrix.php-binary }} vendor/bin/phpunit
+          vendor/bin/phpunit
 
   tests-chrome-selenium:
     name: "Tests on Chrome stable with Selenium"
@@ -165,9 +182,10 @@ jobs:
 
     strategy:
       matrix:
-        php-binary:
-          - php7.2
-          - php7.3
+        php-version:
+          - 7.2
+          - 7.3
+          - 7.4
 
         dependencies:
           - lowest
@@ -213,28 +231,32 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
 
-      - name: "Disable Xdebug"
-        run: ${{ matrix.php-binary }} --ini | grep xdebug | sed 's/,$//' | xargs sudo rm
+      - name: "Install PHP with extensions"
+        uses: shivammathur/setup-php@1.5.5
+        with:
+          coverage: none
+          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          php-version: ${{ matrix.php-version }}
 
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1.0.0
         with:
           path: ~/.composer/cache
-          key: ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+          key: php${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-
+            php${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-
 
       - name: "Install lowest dependencies with composer"
         if: matrix.dependencies == 'lowest'
-        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest --prefer-lowest
+        run: $(which composer) update --no-interaction --no-progress --no-suggest --prefer-lowest
 
       - name: "Install locked dependencies with composer"
         if: matrix.dependencies == 'locked'
-        run: ${{ matrix.php-binary }} $(which composer) install --no-interaction --no-progress --no-suggest
+        run: $(which composer) install --no-interaction --no-progress --no-suggest
 
       - name: "Install highest dependencies with composer"
         if: matrix.dependencies == 'highest'
-        run: ${{ matrix.php-binary }} $(which composer) update --no-interaction --no-progress --no-suggest
+        run: $(which composer) update --no-interaction --no-progress --no-suggest
 
       - name: "Run unit tests with phpunit/phpunit"
         env:
@@ -243,7 +265,7 @@ jobs:
           SELENIUM_PORT: 4444
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
-          ${{ matrix.php-binary }} vendor/bin/phpunit
+          vendor/bin/phpunit
 
       - name: "Stop containers"
         if: always()
@@ -261,6 +283,13 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v1.1.0
 
+      - name: "Install PHP with extensions"
+        uses: shivammathur/setup-php@1.5.5
+        with:
+          coverage: xdebug
+          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          php-version: 7.4
+
       - name: "Install chromedriver"
         run: |
           mkdir -p .build/chromedriver
@@ -273,20 +302,20 @@ jobs:
         uses: actions/cache@v1.0.2
         with:
           path: ~/.composer/cache
-          key: php7.3-composer-locked-${{ hashFiles('**/composer.lock') }}
+          key: php7.4-composer-locked-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            php7.3-composer-locked-
+            php7.4-composer-locked-
 
       - name: "Install locked dependencies with composer"
-        run: php7.3 $(which composer) install --no-interaction --no-progress --no-suggest
+        run: $(which composer) install --no-interaction --no-progress --no-suggest
 
       - name: "Dump Xdebug filter with phpunit/phpunit"
-        run: php7.3 vendor/bin/phpunit --dump-xdebug-filter=.build/phpunit/xdebug-filter.php
+        run: vendor/bin/phpunit --dump-xdebug-filter=.build/phpunit/xdebug-filter.php
 
       - name: "Collect code coverage with Xdebug and phpunit/phpunit"
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
-          php7.3 vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --prepend=.build/phpunit/xdebug-filter.php
+          vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --prepend=.build/phpunit/xdebug-filter.php
 
       - name: "Send code coverage report to Codecov.io"
         env:
