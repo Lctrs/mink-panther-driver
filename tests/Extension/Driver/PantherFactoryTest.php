@@ -11,12 +11,14 @@ use Lctrs\MinkPantherDriver\Extension\Driver\PantherFactory;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use function assert;
 use function method_exists;
 
 final class PantherFactoryTest extends AbstractExtensionTestCase
@@ -90,7 +92,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         ]);
 
         $definition = $this->container->getDefinition(DriverInterface::class);
-        $this->assertSame([PantherDriver::class, 'createChromeDriver'], $definition->getFactory());
+        self::assertSame([PantherDriver::class, 'createChromeDriver'], $definition->getFactory());
     }
 
     public function testItBuildsSeleniumDriver() : void
@@ -112,7 +114,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         );
 
         $definition = $this->container->getDefinition(DriverInterface::class);
-        $this->assertSame([PantherDriver::class, 'createSeleniumDriver'], $definition->getFactory());
+        self::assertSame([PantherDriver::class, 'createSeleniumDriver'], $definition->getFactory());
     }
 
     /**
@@ -308,6 +310,8 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
                     $rootNode = $treeBuilder->root('panther');
                 }
 
+                assert($rootNode instanceof ArrayNodeDefinition);
+
                 $this->factory->configure($rootNode);
 
                 return $treeBuilder;
@@ -338,7 +342,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
             }
 
             /**
-             * @inheritDoc
+             * @param mixed[] $configs
              */
             public function load(array $configs, ContainerBuilder $container) : void
             {

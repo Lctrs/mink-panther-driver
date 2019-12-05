@@ -51,7 +51,7 @@ final class PantherExtension implements Extension
     }
 
     /**
-     * @inheritdoc
+     * @param mixed[] $config
      */
     public function load(ContainerBuilder $container, array $config) : void
     {

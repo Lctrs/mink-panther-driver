@@ -25,6 +25,7 @@ use Facebook\WebDriver\WebDriverRadios;
 use Facebook\WebDriver\WebDriverSelect;
 use RuntimeException;
 use Symfony\Component\Panther\Client;
+use Webmozart\Assert\Assert;
 use const PHP_EOL;
 use function array_map;
 use function array_merge;
@@ -179,7 +180,7 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function setCookie($name, $value = null) : void
     {
@@ -233,7 +234,7 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @inheritdoc
+     * @return array<int, string>
      */
     public function getWindowNames() : array
     {
@@ -328,7 +329,7 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getValue($xpath)
     {
@@ -373,7 +374,7 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function setValue($xpath, $value) : void
     {
@@ -397,18 +398,22 @@ final class PantherDriver extends CoreDriver
         if ($tagName === 'input') {
             $type = strtolower($element->getAttribute('type') ?? '');
 
-            if (in_array($type, ['submit', 'image', 'button', 'reset'])) {
-                throw new DriverException(sprintf('Impossible to set value an element with XPath "%s" as it is not a select, textarea or textbox', $xpath));
+            if (in_array($type, ['submit', 'image', 'button', 'reset'], true)) {
+                throw new DriverException(sprintf('Impossible to set value on element with XPath "%s" as it is not a select, textarea or textbox', $xpath));
             }
 
             switch ($type) {
                 case 'checkbox':
-                    if ($element->isSelected() xor (bool) $value) {
+                    Assert::boolean($value);
+
+                    if ($element->isSelected() xor $value) {
                         $element->click();
                     }
 
                     return;
                 case 'radio':
+                    Assert::string($value);
+
                     try {
                         (new WebDriverRadios($element))->selectByValue($value);
                     } catch (WebDriverException $e) {
@@ -417,6 +422,8 @@ final class PantherDriver extends CoreDriver
 
                     return;
                 case 'file':
+                    Assert::string($value);
+
                     $this->attachFileTo($element, $value);
 
                     return;
@@ -424,6 +431,8 @@ final class PantherDriver extends CoreDriver
                 case 'date':
                 case 'datetime-local':
                 case 'month':
+                    Assert::string($value);
+
                     $this->executeScriptOn(
                         $element,
                         <<<'JS'
@@ -445,9 +454,9 @@ JS
             }
         }
 
-        $value = (string) $value;
+        Assert::string($value);
 
-        if (in_array($tagName, ['input', 'textarea'])) {
+        if (in_array($tagName, ['input', 'textarea'], true)) {
             $existingValueLength = strlen($element->getAttribute('value') ?? '');
             $value               = str_repeat(WebDriverKeys::BACKSPACE . WebDriverKeys::DELETE, $existingValueLength) . $value;
         }
@@ -679,11 +688,7 @@ JS
      */
     public function executeScript($script) : void
     {
-        if (! $this->client instanceof JavaScriptExecutor) {
-            throw new UnsupportedDriverActionException('JS is not supported by %s.', $this);
-        }
-
-        if (preg_match('/^function[\s\(]/', $script)) {
+        if (preg_match('/^function[\s\(]/', $script) === 1) {
             $script = preg_replace('/;$/', '', $script);
             $script = '(' . $script . ')';
         }
@@ -700,10 +705,6 @@ JS
      */
     public function evaluateScript($script)
     {
-        if (! $this->client instanceof JavaScriptExecutor) {
-            throw new UnsupportedDriverActionException('JS is not supported by %s.', $this);
-        }
-
         if (strpos(trim($script), 'return ') !== 0) {
             $script = 'return ' . $script;
         }
@@ -723,12 +724,10 @@ JS
         $seconds = $timeout / 1000.0;
         $wait    = $this->client->wait($seconds);
 
-        if (is_string($condition)) {
-            $script    = 'return ' . $condition . ';';
-            $condition = static function (JavaScriptExecutor $driver) use ($script) {
-                return $driver->executeScript($script);
-            };
-        }
+        $script    = 'return ' . $condition . ';';
+        $condition = static function (JavaScriptExecutor $driver) use ($script) {
+            return $driver->executeScript($script);
+        };
 
         try {
             return (bool) $wait->until($condition);

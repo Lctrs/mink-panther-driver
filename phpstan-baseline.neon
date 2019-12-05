@@ -1,0 +1,42 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Cannot call method variableNode\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#"
+			count: 1
+			path: src/Extension/Driver/PantherFactory.php
+
+		-
+			message: "#^Casting to string something that's already string\\.$#"
+			count: 1
+			path: src/PantherDriver.php
+
+		-
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:getValue\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/PantherDriver.php
+
+		-
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:getValue\\(\\) should return array\\|bool\\|string but returns string\\|null\\.$#"
+			count: 4
+			path: src/PantherDriver.php
+
+		-
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:getValue\\(\\) should return array\\|bool\\|string but returns null\\.$#"
+			count: 2
+			path: src/PantherDriver.php
+
+		-
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:setValue\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/PantherDriver.php
+
+		-
+			message: "#^Call to function method_exists\\(\\) with Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\TreeBuilder and 'getRootNode' will always evaluate to true\\.$#"
+			count: 1
+			path: tests/Extension/Driver/PantherFactoryTest.php
+
+		-
+			message: "#^Call to deprecated method root\\(\\) of class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\TreeBuilder\\:\nsince Symfony 4\\.3, pass the root name to the constructor instead$#"
+			count: 1
+			path: tests/Extension/Driver/PantherFactoryTest.php
+

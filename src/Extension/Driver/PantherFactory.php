@@ -48,7 +48,7 @@ final class PantherFactory implements DriverFactory
                         ->variableNode('arguments')
                             ->defaultNull()
                             ->validate()
-                                ->ifTrue(static function ($v) {
+                                ->ifTrue(static function ($v) : bool {
                                     if (! is_array($v)) {
                                         return true;
                                     }
@@ -82,7 +82,7 @@ final class PantherFactory implements DriverFactory
                         ->scalarNode('browser')
                             ->defaultValue('chrome')
                             ->validate()
-                                ->ifTrue(static function ($v) {
+                                ->ifTrue(static function ($v) : bool {
                                     return ! method_exists(DesiredCapabilities::class, $v);
                                 })
                                 ->thenInvalid('%s is not a valid or supported browser.')
@@ -92,7 +92,7 @@ final class PantherFactory implements DriverFactory
                 ->end()
             ->end()
             ->validate()
-                ->ifTrue(static function ($v) {
+                ->ifTrue(static function ($v) : bool {
                     return $v['selenium']['enabled'] ?? false;
                 })
                 ->then(static function ($v) {
@@ -102,7 +102,7 @@ final class PantherFactory implements DriverFactory
                 })
             ->end()
             ->validate()
-                ->ifTrue(static function ($v) {
+                ->ifTrue(static function ($v) : bool {
                     return $v['chrome']['enabled'] ?? false;
                 })
                 ->then(static function ($v) {
@@ -122,7 +122,7 @@ final class PantherFactory implements DriverFactory
     }
 
     /**
-     * @inheritdoc
+     * @param mixed[] $config
      */
     public function buildDriver(array $config) : Definition
     {
