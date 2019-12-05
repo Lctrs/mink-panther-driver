@@ -6,11 +6,6 @@ parameters:
 			path: src/Extension/Driver/PantherFactory.php
 
 		-
-			message: "#^Casting to string something that's already string\\.$#"
-			count: 1
-			path: src/PantherDriver.php
-
-		-
 			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:getValue\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/PantherDriver.php

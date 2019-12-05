@@ -194,7 +194,7 @@ final class PantherDriver extends CoreDriver
 
         $manager->addCookie(Cookie::createFromArray([
             'name' => $name,
-            'value' => urlencode((string) $value),
+            'value' => urlencode($value),
             'secure' => false,
         ]));
     }
