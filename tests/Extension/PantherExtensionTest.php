@@ -32,7 +32,7 @@ final class PantherExtensionTest extends TestCase
         $extensionManager = new ExtensionManager([$minkExtension]);
 
         $minkExtension->expects(self::once())->method('registerDriverFactory')
-            ->with(self::callback(static function ($factory) {
+            ->with(self::callback(static function ($factory) : bool {
                 return $factory instanceof PantherFactory;
             }));
         $this->extension->initialize($extensionManager);

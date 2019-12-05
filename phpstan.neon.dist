@@ -1,22 +1,10 @@
 includes:
-	- vendor/phpstan/phpstan-phpunit/extension.neon
-	- vendor/phpstan/phpstan-phpunit/rules.neon
-	- vendor/phpstan/phpstan/conf/config.levelmax.neon
+	- phpstan-baseline.neon
 
 parameters:
 	inferPrivatePropertyTypeFromConstructor: true
+	level: max
 	paths:
 		- src
 		- tests
 	tmpDir: %currentWorkingDirectory%/.build/phpstan
-	ignoreErrors:
-		-
-			message: '#Cannot call method variableNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface|null#'
-			path: src/Extension/Driver/PantherFactory.php
-
-		-
-			message: '#Parameter \#1 \$builder of method Lctrs\\MinkPantherDriver\\Extension\\Driver\\PantherFactory::configure\(\) expects Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition, Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition given#'
-			path: tests/Extension/Driver/PantherFactoryTest.php
-
-# Wrong PHPDoc of Behat\Mink\Driver\DriverInterface#getValue()
-		- '#Method Lctrs\\MinkPantherDriver\\PantherDriver::getValue\(\) should return array|bool|string but returns string|null#'
