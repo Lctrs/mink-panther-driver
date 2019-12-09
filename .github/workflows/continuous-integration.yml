@@ -315,7 +315,7 @@ jobs:
       - name: "Install PHP with extensions"
         uses: shivammathur/setup-php@v1
         with:
-          coverage: xdebug
+          coverage: pcov
           extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
           php-version: ${{ matrix.php-version }}
 
@@ -338,15 +338,18 @@ jobs:
       - name: "Install locked dependencies with composer"
         run: composer install --no-interaction --no-progress --no-suggest
 
-      - name: "Dump Xdebug filter with phpunit/phpunit"
-        run: vendor/bin/phpunit --dump-xdebug-filter=.build/phpunit/xdebug-filter.php
+      - name: "Install pcov/clobber"
+        run: composer require pcov/clobber
 
-      - name: "Collect code coverage with Xdebug and phpunit/phpunit"
+      - name: "Clobber the Xdebug driver"
+        run: vendor/bin/pcov clobber
+
+      - name: "Collect code coverage with pcov and phpunit/phpunit"
         env:
           PANTHER_CHROME_DRIVER_BINARY: .build/chromedriver/chromedriver
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
-          vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --prepend=.build/phpunit/xdebug-filter.php
+          vendor/bin/phpunit --coverage-clover=.build/logs/clover.xml
 
       - name: "Send code coverage report to Codecov.io"
         env:
