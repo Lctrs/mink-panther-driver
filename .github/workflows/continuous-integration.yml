@@ -32,7 +32,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           coverage: none
-          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
           php-version: ${{ matrix.php-version }}
 
       - name: "Validate composer.json and composer.lock"
@@ -76,7 +76,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           coverage: none
-          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
           php-version: ${{ matrix.php-version }}
 
       - name: "Cache dependencies installed with composer"
@@ -114,7 +114,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           coverage: none
-          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
           php-version: ${{ matrix.php-version }}
 
       - name: "Cache dependencies installed with composer"
@@ -161,7 +161,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           coverage: none
-          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
           php-version: ${{ matrix.php-version }}
 
       - name: "Install chromedriver"
@@ -259,7 +259,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           coverage: none
-          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
           php-version: ${{ matrix.php-version }}
 
       - name: "Cache dependencies installed with composer"
@@ -316,7 +316,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           coverage: xdebug
-          extension-csv: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
           php-version: ${{ matrix.php-version }}
 
       - name: "Install chromedriver"
