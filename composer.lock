@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11934f7a46b19c4bfd0b298018a4c0a4",
+    "content-hash": "06fdcca0c31d1e37340a45de10a74354",
     "packages": [
         {
             "name": "behat/behat",
@@ -2479,21 +2479,21 @@
         },
         {
             "name": "matthiasnoback/symfony-config-test",
-            "version": "4.0.1",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymfonyTest/SymfonyConfigTest.git",
-                "reference": "30872169bcf74faedf30ab30088b58844403c5eb"
+                "reference": "9d89aa047f053194a7d7a3211f5ead23210c74c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymfonyTest/SymfonyConfigTest/zipball/30872169bcf74faedf30ab30088b58844403c5eb",
-                "reference": "30872169bcf74faedf30ab30088b58844403c5eb",
+                "url": "https://api.github.com/repos/SymfonyTest/SymfonyConfigTest/zipball/9d89aa047f053194a7d7a3211f5ead23210c74c7",
+                "reference": "9d89aa047f053194a7d7a3211f5ead23210c74c7",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1",
-                "symfony/config": "^2.7 || ^3.4 || ^4.0"
+                "symfony/config": "^2.7 || ^3.4 || ^4.0 || ^5.0"
             },
             "conflict": {
                 "phpunit/phpunit": "<7.0"
@@ -2530,7 +2530,7 @@
                 "phpunit",
                 "symfony"
             ],
-            "time": "2019-02-26T21:40:25+00:00"
+            "time": "2019-11-23T13:23:58+00:00"
         },
         {
             "name": "matthiasnoback/symfony-dependency-injection-test",
