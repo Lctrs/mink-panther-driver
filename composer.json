@@ -27,7 +27,7 @@
     "phpstan/phpstan-phpunit": "^0.12.0",
     "phpstan/phpstan-strict-rules": "^0.12.0",
     "phpstan/phpstan-webmozart-assert": "^0.12.0",
-    "phpunit/phpunit": "^7.5.17"
+    "phpunit/phpunit": "^7.5.18"
   },
   "config": {
     "sort-packages": true
