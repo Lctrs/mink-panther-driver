@@ -281,9 +281,6 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getConfiguration() : ConfigurationInterface
     {
         return new class($this->factory) implements ConfigurationInterface
@@ -296,9 +293,6 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
                 $this->factory = $factory;
             }
 
-            /**
-             * @inheritDoc
-             */
             public function getConfigTreeBuilder() : TreeBuilder
             {
                 $treeBuilder = new TreeBuilder('panther');
@@ -351,9 +345,6 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
                 $container->setDefinition(DriverInterface::class, $this->factory->buildDriver($configs));
             }
 
-            /**
-             * @inheritDoc
-             */
             public function getAlias() : string
             {
                 return 'panther';

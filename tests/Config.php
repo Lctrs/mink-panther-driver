@@ -10,10 +10,10 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use PHPUnit\Runner\AfterLastTestHook;
-use const PHP_OS;
 use function getenv;
 use function sprintf;
 use function strpos;
+use const PHP_OS;
 
 final class Config extends AbstractConfig implements AfterLastTestHook
 {

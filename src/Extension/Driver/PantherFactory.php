@@ -18,25 +18,16 @@ use function method_exists;
 
 final class PantherFactory implements DriverFactory
 {
-    /**
-     * @inheritdoc
-     */
     public function getDriverName() : string
     {
         return 'panther';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function supportsJavascript() : bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function configure(ArrayNodeDefinition $builder) : void
     {
         $builder

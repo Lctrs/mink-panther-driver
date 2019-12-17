@@ -13,39 +13,26 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class PantherExtension implements Extension
 {
-    /**
-     * @inheritdoc
-     */
     public function process(ContainerBuilder $container) : void
     {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getConfigKey() : string
     {
         return 'panther';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function initialize(ExtensionManager $extensionManager) : void
     {
-        /** @var MinkExtension|null $minkExtension */
         $minkExtension = $extensionManager->getExtension('mink');
 
-        if ($minkExtension === null) {
+        if (! $minkExtension instanceof MinkExtension) {
             return;
         }
 
         $minkExtension->registerDriverFactory(new PantherFactory());
     }
 
-    /**
-     * @inheritdoc
-     */
     public function configure(ArrayNodeDefinition $builder) : void
     {
     }
