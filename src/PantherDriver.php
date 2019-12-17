@@ -26,7 +26,6 @@ use Facebook\WebDriver\WebDriverSelect;
 use RuntimeException;
 use Symfony\Component\Panther\Client;
 use Webmozart\Assert\Assert;
-use const PHP_EOL;
 use function array_map;
 use function array_merge;
 use function chr;
@@ -45,6 +44,7 @@ use function strtolower;
 use function trim;
 use function urldecode;
 use function urlencode;
+use const PHP_EOL;
 
 final class PantherDriver extends CoreDriver
 {
@@ -77,9 +77,6 @@ final class PantherDriver extends CoreDriver
         return new self(Client::createSeleniumClient($host, $capabilities));
     }
 
-    /**
-     * @inheritdoc
-     */
     public function start() : void
     {
         $this->client->start();
@@ -87,17 +84,11 @@ final class PantherDriver extends CoreDriver
         $this->isStarted = true;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isStarted() : bool
     {
         return $this->isStarted;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function stop() : void
     {
         $this->isStarted = false;
@@ -105,9 +96,6 @@ final class PantherDriver extends CoreDriver
         $this->client->quit();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function reset() : void
     {
         if (! $this->isStarted()) {
@@ -125,33 +113,21 @@ final class PantherDriver extends CoreDriver
         $this->client->get($url);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getCurrentUrl() : string
     {
         return $this->client->getCurrentURL();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function reload() : void
     {
         $this->client->reload();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function forward() : void
     {
         $this->client->forward();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function back() : void
     {
         $this->client->back();
@@ -213,9 +189,6 @@ final class PantherDriver extends CoreDriver
         return urldecode($cookie->getValue());
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getContent() : string
     {
         return str_replace(
@@ -225,9 +198,6 @@ final class PantherDriver extends CoreDriver
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getScreenshot() : string
     {
         return $this->client->takeScreenshot();
@@ -241,9 +211,6 @@ final class PantherDriver extends CoreDriver
         return $this->client->getWindowHandles();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getWindowName() : string
     {
         return $this->client->getWindowHandle();
