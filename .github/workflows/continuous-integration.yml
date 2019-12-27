@@ -1,14 +1,15 @@
 # https://help.github.com/en/categories/automating-your-workflow-with-github-actions
 
+name: "Continuous Integration"
+
 on:
   pull_request:
   push:
     branches:
       - master
-    tags:
-      - "**"
 
-name: "Continuous Integration"
+env:
+  REQUIRED_PHP_EXTENSIONS: "dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
 
 jobs:
   coding-standards:
@@ -29,10 +30,10 @@ jobs:
         uses: actions/checkout@v2.0.0
 
       - name: "Install PHP with extensions"
-        uses: shivammathur/setup-php@1.6.1
+        uses: shivammathur/setup-php@1.6.2
         with:
           coverage: none
-          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
           php-version: ${{ matrix.php-version }}
 
       - name: "Validate composer.json and composer.lock"
@@ -73,10 +74,10 @@ jobs:
         uses: actions/checkout@v2.0.0
 
       - name: "Install PHP with extensions"
-        uses: shivammathur/setup-php@1.6.1
+        uses: shivammathur/setup-php@1.6.2
         with:
           coverage: none
-          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
           php-version: ${{ matrix.php-version }}
 
       - name: "Cache dependencies installed with composer"
@@ -111,10 +112,10 @@ jobs:
         uses: actions/checkout@v2.0.0
 
       - name: "Install PHP with extensions"
-        uses: shivammathur/setup-php@1.6.1
+        uses: shivammathur/setup-php@1.6.2
         with:
           coverage: none
-          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
           php-version: ${{ matrix.php-version }}
 
       - name: "Cache dependencies installed with composer"
@@ -158,10 +159,10 @@ jobs:
         uses: actions/checkout@v2.0.0
 
       - name: "Install PHP with extensions"
-        uses: shivammathur/setup-php@1.6.1
+        uses: shivammathur/setup-php@1.6.2
         with:
           coverage: none
-          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
           php-version: ${{ matrix.php-version }}
 
       - name: "Install chromedriver"
@@ -256,10 +257,10 @@ jobs:
         uses: actions/checkout@v2.0.0
 
       - name: "Install PHP with extensions"
-        uses: shivammathur/setup-php@1.6.1
+        uses: shivammathur/setup-php@1.6.2
         with:
           coverage: none
-          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
           php-version: ${{ matrix.php-version }}
 
       - name: "Cache dependencies installed with composer"
@@ -313,10 +314,10 @@ jobs:
         uses: actions/checkout@v2.0.0
 
       - name: "Install PHP with extensions"
-        uses: shivammathur/setup-php@1.6.1
+        uses: shivammathur/setup-php@1.6.2
         with:
           coverage: pcov
-          extensions: dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip
+          extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
           php-version: ${{ matrix.php-version }}
 
       - name: "Install chromedriver"
