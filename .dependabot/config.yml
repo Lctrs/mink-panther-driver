@@ -13,7 +13,10 @@ update_configs:
     package_manager: "github_actions"
     update_schedule: "daily"
 
-  - default_assignees:
+  - automerged_updates:
+      - match:
+          dependency_type: "development"
+    default_assignees:
       - "Lctrs"
     default_labels:
       - "dependency"
@@ -21,7 +24,7 @@ update_configs:
       - "Lctrs"
     directory: "/"
     package_manager: "php:composer"
-    update_schedule: "daily"
+    update_schedule: "live"
     version_requirement_updates: "increase_versions"
     ignored_updates:
       - match:
