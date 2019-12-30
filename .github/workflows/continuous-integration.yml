@@ -9,7 +9,7 @@ on:
       - master
 
 env:
-  REQUIRED_PHP_EXTENSIONS: "dom, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
+  REQUIRED_PHP_EXTENSIONS: "dom, gd, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
 
 jobs:
   coding-standards:
