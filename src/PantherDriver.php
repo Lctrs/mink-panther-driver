@@ -35,6 +35,7 @@ use function is_string;
 use function ord;
 use function preg_match;
 use function preg_replace;
+use function round;
 use function sprintf;
 use function str_repeat;
 use function str_replace;
@@ -688,7 +689,7 @@ JS
      */
     public function wait($timeout, $condition) : bool
     {
-        $seconds = $timeout / 1000.0;
+        $seconds = (int) round($timeout / 1000.0);
         $wait    = $this->client->wait($seconds);
 
         $script    = 'return ' . $condition . ';';
