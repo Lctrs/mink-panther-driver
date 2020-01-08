@@ -11,7 +11,7 @@ A [Symfony Panther](https://github.com/symfony/panther) driver for [Mink framewo
 ## Installation
 
 ```
-$ composer require localheinz/php-library-template
+$ composer require --dev lctrs/mink-panther-driver
 ```
 
 ## Usage
