@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="3.8.2@90d6b73fd8062432030ef39b7b6694b3902daa31">
+  <file src="src/Extension/Driver/PantherFactory.php">
+    <MissingClosureParamType occurrences="7">
+      <code>$v</code>
+      <code>$v</code>
+      <code>$v</code>
+      <code>$v</code>
+      <code>$v</code>
+      <code>$v</code>
+      <code>$v</code>
+    </MissingClosureParamType>
+    <MissingClosureReturnType occurrences="3">
+      <code>static function ($v) {</code>
+      <code>static function ($v) {</code>
+      <code>static function ($v) {</code>
+    </MissingClosureReturnType>
+    <PossiblyNullReference occurrences="1">
+      <code>variableNode</code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedMethod occurrences="1">
+      <code>variableNode</code>
+    </PossiblyUndefinedMethod>
+  </file>
+  <file src="src/PantherDriver.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>! $multiple &amp;&amp; $select-&gt;isMultiple()</code>
+      <code>$element-&gt;getAttribute('type')</code>
+    </DocblockTypeContradiction>
+    <ImplementedReturnTypeMismatch occurrences="4">
+      <code>bool</code>
+      <code>bool</code>
+      <code>bool</code>
+      <code>bool</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidNullableReturnType occurrences="1">
+      <code>getValue</code>
+    </InvalidNullableReturnType>
+    <InvalidOperand occurrences="1">
+      <code>$key</code>
+    </InvalidOperand>
+    <MissingClosureReturnType occurrences="1">
+      <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
+    </MissingClosureReturnType>
+  </file>
+  <file src="tests/Extension/Driver/PantherFactoryTest.php">
+    <DeprecatedMethod occurrences="1">
+      <code>root</code>
+    </DeprecatedMethod>
+    <RedundantCondition occurrences="1">
+      <code>method_exists($treeBuilder, 'getRootNode')</code>
+    </RedundantCondition>
+  </file>
+  <file src="tests/Extension/PantherExtensionTest.php">
+    <MissingClosureParamType occurrences="1">
+      <code>$factory</code>
+    </MissingClosureParamType>
+  </file>
+</files>

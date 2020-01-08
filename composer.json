@@ -27,14 +27,16 @@
     "phpstan/phpstan-phpunit": "^0.12.5",
     "phpstan/phpstan-strict-rules": "^0.12.1",
     "phpstan/phpstan-webmozart-assert": "^0.12.1",
-    "phpunit/phpunit": "^7.5.20"
+    "phpunit/phpunit": "^7.5.20",
+    "psalm/plugin-phpunit": "^0.8.0",
+    "vimeo/psalm": "^3.8.2"
   },
   "config": {
     "sort-packages": true
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "0.4.x-dev"
+      "dev-master": "0.5.x-dev"
     }
   },
   "autoload": {
