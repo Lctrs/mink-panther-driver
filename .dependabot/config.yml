@@ -16,6 +16,9 @@ update_configs:
   - automerged_updates:
       - match:
           dependency_type: "development"
+    commit_message:
+      include_scope: true
+      prefix: "Build"
     default_assignees:
       - "Lctrs"
     default_labels:
