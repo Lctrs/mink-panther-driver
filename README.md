@@ -4,6 +4,7 @@ A [Symfony Panther](https://github.com/symfony/panther) driver for [Mink framewo
 
 [![Continuous Integration](https://github.com/Lctrs/mink-panther-driver/workflows/Continuous%20Integration/badge.svg)](https://github.com/Lctrs/mink-panther-driver/actions)
 [![Code Coverage](https://img.shields.io/codecov/c/github/Lctrs/mink-panther-driver?style=flat-square)](https://codecov.io/gh/Lctrs/mink-panther-driver)
+[![Type Coverage](https://shepherd.dev/github/Lctrs/mink-panther-driver/coverage.svg)](https://shepherd.dev/github/Lctrs/mink-panther-driver)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Lctrs/mink-panther-driver?style=flat-square)](https://packagist.org/packages/Lctrs/mink-panther-driver)
 [![Total Downloads](https://img.shields.io/packagist/dt/Lctrs/mink-panther-driver?style=flat-square)](https://packagist.org/packages/Lctrs/mink-panther-driver)
 
