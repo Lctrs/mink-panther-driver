@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "361dbc84acd3dbffed45cecafbc30584",
+    "content-hash": "48de80d3273df018bcbb60d45c70c278",
     "packages": [
         {
             "name": "behat/behat",
@@ -394,6 +394,7 @@
                 "selenium",
                 "webdriver"
             ],
+            "abandoned": "php-webdriver/webdriver",
             "time": "2019-06-13T08:02:18+00:00"
         },
         {
@@ -2883,12 +2884,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/driver-testsuite.git",
-                "reference": "55f273a70d8be972c329d52a7e3add22c78343e1"
+                "reference": "4f1fa1a64e102914f7d0a8645fdb1110cd7a0624"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/driver-testsuite/zipball/55f273a70d8be972c329d52a7e3add22c78343e1",
-                "reference": "55f273a70d8be972c329d52a7e3add22c78343e1",
+                "url": "https://api.github.com/repos/minkphp/driver-testsuite/zipball/4f1fa1a64e102914f7d0a8645fdb1110cd7a0624",
+                "reference": "4f1fa1a64e102914f7d0a8645fdb1110cd7a0624",
                 "shasum": ""
             },
             "require": {
@@ -2926,7 +2927,7 @@
             ],
             "description": "Functional testsuite for Mink drivers",
             "homepage": "http://mink.behat.org/",
-            "time": "2019-12-05T14:53:46+00:00"
+            "time": "2020-01-16T15:19:54+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3583,16 +3584,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.5",
+            "version": "0.12.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "71a20c18f06c53605251a00a8efe443fa85225d1"
+                "reference": "884659352d9ae2446f5ec5c6109b1e893c2387b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/71a20c18f06c53605251a00a8efe443fa85225d1",
-                "reference": "71a20c18f06c53605251a00a8efe443fa85225d1",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/884659352d9ae2446f5ec5c6109b1e893c2387b1",
+                "reference": "884659352d9ae2446f5ec5c6109b1e893c2387b1",
                 "shasum": ""
             },
             "require": {
@@ -3618,7 +3619,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-01-12T14:31:21+00:00"
+            "time": "2020-01-20T14:12:32+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
