@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e581f95db79fdf2847a9cf5d7babe2a8",
+    "content-hash": "667fbd5d739a674c50e86e1b359b72ea",
     "packages": [
         {
             "name": "behat/behat",
@@ -337,16 +337,16 @@
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
-            "name": "facebook/webdriver",
+            "name": "php-webdriver/webdriver",
             "version": "1.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/facebook/php-webdriver.git",
+                "url": "https://github.com/php-webdriver/php-webdriver.git",
                 "reference": "e43de70f3c7166169d0f14a374505392734160e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/e43de70f3c7166169d0f14a374505392734160e5",
+                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/e43de70f3c7166169d0f14a374505392734160e5",
                 "reference": "e43de70f3c7166169d0f14a374505392734160e5",
                 "shasum": ""
             },
@@ -394,7 +394,6 @@
                 "selenium",
                 "webdriver"
             ],
-            "abandoned": "php-webdriver/webdriver",
             "time": "2019-06-13T08:02:18+00:00"
         },
         {
@@ -495,7 +494,7 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v4.4.1",
+            "version": "v4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
@@ -876,7 +875,7 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v4.4.1",
+            "version": "v4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
@@ -1115,16 +1114,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v4.4.1",
+            "version": "v4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "6c235cf15d8b516b41204a28d555685191409729"
+                "reference": "9ebfc77b5018a05226b38642def82746f3e2ce0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/6c235cf15d8b516b41204a28d555685191409729",
-                "reference": "6c235cf15d8b516b41204a28d555685191409729",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/9ebfc77b5018a05226b38642def82746f3e2ce0f",
+                "reference": "9ebfc77b5018a05226b38642def82746f3e2ce0f",
                 "shasum": ""
             },
             "require": {
@@ -1179,7 +1178,7 @@
             ],
             "description": "Symfony HttpClient component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-29T16:55:58+00:00"
+            "time": "2019-12-19T15:57:49+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -1240,21 +1239,21 @@
         },
         {
             "name": "symfony/panther",
-            "version": "v0.6.0",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/panther.git",
-                "reference": "0aeafcf21af2727da3536acf2a9c3778e3a5f222"
+                "reference": "e774e332bd5ec1d31c774fc4b2a6a72627c37921"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/panther/zipball/0aeafcf21af2727da3536acf2a9c3778e3a5f222",
-                "reference": "0aeafcf21af2727da3536acf2a9c3778e3a5f222",
+                "url": "https://api.github.com/repos/symfony/panther/zipball/e774e332bd5ec1d31c774fc4b2a6a72627c37921",
+                "reference": "e774e332bd5ec1d31c774fc4b2a6a72627c37921",
                 "shasum": ""
             },
             "require": {
-                "facebook/webdriver": "^1.7.1",
                 "php": ">=7.1",
+                "php-webdriver/webdriver": "^1.7.1",
                 "symfony/browser-kit": "^4.3 || ^5.0",
                 "symfony/dom-crawler": "^4.3 || ^5.0",
                 "symfony/http-client": "^4.3 || ^5.0",
@@ -1307,7 +1306,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2019-10-28T17:01:40+00:00"
+            "time": "2020-01-20T15:24:48+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1541,16 +1540,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v4.4.1",
+            "version": "v4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "51c0135ef3f44c5803b33dc60e96bf4f77752726"
+                "reference": "b84501ad50adb72a94fb460a5b5c91f693e99c9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/51c0135ef3f44c5803b33dc60e96bf4f77752726",
-                "reference": "51c0135ef3f44c5803b33dc60e96bf4f77752726",
+                "url": "https://api.github.com/repos/symfony/process/zipball/b84501ad50adb72a94fb460a5b5c91f693e99c9b",
+                "reference": "b84501ad50adb72a94fb460a5b5c91f693e99c9b",
                 "shasum": ""
             },
             "require": {
@@ -1586,7 +1585,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-28T13:33:56+00:00"
+            "time": "2019-12-06T10:06:46+00:00"
         },
         {
             "name": "symfony/service-contracts",
