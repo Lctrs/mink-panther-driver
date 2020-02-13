@@ -35,6 +35,8 @@ use function is_string;
 use function ord;
 use function preg_match;
 use function preg_replace;
+use function rawurldecode;
+use function rawurlencode;
 use function round;
 use function sprintf;
 use function str_repeat;
@@ -43,8 +45,6 @@ use function strlen;
 use function strpos;
 use function strtolower;
 use function trim;
-use function urldecode;
-use function urlencode;
 use const PHP_EOL;
 
 final class PantherDriver extends CoreDriver
@@ -169,11 +169,7 @@ final class PantherDriver extends CoreDriver
             return;
         }
 
-        $manager->addCookie(Cookie::createFromArray([
-            'name' => $name,
-            'value' => urlencode($value),
-            'secure' => false,
-        ]));
+        $this->client->manage()->addCookie(new Cookie($name, rawurlencode($value)));
     }
 
     /**
@@ -187,7 +183,7 @@ final class PantherDriver extends CoreDriver
             return null;
         }
 
-        return urldecode($cookie->getValue());
+        return rawurldecode($cookie->getValue());
     }
 
     public function getContent() : string
