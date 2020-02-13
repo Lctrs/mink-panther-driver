@@ -9,8 +9,8 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Lctrs\MinkPantherDriver\PantherDriver;
+use OndraM\CiDetector\CiDetector;
 use PHPUnit\Runner\AfterLastTestHook;
-use function getenv;
 use function sprintf;
 use function strpos;
 use const PHP_OS;
@@ -69,7 +69,7 @@ final class Config extends AbstractConfig implements AfterLastTestHook
         $headless = ! ($_SERVER['PANTHER_NO_HEADLESS'] ?? false);
         if ($testCase === 'Behat\Mink\Tests\Driver\Js\WindowTest'
             && (strpos($test, 'testWindowMaximize') === 0)
-            && (getenv('TRAVIS') === 'true' || $headless)
+            && ($headless || (new CiDetector())->isCiDetected())
         ) {
             return 'Maximizing the window does not work when running the browser in Xvfb/Headless.';
         }

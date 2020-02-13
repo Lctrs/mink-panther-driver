@@ -168,14 +168,6 @@ jobs:
           extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
           php-version: ${{ matrix.php-version }}
 
-      - name: "Install chromedriver"
-        run: |
-          mkdir -p .build/chromedriver
-          chromeversion=$(google-chrome --product-version)
-          chromeversion=${chromeversion%.*}
-          curl -LsS -o .build/chromedriver/chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -L https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${chromeversion})/chromedriver_linux64.zip
-          unzip .build/chromedriver/chromedriver.zip -d .build/chromedriver
-
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1.0.3
         with:
@@ -198,7 +190,7 @@ jobs:
 
       - name: "Run unit tests with phpunit/phpunit"
         env:
-          PANTHER_CHROME_DRIVER_BINARY: .build/chromedriver/chromedriver
+          PANTHER_CHROME_DRIVER_BINARY: ${{ env.CHROMEWEBDRIVER }}
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
           vendor/bin/phpunit

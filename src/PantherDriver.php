@@ -8,8 +8,9 @@ use Behat\Mink\Driver\CoreDriver;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Facebook\WebDriver\Cookie;
+use Facebook\WebDriver\Exception\NoSuchCookieException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
-use Facebook\WebDriver\Exception\TimeOutException;
+use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\JavaScriptExecutor;
@@ -35,6 +36,7 @@ use function is_string;
 use function ord;
 use function preg_match;
 use function preg_replace;
+use function rawurlencode;
 use function round;
 use function sprintf;
 use function str_repeat;
@@ -44,7 +46,6 @@ use function strpos;
 use function strtolower;
 use function trim;
 use function urldecode;
-use function urlencode;
 use const PHP_EOL;
 
 final class PantherDriver extends CoreDriver
@@ -62,6 +63,9 @@ final class PantherDriver extends CoreDriver
     /**
      * @param string[]|null $arguments
      * @param mixed[]       $options
+     *
+     * @psalm-param list<string> $arguments
+     * @psalm-param array<string, string|int> $options
      */
     public static function createChromeDriver(
         ?string $chromeDriverBinary = null,
@@ -111,7 +115,7 @@ final class PantherDriver extends CoreDriver
      */
     public function visit($url) : void
     {
-        $this->client->get($url);
+        $this->client->navigate()->to($url);
     }
 
     public function getCurrentUrl() : string
@@ -121,17 +125,17 @@ final class PantherDriver extends CoreDriver
 
     public function reload() : void
     {
-        $this->client->reload();
+        $this->client->navigate()->refresh();
     }
 
     public function forward() : void
     {
-        $this->client->forward();
+        $this->client->navigate()->forward();
     }
 
     public function back() : void
     {
-        $this->client->back();
+        $this->client->navigate()->back();
     }
 
     /**
@@ -153,7 +157,13 @@ final class PantherDriver extends CoreDriver
             return;
         }
 
-        $this->client->switchTo()->frame($name);
+        try {
+            $this->client->switchTo()->frame(
+                $this->client->findElement(WebDriverBy::name($name))
+            );
+        } catch (WebDriverException $e) {
+            throw new DriverException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
@@ -161,19 +171,13 @@ final class PantherDriver extends CoreDriver
      */
     public function setCookie($name, $value = null) : void
     {
-        $manager = $this->client->manage();
-
         if ($value === null) {
-            $manager->deleteCookieNamed($name);
+            $this->client->manage()->deleteCookieNamed($name);
 
             return;
         }
 
-        $manager->addCookie(Cookie::createFromArray([
-            'name' => $name,
-            'value' => urlencode($value),
-            'secure' => false,
-        ]));
+        $this->client->manage()->addCookie(new Cookie($name, rawurlencode($value)));
     }
 
     /**
@@ -181,7 +185,11 @@ final class PantherDriver extends CoreDriver
      */
     public function getCookie($name) : ?string
     {
-        $cookie = $this->client->manage()->getCookieNamed($name);
+        try {
+            $cookie = $this->client->manage()->getCookieNamed($name);
+        } catch (NoSuchCookieException $e) {
+            return null;
+        }
 
         if ($cookie === null) {
             return null;
@@ -205,7 +213,9 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @return array<int, string>
+     * @return string[]
+     *
+     * @psalm-return list<string>
      */
     public function getWindowNames() : array
     {
@@ -537,7 +547,9 @@ JS
      */
     public function click($xpath) : void
     {
-        $this->findElementOrThrow($xpath)->click();
+        $this->createWebDriverAction()->click(
+            $this->findElementOrThrow($xpath)
+        )->perform();
     }
 
     /**
@@ -699,7 +711,7 @@ JS
 
         try {
             return (bool) $wait->until($condition);
-        } catch (TimeOutException $e) {
+        } catch (TimeoutException $e) {
             return false;
         }
     }
@@ -710,7 +722,7 @@ JS
     public function resizeWindow($width, $height, $name = null) : void
     {
         if ($name !== null) {
-            throw new UnsupportedDriverActionException('Named windows are not supported yet', $this);
+            throw new UnsupportedDriverActionException('Named windows are not supported.', $this);
         }
 
         $this->client
@@ -725,7 +737,7 @@ JS
     public function maximizeWindow($name = null) : void
     {
         if ($name !== null) {
-            throw new UnsupportedDriverActionException('Named windows are not supported yet', $this);
+            throw new UnsupportedDriverActionException('Named windows are not supported.', $this);
         }
 
         $this->client
