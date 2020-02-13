@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lctrs\MinkPantherDriver\Tests;
+namespace Lctrs\MinkPantherDriver\Test;
 
 use Lctrs\MinkPantherDriver\PantherDriver;
 

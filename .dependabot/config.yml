@@ -3,15 +3,11 @@
 version: 1
 
 update_configs:
-  - default_assignees:
-      - "Lctrs"
-    default_labels:
+  - default_labels:
       - "dependency"
-    default_reviewers:
-      - "Lctrs"
     directory: "/"
     package_manager: "github_actions"
-    update_schedule: "daily"
+    update_schedule: "monthly"
 
   - automerged_updates:
       - match:
@@ -19,21 +15,9 @@ update_configs:
     commit_message:
       include_scope: true
       prefix: "Build"
-    default_assignees:
-      - "Lctrs"
     default_labels:
       - "dependency"
-    default_reviewers:
-      - "Lctrs"
     directory: "/"
     package_manager: "php:composer"
-    update_schedule: "live"
+    update_schedule: "monthly"
     version_requirement_updates: "increase_versions"
-    ignored_updates:
-      - match:
-          dependency_name: "phpunit/phpunit"
-          version_requirement: ">= 8.0.0"
-      - match:
-          dependency_name: "symfony/config"
-      - match:
-          dependency_name: "symfony/dependency-injection"
