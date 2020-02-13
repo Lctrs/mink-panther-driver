@@ -47,7 +47,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Lctrs\\MinkPantherDriver\\Tests\\": "tests/"
+      "Lctrs\\MinkPantherDriver\\Test\\": "test/"
     }
   }
 }

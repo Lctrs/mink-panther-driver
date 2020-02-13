@@ -24,7 +24,7 @@
     verbose="true"
 >
     <php>
-        <var name="driver_config_factory" value="Lctrs\MinkPantherDriver\Tests\Config::getInstance" />
+        <var name="driver_config_factory" value="Lctrs\MinkPantherDriver\Test\Config::getInstance" />
     </php>
 
     <testsuites>
@@ -33,7 +33,7 @@
         </testsuite>
         <!-- if needed to add more tests -->
         <testsuite name="Driver tests">
-            <directory>./tests/</directory>
+            <directory>./test/</directory>
         </testsuite>
     </testsuites>
 
@@ -44,6 +44,6 @@
     </filter>
 
     <extensions>
-        <extension class="Lctrs\MinkPantherDriver\Tests\Config"/>
+        <extension class="Lctrs\MinkPantherDriver\Test\Config"/>
     </extensions>
 </phpunit>

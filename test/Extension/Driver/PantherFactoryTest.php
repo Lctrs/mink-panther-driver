@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lctrs\MinkPantherDriver\Tests\Extension\Driver;
+namespace Lctrs\MinkPantherDriver\Test\Extension\Driver;
 
 use Behat\Mink\Driver\DriverInterface;
 use Facebook\WebDriver\Remote\DesiredCapabilities;

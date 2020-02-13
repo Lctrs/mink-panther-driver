@@ -1,10 +1,11 @@
 # mink-panther-driver
 
-A [Symfony Panther](https://github.com/symfony/panther) driver for [Mink framework](http://mink.behat.org/en/latest/) .
-
+[![Continuous Deployment](https://github.com/Lctrs/mink-panther-driver/workflows/Continuous%20Deployment/badge.svg)](https://github.com/Lctrs/mink-panther-driver/actions)
 [![Continuous Integration](https://github.com/Lctrs/mink-panther-driver/workflows/Continuous%20Integration/badge.svg)](https://github.com/Lctrs/mink-panther-driver/actions)
-[![Code Coverage](https://img.shields.io/codecov/c/github/Lctrs/mink-panther-driver?style=flat-square)](https://codecov.io/gh/Lctrs/mink-panther-driver)
+
+[![Code Coverage](https://codecov.io/gh/Lctrs/mink-panther-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/Lctrs/mink-panther-driver)
 [![Type Coverage](https://shepherd.dev/github/Lctrs/mink-panther-driver/coverage.svg)](https://shepherd.dev/github/Lctrs/mink-panther-driver)
+
 [![Latest Stable Version](https://img.shields.io/packagist/v/Lctrs/mink-panther-driver?style=flat-square)](https://packagist.org/packages/Lctrs/mink-panther-driver)
 [![Total Downloads](https://img.shields.io/packagist/dt/Lctrs/mink-panther-driver?style=flat-square)](https://packagist.org/packages/Lctrs/mink-panther-driver)
 
@@ -77,6 +78,12 @@ mink-panther-driver is juste a glue betweek Mink and Symfony Panther, see their 
 * For `Panther`, read [Symfony Panther's documentation](https://github.com/symfony/panther)
 * For usage with `Behat`, read [Behat's documentation](http://behat.org/en/latest/guides.html)
 
+## Contributing
+
+Please have a look at [`CONTRIBUTING.md`](.github/CONTRIBUTING.md).
+
 ## License
 
 This package is licensed using the MIT License.
+
+Please have a look at [`LICENSE.md`](LICENSE.md).

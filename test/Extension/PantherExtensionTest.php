@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lctrs\MinkPantherDriver\Tests\Extension;
+namespace Lctrs\MinkPantherDriver\Test\Extension;
 
 use Behat\MinkExtension\ServiceContainer\MinkExtension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
