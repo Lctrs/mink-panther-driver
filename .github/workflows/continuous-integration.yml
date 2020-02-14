@@ -291,8 +291,9 @@ jobs:
       - name: "Run unit tests with phpunit/phpunit"
         env:
           BROWSER_NAME: "chrome"
-          SELENIUM_HOST: "selenium"
+          SELENIUM_HOST: "localhost"
           SELENIUM_PORT: "${{ job.services.selenium.ports['4444'] }}"
+          WEB_FIXTURES_HOST: "http://172.17.42.1:8002"
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
           vendor/bin/phpunit
