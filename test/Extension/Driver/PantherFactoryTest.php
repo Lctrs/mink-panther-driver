@@ -178,6 +178,24 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
             [
                 [
                     'chrome' => [
+                        'binary' => null,
+                        'arguments' => null,
+                    ],
+                ],
+            ],
+            [
+                'chrome' => [
+                    'binary' => null,
+                    'arguments' => null,
+                    'options' => [],
+                ],
+            ],
+        ];
+
+        yield [
+            [
+                [
+                    'chrome' => [
                         'options' => ['scheme' => 'https'],
                     ],
                 ],
@@ -279,6 +297,15 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
             ],
             '"invalid-browser" is not a valid or supported browser.',
         ];
+
+        yield [
+            [
+                [
+                    'selenium' => ['browser' => 1],
+                ],
+            ],
+            '1 is not a valid or supported browser.',
+        ];
     }
 
     protected function getConfiguration() : ConfigurationInterface
@@ -297,10 +324,12 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
             {
                 $treeBuilder = new TreeBuilder('panther');
 
+                /** @psalm-suppress RedundantCondition */
                 if (method_exists($treeBuilder, 'getRootNode')) {
                     $rootNode = $treeBuilder->getRootNode();
                 } else {
                     // BC layer for symfony/config 4.1 and older
+                    /** @psalm-suppress DeprecatedMethod */
                     $rootNode = $treeBuilder->root('panther');
                 }
 
