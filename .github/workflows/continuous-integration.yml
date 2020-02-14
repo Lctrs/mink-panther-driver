@@ -295,7 +295,7 @@ jobs:
         env:
           BROWSER_NAME: "chrome"
           SELENIUM_HOST: "localhost"
-          SELENIUM_PORT: "4444"
+          SELENIUM_PORT: "${{ job.services.selenium.ports['4444'] }}"
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
           vendor/bin/phpunit
