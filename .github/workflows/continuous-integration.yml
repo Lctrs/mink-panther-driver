@@ -256,8 +256,6 @@ jobs:
         image: "selenium/standalone-chrome:latest"
         ports:
           - "4444/tcp"
-        volumes:
-          - "/home/runner/work/mink-panther-driver:/home/runner/work/mink-panther-driver"
         options: --health-cmd /opt/bin/check-grid.sh --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
@@ -293,7 +291,7 @@ jobs:
       - name: "Run unit tests with phpunit/phpunit"
         env:
           BROWSER_NAME: "chrome"
-          SELENIUM_HOST: "localhost"
+          SELENIUM_HOST: "selenium"
           SELENIUM_PORT: "${{ job.services.selenium.ports['4444'] }}"
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
