@@ -39,19 +39,28 @@ final class PantherFactory implements DriverFactory
                         ->variableNode('arguments')
                             ->defaultNull()
                             ->validate()
-                                ->ifTrue(static function ($v) : bool {
-                                    if (! is_array($v)) {
-                                        return true;
-                                    }
+                                ->ifTrue(
+                                    /**
+                                     * @param list<string|float|int|bool|null>|string|float|int|bool|null $v
+                                     */
+                                    static function ($v) : bool {
+                                        if ($v === null) {
+                                            return false;
+                                        }
 
-                                    foreach ($v as $child) {
-                                        if (! is_string($child)) {
+                                        if (! is_array($v)) {
                                             return true;
                                         }
-                                    }
 
-                                    return false;
-                                })
+                                        foreach ($v as $child) {
+                                            if (! is_string($child)) {
+                                                return true;
+                                            }
+                                        }
+
+                                        return false;
+                                    }
+                                )
                                 ->thenInvalid('"arguments" must be an array of strings or null.')
                             ->end()
                         ->end()
@@ -73,9 +82,18 @@ final class PantherFactory implements DriverFactory
                         ->scalarNode('browser')
                             ->defaultValue('chrome')
                             ->validate()
-                                ->ifTrue(static function ($v) : bool {
-                                    return ! method_exists(DesiredCapabilities::class, $v);
-                                })
+                                ->ifTrue(
+                                    /**
+                                     * @param string|bool|float|int $v
+                                     */
+                                    static function ($v) : bool {
+                                        if (! is_string($v)) {
+                                            return true;
+                                        }
+
+                                        return ! method_exists(DesiredCapabilities::class, $v);
+                                    }
+                                )
                                 ->thenInvalid('%s is not a valid or supported browser.')
                             ->end()
                         ->end()
@@ -83,32 +101,57 @@ final class PantherFactory implements DriverFactory
                 ->end()
             ->end()
             ->validate()
-                ->ifTrue(static function ($v) : bool {
-                    return $v['selenium']['enabled'] ?? false;
-                })
-                ->then(static function ($v) {
-                    unset($v['chrome']);
+                ->ifTrue(
+                    /**
+                     * @param array{selenium?: array{enabled: bool}} $v
+                     */
+                    static function (array $v) : bool {
+                        return $v['selenium']['enabled'] ?? false;
+                    }
+                )
+                ->then(
+                    /**
+                     * @param array{chrome?: array<string, string>} $v
+                     */
+                    static function (array $v) : array {
+                        unset($v['chrome']);
 
-                    return $v;
-                })
+                        return $v;
+                    }
+                )
             ->end()
             ->validate()
-                ->ifTrue(static function ($v) : bool {
-                    return $v['chrome']['enabled'] ?? false;
-                })
-                ->then(static function ($v) {
-                    unset($v['selenium']);
+                ->ifTrue(
+                    /**
+                     * @param array{chrome?: array{enabled: bool}} $v
+                     */
+                    static function (array $v) : bool {
+                        return $v['chrome']['enabled'] ?? false;
+                    }
+                )
+                ->then(
+                    /**
+                     * @param array{selenium?: array<string, string>} $v
+                     */
+                    static function (array $v) : array {
+                        unset($v['selenium']);
 
-                    return $v;
-                })
+                        return $v;
+                    }
+                )
             ->end()
             ->validate()
-                ->always(static function ($v) {
-                    unset($v['chrome']['enabled']);
-                    unset($v['selenium']['enabled']);
+                ->always(
+                    /**
+                     * @param array{chrome?: array{enabled?: bool}, selenium?: array{enabled?: bool}} $v
+                     */
+                    static function ($v) : array {
+                        unset($v['chrome']['enabled']);
+                        unset($v['selenium']['enabled']);
 
-                    return $v;
-                })
+                        return $v;
+                    }
+                )
             ->end();
     }
 

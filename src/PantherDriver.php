@@ -61,11 +61,8 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @param string[]|null $arguments
-     * @param mixed[]       $options
-     *
-     * @psalm-param list<string> $arguments
-     * @psalm-param array<string, string|int> $options
+     * @param list<string>                                                     $arguments
+     * @param array{scheme?: string, host?: string, port?: int, path?: string} $options
      */
     public static function createChromeDriver(
         ?string $chromeDriverBinary = null,
@@ -232,6 +229,7 @@ final class PantherDriver extends CoreDriver
      */
     protected function findElementXpaths($xpath) : array
     {
+        /** @var list<WebDriverElement> $elements */
         $elements = $this->client->findElements(WebDriverBy::xpath($xpath));
 
         $xPaths = [];
@@ -307,7 +305,10 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
+     * @return string[]|string|bool|null
+     *
      * @inheritDoc
+     * @psalm-return array<array-key, string>|string|bool|null
      */
     public function getValue($xpath)
     {
@@ -704,7 +705,10 @@ JS
         $seconds = (int) round($timeout / 1000.0);
         $wait    = $this->client->wait($seconds);
 
-        $script    = 'return ' . $condition . ';';
+        $script = 'return ' . $condition . ';';
+        /**
+         * @return mixed
+         */
         $condition = static function (JavaScriptExecutor $driver) use ($script) {
             return $driver->executeScript($script);
         };

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lctrs\MinkPantherDriver\Test\Extension;
 
+use Behat\MinkExtension\ServiceContainer\Driver\DriverFactory;
 use Behat\MinkExtension\ServiceContainer\MinkExtension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Lctrs\MinkPantherDriver\Extension\Driver\PantherFactory;
@@ -32,7 +33,7 @@ final class PantherExtensionTest extends TestCase
         $extensionManager = new ExtensionManager([$minkExtension]);
 
         $minkExtension->expects(self::once())->method('registerDriverFactory')
-            ->with(self::callback(static function ($factory) : bool {
+            ->with(self::callback(static function (DriverFactory $factory) : bool {
                 return $factory instanceof PantherFactory;
             }));
         $this->extension->initialize($extensionManager);
