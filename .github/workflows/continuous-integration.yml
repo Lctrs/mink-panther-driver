@@ -257,8 +257,7 @@ jobs:
         ports:
           - "4444/tcp"
         volumes:
-          - "/dev/shm:/dev/shm"
-          - "$(pwd):$(pwd)"
+          - "${{ runner.workspace }}:${{ runner.workspace }}"
         options: --health-cmd /opt/bin/check-grid.sh --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
