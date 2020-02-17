@@ -237,7 +237,7 @@ jobs:
   tests-chrome-selenium:
     name: "Tests on Chrome stable with Selenium"
 
-    runs-on: "ubuntu-latest"
+    runs-on: "windows-latest"
 
     strategy:
       matrix:
