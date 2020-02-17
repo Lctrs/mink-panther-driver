@@ -256,7 +256,7 @@ jobs:
         image: "selenium/standalone-chrome:latest"
         ports:
           - "4444/tcp"
-        options: --health-cmd /opt/bin/check-grid.sh --add-host=host.docker.internal:$(ip route | grep docker0 | awk '{print $9}')
+        options: --health-cmd /opt/bin/check-grid.sh --add-host=host.docker.internal:host-gateway
 
     steps:
       - name: "Checkout"
