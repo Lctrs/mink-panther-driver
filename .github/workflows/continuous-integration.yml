@@ -254,6 +254,10 @@ jobs:
     services:
       dockerhost:
         image: "qoomon/docker-host"
+        options: >-
+          --cap-add=NET_ADMIN
+          --cap-add=NET_RAW
+          --restart on-failure
       selenium:
         image: "selenium/standalone-chrome:latest"
         ports:
