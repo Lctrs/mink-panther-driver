@@ -256,7 +256,7 @@ jobs:
         image: "selenium/standalone-chrome:latest"
         ports:
           - "4444/tcp"
-        options: --health-cmd /opt/bin/check-grid.sh --add-host=host.docker.internal:host-gateway
+        options: --health-cmd /opt/bin/check-grid.sh --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: "Checkout"
@@ -293,7 +293,7 @@ jobs:
           BROWSER_NAME: "chrome"
           SELENIUM_HOST: "localhost"
           SELENIUM_PORT: "${{ job.services.selenium.ports['4444'] }}"
-          WEB_FIXTURES_HOST: "http://172.17.42.1:8002"
+          WEB_FIXTURES_HOST: "http://host.docker.internal:8002"
         run: |
           vendor/bin/mink-test-server > /dev/null 2>&1 &
           vendor/bin/phpunit
