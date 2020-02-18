@@ -21,3 +21,11 @@ update_configs:
     package_manager: "php:composer"
     update_schedule: "monthly"
     version_requirement_updates: "increase_versions"
+    ignored_updates:
+      - match:
+          dependency_name: "phpunit/phpunit"
+          version_requirement: ">= 8.0.0"
+      - match:
+          dependency_name: "symfony/config"
+      - match:
+          dependency_name: "symfony/dependency-injection"
