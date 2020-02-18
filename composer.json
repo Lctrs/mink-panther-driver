@@ -12,7 +12,7 @@
     "symfony/config": "~3.4.37 || ~4.3.11 || ~4.4.4",
     "symfony/dependency-injection": "~3.4.37 || ~4.3.11 || ~4.4.4",
     "symfony/panther": "^0.6.1",
-    "webmozart/assert": "^1.6.0"
+    "webmozart/assert": "^1.7.0"
   },
   "require-dev": {
     "doctrine/coding-standard": "^7.0.2",
