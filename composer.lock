@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ddd826f0e88173ce3a7d5a932c1afb42",
+    "content-hash": "45dad4e26e922814fad53f574b4500df",
     "packages": [
         {
             "name": "behat/behat",
@@ -341,16 +341,16 @@
         },
         {
             "name": "php-webdriver/webdriver",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-webdriver/php-webdriver.git",
-                "reference": "3e33ee3b8a688d719c55acdd7c6788e3006e1d3e"
+                "reference": "262ea0d209c292e0330be1041424887bbbffef04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/3e33ee3b8a688d719c55acdd7c6788e3006e1d3e",
-                "reference": "3e33ee3b8a688d719c55acdd7c6788e3006e1d3e",
+                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/262ea0d209c292e0330be1041424887bbbffef04",
+                "reference": "262ea0d209c292e0330be1041424887bbbffef04",
                 "shasum": ""
             },
             "require": {
@@ -382,12 +382,12 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "lib/Exception/TimeoutException.php"
-                ],
                 "psr-4": {
                     "Facebook\\WebDriver\\": "lib/"
-                }
+                },
+                "files": [
+                    "lib/Exception/TimeoutException.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -402,7 +402,7 @@
                 "selenium",
                 "webdriver"
             ],
-            "time": "2020-02-10T15:04:25+00:00"
+            "time": "2020-02-17T08:14:38+00:00"
         },
         {
             "name": "psr/container",
