@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa4f9dd33715a76a3cf31e7fe7ac6418",
+    "content-hash": "a9a49e7e183d553cf339a2d4c4557527",
     "packages": [
         {
             "name": "behat/behat",
@@ -3078,26 +3078,30 @@
         },
         {
             "name": "ondram/ci-detector",
-            "version": "3.1.1",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OndraM/ci-detector.git",
-                "reference": "37a2ee68567d5abb92af20df5b93006f4565d904"
+                "reference": "5356952b4234a5b2123e4ac35075e69ac334ad39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OndraM/ci-detector/zipball/37a2ee68567d5abb92af20df5b93006f4565d904",
-                "reference": "37a2ee68567d5abb92af20df5b93006f4565d904",
+                "url": "https://api.github.com/repos/OndraM/ci-detector/zipball/5356952b4234a5b2123e4ac35075e69ac334ad39",
+                "reference": "5356952b4234a5b2123e4ac35075e69ac334ad39",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1"
             },
             "require-dev": {
+                "ergebnis/composer-normalize": "^2.2",
+                "jakub-onderka/php-parallel-lint": "^1.0",
                 "lmc/coding-standard": "^1.0",
-                "phpstan/phpstan-phpunit": "^0.11.2",
-                "phpstan/phpstan-shim": "^0.11.19",
-                "phpunit/phpunit": "^7.1 || ^8.0"
+                "php-coveralls/php-coveralls": "^2.2",
+                "phpstan/extension-installer": "^1.0.3",
+                "phpstan/phpstan": "^0.12.0",
+                "phpstan/phpstan-phpunit": "^0.12.1",
+                "phpunit/phpunit": "^7.1 || ^8.0 || ^9.0"
             },
             "type": "library",
             "autoload": {
@@ -3122,16 +3126,18 @@
                 "adapter",
                 "appveyor",
                 "bamboo",
+                "buddy",
                 "continuous integration",
                 "continuousphp",
                 "drone",
+                "github",
                 "gitlab",
                 "interface",
                 "jenkins",
                 "teamcity",
                 "travis"
             ],
-            "time": "2019-11-10T23:14:15+00:00"
+            "time": "2020-02-18T14:48:31+00:00"
         },
         {
             "name": "openlss/lib-array2xml",
