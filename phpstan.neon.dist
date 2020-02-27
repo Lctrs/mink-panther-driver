@@ -4,6 +4,6 @@ includes:
 parameters:
 	level: max
 	paths:
-		- src
-		- test
+		- src/
+		- test/
 	tmpDir: %currentWorkingDirectory%/.build/phpstan
