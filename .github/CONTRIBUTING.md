@@ -52,6 +52,10 @@ to regenerate the baselines in [`../phpstan-baseline.neon`](../phpstan-baseline.
 
 :exclamation: Ideally, the baselines should shrink over time.
 
+## Tests
+
+We are using [`phpunit/phpunit`](https://github.com/sebastianbergmann/phpunit) to drive the development.
+
 ## Extra lazy?
 
 Run

@@ -29,7 +29,7 @@
 
     <testsuites>
         <testsuite name="Functional tests">
-            <directory>vendor/mink/driver-testsuite/tests</directory>
+            <directory>vendor/mink/driver-testsuite/tests/</directory>
         </testsuite>
         <!-- if needed to add more tests -->
         <testsuite name="Driver tests">
@@ -39,7 +39,7 @@
 
     <filter>
         <whitelist>
-            <directory>./src</directory>
+            <directory>./src/</directory>
         </whitelist>
     </filter>
 

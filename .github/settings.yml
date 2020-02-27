@@ -83,5 +83,9 @@ repository:
   has_pages: false
   has_projects: false
   has_wiki: false
-  name: mink-panther-driver
+  name: "mink-panther-driver"
   private: false
+
+  # https://developer.github.com/v3/repos/branches/#remove-branch-protection
+
+  topics: ""

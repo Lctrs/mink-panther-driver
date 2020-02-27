@@ -30,7 +30,7 @@ jobs:
         uses: "actions/checkout@v2.0.0"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@2.0.2"
         with:
           coverage: "none"
           extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
@@ -39,22 +39,26 @@ jobs:
       - name: "Validate composer.json and composer.lock"
         run: "composer validate --strict"
 
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v1.1.2"
         with:
-          path: "~/.composer/cache"
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
-      - name: "Install lowest dependencies with composer"
+      - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
         run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
 
-      - name: "Install locked dependencies with composer"
+      - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Install highest dependencies with composer"
+      - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress --no-suggest"
 
@@ -92,28 +96,35 @@ jobs:
         uses: "actions/checkout@v2.0.0"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@2.0.2"
         with:
           coverage: "none"
           extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
+      - name: "Validate composer.json and composer.lock"
+        run: "composer validate --strict"
+
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v1.1.2"
         with:
-          path: "~/.composer/cache"
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
-      - name: "Install lowest dependencies with composer"
+      - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
         run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
 
-      - name: "Install locked dependencies with composer"
+      - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Install highest dependencies with composer"
+      - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress --no-suggest"
 
@@ -138,28 +149,35 @@ jobs:
         uses: "actions/checkout@v2.0.0"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@2.0.2"
         with:
           coverage: "none"
           extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
+      - name: "Validate composer.json and composer.lock"
+        run: "composer validate --strict"
+
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v1.1.2"
         with:
-          path: "~/.composer/cache"
-          key: "${{ matrix.php-version }}-composer-locked-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "${{ matrix.php-version }}-composer-locked-"
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
-      - name: "Install lowest dependencies with composer"
+      - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
         run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
 
-      - name: "Install locked dependencies with composer"
+      - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Install highest dependencies with composer"
+      - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress --no-suggest"
 
@@ -202,28 +220,35 @@ jobs:
         uses: "actions/checkout@v2.0.0"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@2.0.2"
         with:
           coverage: "none"
           extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
+      - name: "Validate composer.json and composer.lock"
+        run: "composer validate --strict"
+
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v1.1.2"
         with:
-          path: "~/.composer/cache"
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
-      - name: "Install lowest dependencies with composer"
+      - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
         run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
 
-      - name: "Install locked dependencies with composer"
+      - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Install highest dependencies with composer"
+      - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress --no-suggest"
 
@@ -291,28 +316,35 @@ jobs:
         uses: "actions/checkout@v2.0.0"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@2.0.2"
         with:
           coverage: "none"
           extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
+      - name: "Validate composer.json and composer.lock"
+        run: "composer validate --strict"
+
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v1.1.2"
         with:
-          path: "~/.composer/cache"
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
-      - name: "Install lowest dependencies with composer"
+      - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
         run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
 
-      - name: "Install locked dependencies with composer"
+      - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Install highest dependencies with composer"
+      - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress --no-suggest"
 
@@ -347,28 +379,35 @@ jobs:
         uses: "actions/checkout@v2.0.0"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@2.0.2"
         with:
           coverage: "pcov"
           extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
+      - name: "Validate composer.json and composer.lock"
+        run: "composer validate --strict"
+
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v1.1.2"
         with:
-          path: "~/.composer/cache"
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
-      - name: "Install lowest dependencies with composer"
+      - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
         run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
 
-      - name: "Install locked dependencies with composer"
+      - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Install highest dependencies with composer"
+      - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress --no-suggest"
 
