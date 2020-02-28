@@ -11,7 +11,7 @@
     "php-webdriver/webdriver": "^1.8.1",
     "symfony/config": "~3.4.37 || ~4.3.11 || ~4.4.4",
     "symfony/dependency-injection": "~3.4.37 || ~4.3.11 || ~4.4.4",
-    "symfony/panther": "^0.6.1",
+    "symfony/panther": "^0.7.1",
     "webmozart/assert": "^1.7.0"
   },
   "require-dev": {
@@ -33,6 +33,7 @@
     "vimeo/psalm": "^3.9.3"
   },
   "config": {
+"platform": {"php": "7.2.0"},
     "sort-packages": true
   },
   "extra": {

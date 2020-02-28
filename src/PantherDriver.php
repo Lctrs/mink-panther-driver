@@ -12,24 +12,37 @@ use Facebook\WebDriver\Exception\NoSuchCookieException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\Interactions\Internal\WebDriverCoordinates;
 use Facebook\WebDriver\Interactions\WebDriverActions;
+use Facebook\WebDriver\Internal\WebDriverLocatable;
 use Facebook\WebDriver\JavaScriptExecutor;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverCapabilities;
 use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverElement;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverHasInputDevices;
 use Facebook\WebDriver\WebDriverKeys;
 use Facebook\WebDriver\WebDriverRadios;
 use Facebook\WebDriver\WebDriverSelect;
+use Lctrs\MinkPantherDriver\ElementLocator\ElementLocator;
+use Lctrs\MinkPantherDriver\ElementLocator\SimpleElementLocator;
+use Lctrs\MinkPantherDriver\ElementLocator\WaitingElementLocator;
 use RuntimeException;
 use Symfony\Component\Panther\Client;
 use Webmozart\Assert\Assert;
+use function array_key_exists;
 use function array_map;
 use function array_merge;
+use function array_search;
+use function assert;
 use function chr;
+use function count;
+use function dump;
 use function in_array;
 use function is_int;
 use function is_string;
@@ -52,13 +65,20 @@ final class PantherDriver extends CoreDriver
 {
     /** @var Client */
     private $client;
+    /** @var ElementLocator */
+    private $elementLocator;
+
+    /** @var string */
+    private $browserName;
+
     /** @var bool */
     private $isStarted = false;
 
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
+    /** @var string */
+    private $rootWindow = '';
+
+    /** @var array<string, string> */
+    private $windows = [];
 
     /**
      * @param list<string>                                                     $arguments
@@ -69,19 +89,61 @@ final class PantherDriver extends CoreDriver
         ?array $arguments = null,
         array $options = []
     ) : self {
-        return new self(Client::createChromeClient($chromeDriverBinary, $arguments, $options));
+        $client = Client::createChromeClient($chromeDriverBinary, $arguments, $options);
+
+        return new self(
+            $client,
+            new SimpleElementLocator($client),
+            WebDriverBrowserType::CHROME
+        );
+    }
+
+    /**
+     * @param list<string>                                                     $arguments
+     * @param array{scheme?: string, host?: string, port?: int, path?: string} $options
+     */
+    public static function createFirefoxDriver(
+        ?string $geckodriverBinary = null,
+        ?array $arguments = null,
+        array $options = []
+    ) : self {
+        $client = Client::createFirefoxClient($geckodriverBinary, $arguments, $options);
+
+        return new self(
+            $client,
+            new WaitingElementLocator($client),
+            WebDriverBrowserType::FIREFOX
+        );
     }
 
     public static function createSeleniumDriver(
         ?string $host = null,
         ?WebDriverCapabilities $capabilities = null
     ) : self {
-        return new self(Client::createSeleniumClient($host, $capabilities));
+        $capabilities = $capabilities ?? DesiredCapabilities::chrome();
+        $browserName  = $capabilities->getBrowserName();
+        $client       = Client::createSeleniumClient($host, $capabilities);
+
+        return new self(
+            $client,
+            $browserName === WebDriverBrowserType::FIREFOX
+                ? new WaitingElementLocator($client)
+                : new SimpleElementLocator($client),
+            $browserName
+        );
+    }
+
+    private function __construct(Client $client, ElementLocator $elementLocator, string $browserName)
+    {
+        $this->client         = $client;
+        $this->elementLocator = $elementLocator;
+        $this->browserName    = $browserName;
     }
 
     public function start() : void
     {
         $this->client->start();
+        $this->rootWindow = $this->client->getWindowHandle();
 
         $this->isStarted = true;
     }
@@ -140,6 +202,18 @@ final class PantherDriver extends CoreDriver
      */
     public function switchToWindow($name = null) : void
     {
+        if ($this->browserName === WebDriverBrowserType::FIREFOX) {
+            // @see https://github.com/mozilla/geckodriver/issues/149
+            if ($name === null) {
+                $name = $this->rootWindow;
+            } else {
+                $windowId = array_search($name, $this->windows, true);
+                if ($windowId !== false) {
+                    $name = $windowId;
+                }
+            }
+        }
+
         $this->client->switchTo()->window($name ?? '');
     }
 
@@ -154,13 +228,9 @@ final class PantherDriver extends CoreDriver
             return;
         }
 
-        try {
-            $this->client->switchTo()->frame(
-                $this->client->findElement(WebDriverBy::name($name))
-            );
-        } catch (WebDriverException $e) {
-            throw new DriverException($e->getMessage(), 0, $e);
-        }
+        $this->client->switchTo()->frame(
+            $this->findElement(WebDriverBy::name($name))
+        );
     }
 
     /**
@@ -229,8 +299,11 @@ final class PantherDriver extends CoreDriver
      */
     protected function findElementXpaths($xpath) : array
     {
-        /** @var list<WebDriverElement> $elements */
-        $elements = $this->client->findElements(WebDriverBy::xpath($xpath));
+        try {
+            $elements = $this->elementLocator->findElements(WebDriverBy::xpath($xpath));
+        } catch (WebDriverException $e) {
+            return [];
+        }
 
         $xPaths = [];
         foreach ($elements as $key => $element) {
@@ -245,7 +318,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getTagName($xpath) : string
     {
-        return $this->findElementOrThrow($xpath)->getTagName();
+        return $this->findElementByXPath($xpath)->getTagName();
     }
 
     /**
@@ -256,7 +329,7 @@ final class PantherDriver extends CoreDriver
         return str_replace(
             ["\r", "\r\n", "\n"],
             ' ',
-            $this->findElementOrThrow($xpath)->getText()
+            $this->findElementByXPath($xpath)->getText()
         );
     }
 
@@ -265,7 +338,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getHtml($xpath) : string
     {
-        return $this->executeScriptOn($this->findElementOrThrow($xpath), 'return arguments[0].innerHTML;');
+        return $this->executeScriptOn($this->findElementByXPath($xpath), 'return arguments[0].innerHTML;');
     }
 
     /**
@@ -273,7 +346,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getOuterHtml($xpath) : string
     {
-        return $this->executeScriptOn($this->findElementOrThrow($xpath), 'return arguments[0].outerHTML;');
+        return $this->executeScriptOn($this->findElementByXPath($xpath), 'return arguments[0].outerHTML;');
     }
 
     /**
@@ -281,7 +354,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getAttribute($xpath, $name) : ?string
     {
-        $element = $this->findElementOrThrow($xpath);
+        $element = $this->findElementByXPath($xpath);
 
         /**
          * If attribute is present but does not have value, it's considered as Boolean Attributes https://html.spec.whatwg.org/#boolean-attributes
@@ -312,7 +385,7 @@ final class PantherDriver extends CoreDriver
      */
     public function getValue($xpath)
     {
-        $element = $this->findElementOrThrow($xpath);
+        $element = $this->findVisibleElementByXPath($xpath);
         $tagName = $element->getTagName();
 
         if ($tagName === 'input') {
@@ -357,7 +430,7 @@ final class PantherDriver extends CoreDriver
      */
     public function setValue($xpath, $value) : void
     {
-        $element = $this->findElementOrThrow($xpath);
+        $element = $this->findVisibleElementByXPath($xpath);
         $tagName = $element->getTagName();
 
         if ($tagName === 'select') {
@@ -386,7 +459,9 @@ final class PantherDriver extends CoreDriver
                     Assert::boolean($value);
 
                     if ($element->isSelected() xor $value) {
-                        $element->click();
+                        $this->createWebDriverAction()->click(
+                            $element
+                        )->perform();
                     }
 
                     return;
@@ -459,7 +534,7 @@ JS
      */
     public function check($xpath) : void
     {
-        $element = $this->findElementOrThrow($xpath);
+        $element = $this->findVisibleElementByXPath($xpath);
 
         $this->ensureInputType($element, $xpath, 'checkbox', 'check');
 
@@ -467,7 +542,9 @@ JS
             return;
         }
 
-        $element->click();
+        $this->createWebDriverAction()->click(
+            $element
+        )->perform();
     }
 
     /**
@@ -475,7 +552,7 @@ JS
      */
     public function uncheck($xpath) : void
     {
-        $element = $this->findElementOrThrow($xpath);
+        $element = $this->findVisibleElementByXPath($xpath);
 
         $this->ensureInputType($element, $xpath, 'checkbox', 'uncheck');
 
@@ -483,7 +560,9 @@ JS
             return;
         }
 
-        $element->click();
+        $this->createWebDriverAction()->click(
+            $element
+        )->perform();
     }
 
     /**
@@ -499,7 +578,7 @@ JS
      */
     public function selectOption($xpath, $value, $multiple = false) : void
     {
-        $element = $this->findElementOrThrow($xpath);
+        $element = $this->findVisibleElementByXPath($xpath);
         $tagName = $element->getTagName();
 
         if ($tagName === 'input' && strtolower($element->getAttribute('type') ?? '') === 'radio') {
@@ -540,7 +619,7 @@ JS
      */
     public function isSelected($xpath) : bool
     {
-        return $this->findElementOrThrow($xpath)->isSelected();
+        return $this->findElementByXPath($xpath)->isSelected();
     }
 
     /**
@@ -548,9 +627,36 @@ JS
      */
     public function click($xpath) : void
     {
-        $this->createWebDriverAction()->click(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $element = $this->elementLocator->findClickableElement(WebDriverBy::xpath($xpath));
+        $this->client->getMouse()->click($this->toCoordinates($element));
+
+        if ($this->browserName !== WebDriverBrowserType::FIREFOX) {
+            return;
+        }
+
+        try {
+            $this->client->getWebDriver()->wait(1)->until(
+                WebDriverExpectedCondition::stalenessOf($element)
+            );
+        } catch (WebDriverException $e) {}
+
+        foreach ($this->getWindowNames() as $windowName) {
+            if ($windowName === $this->rootWindow) {
+                continue;
+            }
+
+            if (array_key_exists($windowName, $this->windows)) {
+                continue;
+            }
+
+            $this->switchToWindow($windowName);
+            $title = $this->evaluateScript('window.name');
+            $this->switchToWindow(null);
+
+            assert(is_string($title));
+
+            $this->windows[$windowName] = $title;
+        }
     }
 
     /**
@@ -558,9 +664,9 @@ JS
      */
     public function doubleClick($xpath) : void
     {
-        $this->createWebDriverAction()->doubleClick(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $this->client->getMouse()->doubleClick($this->toCoordinates(
+            $this->elementLocator->findClickableElement(WebDriverBy::xpath($xpath))
+        ));
     }
 
     /**
@@ -568,9 +674,9 @@ JS
      */
     public function rightClick($xpath) : void
     {
-        $this->createWebDriverAction()->contextClick(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $this->client->getMouse()->contextClick($this->toCoordinates(
+            $this->elementLocator->findClickableElement(WebDriverBy::xpath($xpath))
+        ));
     }
 
     /**
@@ -578,7 +684,7 @@ JS
      */
     public function attachFile($xpath, $path) : void
     {
-        $fileInput = $this->findElementOrThrow($xpath);
+        $fileInput = $this->findVisibleElementByXPath($xpath);
         $this->ensureInputType($fileInput, $xpath, 'file', 'attach a file on');
 
         $this->attachFileTo($fileInput, $path);
@@ -589,7 +695,7 @@ JS
      */
     public function isVisible($xpath) : bool
     {
-        return $this->findElementOrThrow($xpath)->isDisplayed();
+        return $this->findElementByXPath($xpath)->isDisplayed();
     }
 
     /**
@@ -598,7 +704,7 @@ JS
     public function mouseOver($xpath) : void
     {
         $this->createWebDriverAction()->moveToElement(
-            $this->findElementOrThrow($xpath)
+            $this->findVisibleElementByXPath($xpath)
         )->perform();
     }
 
@@ -607,9 +713,15 @@ JS
      */
     public function focus($xpath) : void
     {
-        $this->createWebDriverAction()->click(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $element = $this->findVisibleElementByXPath($xpath);
+
+        if (in_array($element->getTagName(), ['input', 'textarea'], true)) {
+            $this->createWebDriverAction()->click($element)->perform();
+
+            return;
+        }
+
+        $this->createWebDriverAction()->moveToElement($element)->perform();
     }
 
     /**
@@ -618,7 +730,7 @@ JS
     public function blur($xpath) : void
     {
         $this->createWebDriverAction()->sendKeys(
-            $this->findElementOrThrow($xpath),
+            $this->findVisibleElementByXPath($xpath),
             WebDriverKeys::TAB
         )->perform();
     }
@@ -659,8 +771,8 @@ JS
     public function dragTo($sourceXpath, $destinationXpath) : void
     {
         $this->createWebDriverAction()->dragAndDrop(
-            $this->findElementOrThrow($sourceXpath),
-            $this->findElementOrThrow($destinationXpath)
+            $this->findVisibleElementByXPath($sourceXpath),
+            $this->findVisibleElementByXPath($destinationXpath)
         )->perform();
     }
 
@@ -755,16 +867,44 @@ JS
      */
     public function submitForm($xpath) : void
     {
-        $this->findElementOrThrow($xpath)->submit();
+        $this->findVisibleElementByXPath($xpath)->submit();
     }
 
     /**
      * @throws DriverException
      */
-    private function findElementOrThrow(string $xpath) : WebDriverElement
+    private function findElementByXPath(string $xpath) : WebDriverElement
+    {
+        return $this->findElement(WebDriverBy::xpath($xpath));
+    }
+
+    /**
+     * @throws DriverException
+     */
+    private function findElement(WebDriverBy $by) : WebDriverElement
     {
         try {
-            return $this->client->findElement(WebDriverBy::xpath($xpath));
+            return $this->elementLocator->findElement($by);
+        } catch (WebDriverException $e) {
+            throw new DriverException($e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * @throws DriverException
+     */
+    private function findVisibleElementByXPath(string $xpath) : WebDriverElement
+    {
+        return $this->findVisibleElement(WebDriverBy::xpath($xpath));
+    }
+
+    /**
+     * @throws DriverException
+     */
+    private function findVisibleElement(WebDriverBy $by) : WebDriverElement
+    {
+        try {
+            return $this->elementLocator->findVisibleElement($by);
         } catch (WebDriverException $e) {
             throw new DriverException($e->getMessage(), 0, $e);
         }
@@ -806,7 +946,7 @@ JS
     private function dispatchKeyboardEventOn(string $xpath, string $type, $char, ?string $modifier) : void
     {
         $this->executeScriptOn(
-            $this->findElementOrThrow($xpath),
+            $this->findElementByXPath($xpath),
             'arguments[0].dispatchEvent(new KeyboardEvent(arguments[1], arguments[2]));',
             $type,
             self::keyboardEventsOptions($char, $modifier)
@@ -843,6 +983,18 @@ JS
         $element->setFileDetector(new LocalFileDetector());
 
         $element->sendKeys($path);
+    }
+
+    /**
+     * @throws DriverException
+     */
+    private function toCoordinates(WebDriverElement $element) : WebDriverCoordinates
+    {
+        if (! $element instanceof WebDriverLocatable) {
+            throw new RuntimeException(sprintf('The element does not implement "%s".', WebDriverLocatable::class));
+        }
+
+        return $element->getCoordinates();
     }
 
     /**

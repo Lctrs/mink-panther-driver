@@ -12,188 +12,188 @@ env:
   REQUIRED_PHP_EXTENSIONS: "dom, gd, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
 
 jobs:
-  coding-standards:
-    name: "Coding Standards"
+#  coding-standards:
+#    name: "Coding Standards"
+#
+#    runs-on: "ubuntu-latest"
+#
+#    strategy:
+#      matrix:
+#        php-version:
+#          - "7.4"
+#
+#        dependencies:
+#          - "locked"
+#
+#    steps:
+#      - name: "Checkout"
+#        uses: "actions/checkout@v2.0.0"
+#
+#      - name: "Install PHP with extensions"
+#        uses: "shivammathur/setup-php@2.0.2"
+#        with:
+#          coverage: "none"
+#          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+#          php-version: "${{ matrix.php-version }}"
+#
+#      - name: "Validate composer.json and composer.lock"
+#        run: "composer validate --strict"
+#
+#      - name: "Determine composer cache directory"
+#        id: "determine-composer-cache-directory"
+#        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+#
+#      - name: "Cache dependencies installed with composer"
+#        uses: "actions/cache@v1.1.2"
+#        with:
+#          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+#          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
+#          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
+#
+#      - name: "Install lowest dependencies from composer.json"
+#        if: "matrix.dependencies == 'lowest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+#
+#      - name: "Install locked dependencies from composer.lock"
+#        if: "matrix.dependencies == 'locked'"
+#        run: "composer install --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Install highest dependencies from composer.json"
+#        if: "matrix.dependencies == 'highest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Run ergebnis/composer-normalize"
+#        run: "composer normalize --dry-run"
+#
+#      - name: "Create cache directory for squizlabs/php_codesniffer"
+#        run: "mkdir -p .build/php_codesniffer"
+#
+#      - name: "Cache cache directory for squizlabs/php_codesniffer"
+#        uses: "actions/cache@v1.1.2"
+#        with:
+#          path: ".build/php_codesniffer"
+#          key: "php-${{ matrix.php-version }}-php_codesniffer-${{ hashFiles('**/composer.lock') }}"
+#          restore-keys: "php-${{ matrix.php-version }}-php_codesniffer-"
+#
+#      - name: "Run squizlabs/php_codesniffer"
+#        run: "vendor/bin/phpcs"
+#
+#  dependency-analysis:
+#    name: "Dependency Analysis"
+#
+#    runs-on: "ubuntu-latest"
+#
+#    strategy:
+#      matrix:
+#        php-version:
+#          - "7.4"
+#
+#        dependencies:
+#          - "locked"
+#
+#    steps:
+#      - name: "Checkout"
+#        uses: "actions/checkout@v2.0.0"
+#
+#      - name: "Install PHP with extensions"
+#        uses: "shivammathur/setup-php@2.0.2"
+#        with:
+#          coverage: "none"
+#          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+#          php-version: "${{ matrix.php-version }}"
+#
+#      - name: "Validate composer.json and composer.lock"
+#        run: "composer validate --strict"
+#
+#      - name: "Determine composer cache directory"
+#        id: "determine-composer-cache-directory"
+#        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+#
+#      - name: "Cache dependencies installed with composer"
+#        uses: "actions/cache@v1.1.2"
+#        with:
+#          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+#          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
+#          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
+#
+#      - name: "Install lowest dependencies from composer.json"
+#        if: "matrix.dependencies == 'lowest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+#
+#      - name: "Install locked dependencies from composer.lock"
+#        if: "matrix.dependencies == 'locked'"
+#        run: "composer install --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Install highest dependencies from composer.json"
+#        if: "matrix.dependencies == 'highest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Run maglnet/composer-require-checker"
+#        run: "vendor/bin/composer-require-checker"
+#
+#  static-code-analysis:
+#    name: "Static Code Analysis"
+#
+#    runs-on: "ubuntu-latest"
+#
+#    strategy:
+#      matrix:
+#        php-version:
+#          - "7.4"
+#
+#        dependencies:
+#          - "locked"
+#
+#    steps:
+#      - name: "Checkout"
+#        uses: "actions/checkout@v2.0.0"
+#
+#      - name: "Install PHP with extensions"
+#        uses: "shivammathur/setup-php@2.0.2"
+#        with:
+#          coverage: "none"
+#          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+#          php-version: "${{ matrix.php-version }}"
+#
+#      - name: "Validate composer.json and composer.lock"
+#        run: "composer validate --strict"
+#
+#      - name: "Determine composer cache directory"
+#        id: "determine-composer-cache-directory"
+#        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+#
+#      - name: "Cache dependencies installed with composer"
+#        uses: "actions/cache@v1.1.2"
+#        with:
+#          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+#          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
+#          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
+#
+#      - name: "Install lowest dependencies from composer.json"
+#        if: "matrix.dependencies == 'lowest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+#
+#      - name: "Install locked dependencies from composer.lock"
+#        if: "matrix.dependencies == 'locked'"
+#        run: "composer install --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Install highest dependencies from composer.json"
+#        if: "matrix.dependencies == 'highest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Create cache directory for phpstan/phpstan"
+#        run: "mkdir -p .build/phpstan"
+#
+#      - name: "Run phpstan/phpstan"
+#        run: "vendor/bin/phpstan analyse --configuration=phpstan.neon.dist"
+#
+#      - name: "Create cache directory for vimeo/psalm"
+#        run: "mkdir -p .build/psalm"
+#
+#      - name: "Run vimeo/psalm"
+#        run: "vendor/bin/psalm --config=psalm.xml --shepherd --show-info=false --stats"
 
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-        dependencies:
-          - "locked"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
-
-      - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.0.2"
-        with:
-          coverage: "none"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
-          php-version: "${{ matrix.php-version }}"
-
-      - name: "Validate composer.json and composer.lock"
-        run: "composer validate --strict"
-
-      - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
-
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1.1.2"
-        with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
-          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
-
-      - name: "Install lowest dependencies from composer.json"
-        if: "matrix.dependencies == 'lowest'"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
-
-      - name: "Install locked dependencies from composer.lock"
-        if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install highest dependencies from composer.json"
-        if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
-
-      - name: "Run ergebnis/composer-normalize"
-        run: "composer normalize --dry-run"
-
-      - name: "Create cache directory for squizlabs/php_codesniffer"
-        run: "mkdir -p .build/php_codesniffer"
-
-      - name: "Cache cache directory for squizlabs/php_codesniffer"
-        uses: "actions/cache@v1.1.2"
-        with:
-          path: ".build/php_codesniffer"
-          key: "php-${{ matrix.php-version }}-php_codesniffer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-php_codesniffer-"
-
-      - name: "Run squizlabs/php_codesniffer"
-        run: "vendor/bin/phpcs"
-
-  dependency-analysis:
-    name: "Dependency Analysis"
-
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-        dependencies:
-          - "locked"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
-
-      - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.0.2"
-        with:
-          coverage: "none"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
-          php-version: "${{ matrix.php-version }}"
-
-      - name: "Validate composer.json and composer.lock"
-        run: "composer validate --strict"
-
-      - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
-
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1.1.2"
-        with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
-          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
-
-      - name: "Install lowest dependencies from composer.json"
-        if: "matrix.dependencies == 'lowest'"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
-
-      - name: "Install locked dependencies from composer.lock"
-        if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install highest dependencies from composer.json"
-        if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
-
-      - name: "Run maglnet/composer-require-checker"
-        run: "vendor/bin/composer-require-checker"
-
-  static-code-analysis:
-    name: "Static Code Analysis"
-
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-        dependencies:
-          - "locked"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
-
-      - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.0.2"
-        with:
-          coverage: "none"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
-          php-version: "${{ matrix.php-version }}"
-
-      - name: "Validate composer.json and composer.lock"
-        run: "composer validate --strict"
-
-      - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
-
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1.1.2"
-        with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
-          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
-
-      - name: "Install lowest dependencies from composer.json"
-        if: "matrix.dependencies == 'lowest'"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
-
-      - name: "Install locked dependencies from composer.lock"
-        if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install highest dependencies from composer.json"
-        if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
-
-      - name: "Create cache directory for phpstan/phpstan"
-        run: "mkdir -p .build/phpstan"
-
-      - name: "Run phpstan/phpstan"
-        run: "vendor/bin/phpstan analyse --configuration=phpstan.neon.dist"
-
-      - name: "Create cache directory for vimeo/psalm"
-        run: "mkdir -p .build/psalm"
-
-      - name: "Run vimeo/psalm"
-        run: "vendor/bin/psalm --config=psalm.xml --shepherd --show-info=false --stats"
-
-  tests-chrome-chromedriver:
+  tests-chrome:
     name: "Tests on Chrome stable with chromedriver"
 
     runs-on: "ubuntu-latest"
@@ -201,19 +201,19 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.2"
-          - "7.3"
+          #          - "7.2"
+          #          - "7.3"
           - "7.4"
 
         dependencies:
-          - "lowest"
+          #          - "lowest"
           - "locked"
-          - "highest"
+    #          - "highest"
 
-        exclude:
-          # Covered by the "Code Coverage" job
-          - php-version: "7.4"
-            dependencies: "locked"
+    #        exclude:
+    #          # Covered by the "Code Coverage" job
+    #          - php-version: "7.4"
+    #            dependencies: "locked"
 
     steps:
       - name: "Checkout"
@@ -259,29 +259,94 @@ jobs:
           vendor/bin/mink-test-server > /dev/null 2>&1 &
           vendor/bin/phpunit --configuration=phpunit.xml.dist
 
-  tests-chrome-selenium:
-    name: "Tests on Chrome stable with Selenium"
+  tests-firefox:
+    name: "Tests on Firefox stable with geckodriver"
 
     runs-on: "ubuntu-latest"
 
     strategy:
       matrix:
         php-version:
-          - "7.2"
-          - "7.3"
+#          - "7.2"
+#          - "7.3"
           - "7.4"
 
         dependencies:
-          - "lowest"
+#          - "lowest"
           - "locked"
-          - "highest"
+#          - "highest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2.0.0"
+
+      - name: "Install PHP with extensions"
+        uses: "shivammathur/setup-php@2.0.2"
+        with:
+          coverage: "none"
+          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Validate composer.json and composer.lock"
+        run: "composer validate --strict"
+
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v1.1.2"
+        with:
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
+
+      - name: "Install lowest dependencies from composer.json"
+        if: "matrix.dependencies == 'lowest'"
+        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+
+      - name: "Install locked dependencies from composer.lock"
+        if: "matrix.dependencies == 'locked'"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Install highest dependencies from composer.json"
+        if: "matrix.dependencies == 'highest'"
+        run: "composer update --no-interaction --no-progress --no-suggest"
+
+      - name: "Run unit tests with phpunit/phpunit"
+        env:
+          PANTHER_CHROME_DRIVER_BINARY: "${{ env.GECKOWEBDRIVER }}"
+        run: |
+          vendor/bin/mink-test-server > /dev/null 2>&1 &
+          vendor/bin/phpunit --configuration=phpunit.xml.dist
+
+  tests-selenium:
+    name: "Tests on Selenium"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        browser:
+          - "chrome"
+          - "firefox"
+
+        php-version:
+#          - "7.2"
+#          - "7.3"
+          - "7.4"
+
+        dependencies:
+#          - "lowest"
+          - "locked"
+#          - "highest"
 
     steps:
       - name: "Initialize containers"
         run: |
           set -eux
 
-          docker pull selenium/standalone-chrome:latest
+          docker pull selenium/standalone-${{ matrix.browser }}:latest
           container_id=$(docker create \
             --name selenium \
             --network host \
@@ -290,7 +355,7 @@ jobs:
             --health-timeout 5s \
             --health-retries 5 \
             -e GITHUB_ACTIONS=true \
-            selenium/standalone-chrome:latest)
+            selenium/standalone-${{ matrix.browser }}:latest)
 
           echo ::set-env name=container_id::${container_id}
 
@@ -350,7 +415,7 @@ jobs:
 
       - name: "Run unit tests with phpunit/phpunit"
         env:
-          BROWSER_NAME: "chrome"
+          BROWSER_NAME: "${{ matrix.browser }}"
           SELENIUM_HOST: "localhost"
           SELENIUM_PORT: "4444"
         run: |
@@ -361,90 +426,91 @@ jobs:
         if: "always()"
         run: "docker rm --force ${container_id}"
 
-  code-coverage:
-    name: "Code Coverage"
-
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-        dependencies:
-          - "locked"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
-
-      - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.0.2"
-        with:
-          coverage: "pcov"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
-          php-version: "${{ matrix.php-version }}"
-
-      - name: "Validate composer.json and composer.lock"
-        run: "composer validate --strict"
-
-      - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
-
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1.1.2"
-        with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
-          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
-
-      - name: "Install lowest dependencies from composer.json"
-        if: "matrix.dependencies == 'lowest'"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
-
-      - name: "Install locked dependencies from composer.lock"
-        if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install highest dependencies from composer.json"
-        if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
-
-      - name: "Install pcov/clobber"
-        run: "composer require pcov/clobber"
-
-      - name: "Clobber the Xdebug driver"
-        run: "vendor/bin/pcov clobber"
-
-      - name: "Collect code coverage with pcov and phpunit/phpunit"
-        env:
-          PANTHER_CHROME_DRIVER_BINARY: "${{ env.CHROMEWEBDRIVER }}"
-        run: |
-          vendor/bin/mink-test-server > /dev/null 2>&1 &
-          vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-clover=.build/logs/clover.xml
-
-      - name: "Send code coverage report to Codecov.io"
-        env:
-          CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"
-        run: "bash <(curl -s https://codecov.io/bash)"
-
-  approve:
-    name: "Approve"
-
-    runs-on: "ubuntu-latest"
-
-    needs:
-      - "code-coverage"
-      - "coding-standards"
-      - "dependency-analysis"
-      - "static-code-analysis"
-      - "tests-chrome-chromedriver"
-      - "tests-chrome-selenium"
-
-    steps:
-      - name: "Approve"
-        uses: "hmarr/auto-approve-action@v2.0.0"
-        if: "(github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]') && github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Build(deps-dev)')"
-        with:
-          github-token: "${{ secrets.AUTO_APPROVE_TOKEN }}"
+#  code-coverage:
+#    name: "Code Coverage"
+#
+#    runs-on: "ubuntu-latest"
+#
+#    strategy:
+#      matrix:
+#        php-version:
+#          - "7.4"
+#
+#        dependencies:
+#          - "locked"
+#
+#    steps:
+#      - name: "Checkout"
+#        uses: "actions/checkout@v2.0.0"
+#
+#      - name: "Install PHP with extensions"
+#        uses: "shivammathur/setup-php@2.0.2"
+#        with:
+#          coverage: "pcov"
+#          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+#          php-version: "${{ matrix.php-version }}"
+#
+#      - name: "Validate composer.json and composer.lock"
+#        run: "composer validate --strict"
+#
+#      - name: "Determine composer cache directory"
+#        id: "determine-composer-cache-directory"
+#        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+#
+#      - name: "Cache dependencies installed with composer"
+#        uses: "actions/cache@v1.1.2"
+#        with:
+#          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+#          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
+#          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
+#
+#      - name: "Install lowest dependencies from composer.json"
+#        if: "matrix.dependencies == 'lowest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+#
+#      - name: "Install locked dependencies from composer.lock"
+#        if: "matrix.dependencies == 'locked'"
+#        run: "composer install --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Install highest dependencies from composer.json"
+#        if: "matrix.dependencies == 'highest'"
+#        run: "composer update --no-interaction --no-progress --no-suggest"
+#
+#      - name: "Install pcov/clobber"
+#        run: "composer require pcov/clobber"
+#
+#      - name: "Clobber the Xdebug driver"
+#        run: "vendor/bin/pcov clobber"
+#
+#      - name: "Collect code coverage with pcov and phpunit/phpunit"
+#        env:
+#          PANTHER_CHROME_DRIVER_BINARY: "${{ env.CHROMEWEBDRIVER }}"
+#        run: |
+#          vendor/bin/mink-test-server > /dev/null 2>&1 &
+#          vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-clover=.build/logs/clover.xml
+#
+#      - name: "Send code coverage report to Codecov.io"
+#        env:
+#          CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"
+#        run: "bash <(curl -s https://codecov.io/bash)"
+#
+#  approve:
+#    name: "Approve"
+#
+#    runs-on: "ubuntu-latest"
+#
+#    needs:
+#      - "code-coverage"
+#      - "coding-standards"
+#      - "dependency-analysis"
+#      - "static-code-analysis"
+#      - "tests-chrome"
+#      - "tests-firefox"
+#      - "tests-selenium"
+#
+#    steps:
+#      - name: "Approve"
+#        uses: "hmarr/auto-approve-action@v2.0.0"
+#        if: "(github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]') && github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Build(deps-dev)')"
+#        with:
+#          github-token: "${{ secrets.AUTO_APPROVE_TOKEN }}"
