@@ -7,15 +7,14 @@ namespace Lctrs\MinkPantherDriver;
 use Behat\Mink\Driver\CoreDriver;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
-use Facebook\WebDriver\Cookie;
-use Facebook\WebDriver\Exception\NoSuchCookieException;
+use Closure;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\Interactions\Internal\WebDriverCoordinates;
 use Facebook\WebDriver\Interactions\WebDriverActions;
+use Facebook\WebDriver\Internal\WebDriverLocatable;
 use Facebook\WebDriver\JavaScriptExecutor;
-use Facebook\WebDriver\Remote\LocalFileDetector;
-use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverCapabilities;
 use Facebook\WebDriver\WebDriverDimension;
@@ -23,26 +22,28 @@ use Facebook\WebDriver\WebDriverElement;
 use Facebook\WebDriver\WebDriverHasInputDevices;
 use Facebook\WebDriver\WebDriverKeys;
 use Facebook\WebDriver\WebDriverRadios;
-use Facebook\WebDriver\WebDriverSelect;
+use Facebook\WebDriver\WebDriverSelectInterface;
+use LogicException;
 use RuntimeException;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\Panther\Client;
-use Webmozart\Assert\Assert;
-use function array_map;
+use Symfony\Component\Panther\DomCrawler\Crawler;
+use Symfony\Component\Panther\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\Panther\DomCrawler\Field\FileFormField;
+use Symfony\Component\Panther\DomCrawler\Field\InputFormField;
+use Symfony\Component\Panther\DomCrawler\Field\TextareaFormField;
 use function array_merge;
 use function chr;
 use function count;
 use function in_array;
 use function is_int;
-use function is_string;
-use function ord;
 use function preg_match;
 use function preg_replace;
 use function rawurlencode;
 use function round;
 use function sprintf;
-use function str_repeat;
 use function str_replace;
-use function strlen;
 use function strpos;
 use function strtolower;
 use function trim;
@@ -61,6 +62,11 @@ final class PantherDriver extends CoreDriver
         $this->client = $client;
     }
 
+    public function __destruct()
+    {
+        $this->stop();
+    }
+
     /**
      * @param list<string>                                                     $arguments
      * @param array{scheme?: string, host?: string, port?: int, path?: string} $options
@@ -71,6 +77,18 @@ final class PantherDriver extends CoreDriver
         array $options = []
     ) : self {
         return new self(Client::createChromeClient($chromeDriverBinary, $arguments, $options));
+    }
+
+    /**
+     * @param list<string>                                                     $arguments
+     * @param array{scheme?: string, host?: string, port?: int, path?: string} $options
+     */
+    public static function createFirefoxDriver(
+        ?string $geckodriverBinary = null,
+        ?array $arguments = null,
+        array $options = []
+    ) : self {
+        return new self(Client::createFirefoxClient($geckodriverBinary, $arguments, $options));
     }
 
     public static function createSeleniumDriver(
@@ -101,19 +119,15 @@ final class PantherDriver extends CoreDriver
 
     public function reset() : void
     {
-        if (! $this->isStarted()) {
-            return;
-        }
-
-        $this->client->manage()->deleteAllCookies();
+        $this->client->getCookieJar()->clear();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function visit($url) : void
     {
-        $this->client->navigate()->to($url);
+        $this->client->get($url);
     }
 
     public function getCurrentUrl() : string
@@ -123,34 +137,36 @@ final class PantherDriver extends CoreDriver
 
     public function reload() : void
     {
-        $this->client->navigate()->refresh();
+        $this->client->reload();
     }
 
     public function forward() : void
     {
-        $this->client->navigate()->forward();
+        $this->client->forward();
     }
 
     public function back() : void
     {
-        $this->client->navigate()->back();
+        $this->client->back();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function switchToWindow($name = null) : void
     {
         $this->client->switchTo()->window($name ?? '');
+        $this->client->refreshCrawler();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function switchToIFrame($name = null) : void
     {
         if ($name === null) {
             $this->client->switchTo()->defaultContent();
+            $this->client->refreshCrawler();
 
             return;
         }
@@ -159,6 +175,7 @@ final class PantherDriver extends CoreDriver
             $this->client->switchTo()->frame(
                 $this->client->findElement(WebDriverBy::name($name))
             );
+            $this->client->refreshCrawler();
         } catch (WebDriverException $e) {
             throw new DriverException($e->getMessage(), 0, $e);
         }
@@ -170,25 +187,20 @@ final class PantherDriver extends CoreDriver
     public function setCookie($name, $value = null) : void
     {
         if ($value === null) {
-            $this->client->manage()->deleteCookieNamed($name);
+            $this->client->getCookieJar()->expire($name);
 
             return;
         }
 
-        $this->client->manage()->addCookie(new Cookie($name, rawurlencode($value)));
+        $this->client->getCookieJar()->set(new Cookie($name, rawurlencode($value)));
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getCookie($name) : ?string
     {
-        try {
-            $cookie = $this->client->manage()->getCookieNamed($name);
-        } catch (NoSuchCookieException $e) {
-            return null;
-        }
-
+        $cookie = $this->client->getCookieJar()->get($name);
         if ($cookie === null) {
             return null;
         }
@@ -226,12 +238,11 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected function findElementXpaths($xpath) : array
     {
-        /** @var list<WebDriverElement> $elements */
-        $elements = $this->client->findElements(WebDriverBy::xpath($xpath));
+        $elements = $this->getFilteredCrawlerBy($xpath);
 
         $xPaths = [];
         foreach ($elements as $key => $element) {
@@ -242,47 +253,47 @@ final class PantherDriver extends CoreDriver
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getTagName($xpath) : string
     {
-        return $this->findElementOrThrow($xpath)->getTagName();
+        return $this->getFilteredCrawlerBy($xpath)->getTagName();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getText($xpath) : string
     {
         return str_replace(
             ["\r", "\r\n", "\n"],
             ' ',
-            $this->findElementOrThrow($xpath)->getText()
+            $this->getFilteredCrawlerBy($xpath)->text()
         );
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getHtml($xpath) : string
     {
-        return $this->executeScriptOn($this->findElementOrThrow($xpath), 'return arguments[0].innerHTML;');
+        return $this->getFilteredCrawlerBy($xpath)->getAttribute('innerHTML') ?? '';
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getOuterHtml($xpath) : string
     {
-        return $this->executeScriptOn($this->findElementOrThrow($xpath), 'return arguments[0].outerHTML;');
+        return $this->getFilteredCrawlerBy($xpath)->html();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getAttribute($xpath, $name) : ?string
     {
-        $element = $this->findElementOrThrow($xpath);
+        $element = $this->findElement($xpath);
 
         /**
          * If attribute is present but does not have value, it's considered as Boolean Attributes https://html.spec.whatwg.org/#boolean-attributes
@@ -302,28 +313,30 @@ final class PantherDriver extends CoreDriver
      */
     private function hasAttribute(WebDriverElement $element, string $name) : bool
     {
-        return $this->executeScriptOn($element, 'return arguments[0].hasAttribute(arguments[1]);', $name);
+        return (bool) $this->executeScriptOn($element, 'return arguments[0].hasAttribute(arguments[1]);', $name);
     }
 
     /**
      * @return string[]|string|bool|null
      *
      * @inheritDoc
-     * @psalm-return array<array-key, string>|string|bool|null
+     * @psalm-return list<string>|string|bool|null
      */
     public function getValue($xpath)
     {
-        $element = $this->findElementOrThrow($xpath);
-        $tagName = $element->getTagName();
+        $element = $this->findElement($xpath);
+        try {
+            $formField = $this->getFormField($element);
+        } catch (LogicException $e) {
+            return $element->getAttribute('value');
+        }
 
-        if ($tagName === 'input') {
-            $type = strtolower($element->getAttribute('type') ?? '');
-
-            if ($type === 'checkbox') {
+        if ($formField instanceof ChoiceFormField) {
+            if ($formField->getType() === 'checkbox') {
                 return $element->isSelected() ? $element->getAttribute('value') : null;
             }
 
-            if ($type === 'radio') {
+            if ($formField->getType() === 'radio') {
                 $radio = new WebDriverRadios($element);
 
                 try {
@@ -332,29 +345,21 @@ final class PantherDriver extends CoreDriver
                     return null;
                 }
             }
-        }
 
-        if ($tagName === 'select') {
-            $select = new WebDriverSelect($element);
-
-            if (count($select->getOptions()) === 0) {
+            if (count($formField->availableOptionValues()) === 0) {
                 return '';
             }
 
-            if (! $select->isMultiple()) {
-                try {
-                    return $select->getFirstSelectedOption()->getAttribute('value');
-                } catch (NoSuchElementException $e) {
-                    return null;
-                }
+            $value = $formField->getValue();
+
+            if ($value === '') {
+                return null;
             }
 
-            return array_map(static function (WebDriverElement $element) : string {
-                return $element->getAttribute('value') ?? '';
-            }, $select->getAllSelectedOptions());
+            return $value;
         }
 
-        return $element->getAttribute('value');
+        return $formField->getValue();
     }
 
     /**
@@ -362,62 +367,9 @@ final class PantherDriver extends CoreDriver
      */
     public function setValue($xpath, $value) : void
     {
-        $element = $this->findElementOrThrow($xpath);
-        $tagName = $element->getTagName();
+        $element = $this->findElement($xpath);
 
-        if ($tagName === 'select') {
-            $select = new WebDriverSelect($element);
-
-            if ($select->isMultiple()) {
-                $select->deselectAll();
-            }
-
-            foreach ((array) $value as $val) {
-                $select->selectByValue($val);
-            }
-
-            return;
-        }
-
-        if ($tagName === 'input') {
-            $type = strtolower($element->getAttribute('type') ?? '');
-
-            if (in_array($type, ['submit', 'image', 'button', 'reset'], true)) {
-                throw new DriverException(sprintf('Impossible to set value on element with XPath "%s" as it is not a select, textarea or textbox', $xpath));
-            }
-
-            switch ($type) {
-                case 'checkbox':
-                    Assert::boolean($value);
-
-                    if ($element->isSelected() xor $value) {
-                        $element->click();
-                    }
-
-                    return;
-                case 'radio':
-                    Assert::string($value);
-
-                    try {
-                        (new WebDriverRadios($element))->selectByValue($value);
-                    } catch (WebDriverException $e) {
-                        throw new DriverException($e->getMessage(), 0, $e);
-                    }
-
-                    return;
-                case 'file':
-                    Assert::string($value);
-
-                    $this->attachFileTo($element, $value);
-
-                    return;
-                case 'color':
-                case 'date':
-                case 'datetime-local':
-                case 'month':
-                case 'time':
-                    Assert::string($value);
-
+        if ($element->getTagName() === 'input' && in_array($element->getAttribute('type'), ['date', 'color', 'datetime-local', 'month', 'time'], true)) {
                     $this->executeScriptOn(
                         $element,
                         <<<'JS'
@@ -436,64 +388,52 @@ JS
                     );
 
                     return;
-            }
         }
 
-        Assert::string($value);
+        $field = $this->getFormField($element);
 
-        if (in_array($tagName, ['input', 'textarea'], true)) {
-            $existingValueLength = strlen($element->getAttribute('value') ?? '');
-            $value               = str_repeat(WebDriverKeys::BACKSPACE . WebDriverKeys::DELETE, $existingValueLength) . $value;
+        if ($field instanceof ChoiceFormField && $field->isMultiple()) {
+            self::getInnerSelector($field)->deselectAll();
         }
 
-        $this->createWebDriverAction()
-            ->sendKeys(
-                $element,
-                $value
-            )
-            // Add the TAB key to ensure we unfocus the field as browsers are triggering the change event only
-            // after leaving the field.
-            ->sendKeys(
-                $element,
-                WebDriverKeys::TAB
-            )
-            ->perform();
+        $field->setValue($value);
+        $this->client->getKeyboard()->sendKeys(WebDriverKeys::TAB);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function check($xpath) : void
     {
-        $element = $this->findElementOrThrow($xpath);
+        $field = $this->getFormField($this->findElement($xpath));
 
-        $this->ensureInputType($element, $xpath, 'checkbox', 'check');
-
-        if ($element->isSelected()) {
-            return;
+        if (! $field instanceof ChoiceFormField) {
+            throw new DriverException(
+                sprintf('Impossible to check the element with XPath "%s" as it is not a checkbox.', $xpath)
+            );
         }
 
-        $element->click();
+        $field->tick();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function uncheck($xpath) : void
     {
-        $element = $this->findElementOrThrow($xpath);
+        $field = $this->getFormField($this->findElement($xpath));
 
-        $this->ensureInputType($element, $xpath, 'checkbox', 'uncheck');
-
-        if (! $element->isSelected()) {
-            return;
+        if (! $field instanceof ChoiceFormField) {
+            throw new DriverException(
+                sprintf('Impossible to uncheck the element with XPath "%s" as it is not a checkbox.', $xpath)
+            );
         }
 
-        $element->click();
+        $field->untick();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isChecked($xpath) : bool
     {
@@ -501,173 +441,181 @@ JS
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function selectOption($xpath, $value, $multiple = false) : void
     {
-        $element = $this->findElementOrThrow($xpath);
-        $tagName = $element->getTagName();
+        $field = $this->getFormField($this->findElement($xpath));
 
-        if ($tagName === 'input' && strtolower($element->getAttribute('type') ?? '') === 'radio') {
-            try {
-                (new WebDriverRadios($element))->selectByValue($value);
-            } catch (NoSuchElementException $e) {
-                throw new DriverException($e->getMessage(), 0, $e);
-            }
-
-            return;
+        if (! $field instanceof ChoiceFormField) {
+            throw new DriverException(
+                sprintf('Impossible to select an option on the element with XPath "%s" as it is not a select or radio input', $xpath)
+            );
         }
 
-        if ($tagName === 'select') {
-            $select = new WebDriverSelect($element);
-
-            if (! $multiple && $select->isMultiple()) {
-                $select->deselectAll();
-            }
-
-            try {
-                $select->selectByValue($value);
-            } catch (NoSuchElementException $e) {
-                $select->selectByVisibleText($value);
-            }
-
-            return;
+        if (! $multiple && $field->isMultiple()) {
+            self::getInnerSelector($field)->deselectAll();
         }
 
-        throw new DriverException(sprintf('Impossible to select an option on the element with XPath "%s" as it is not a select or radio input', $xpath));
+        try {
+            $field->select($value);
+        } catch (NoSuchElementException $e) {
+            $selector = self::getInnerSelector($field);
+
+            foreach ((array) $value as $v) {
+                $selector->selectByVisibleText($v);
+            }
+        }
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isSelected($xpath) : bool
     {
-        return $this->findElementOrThrow($xpath)->isSelected();
+        return $this->getFilteredCrawlerBy($xpath)->isSelected();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function click($xpath) : void
     {
-        $this->createWebDriverAction()->click(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $this->client->getMouse()->click($this->toCoordinates($xpath));
+        $this->client->refreshCrawler();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function doubleClick($xpath) : void
     {
-        $this->createWebDriverAction()->doubleClick(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $this->client->getMouse()->doubleClick($this->toCoordinates($xpath));
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function rightClick($xpath) : void
     {
-        $this->createWebDriverAction()->contextClick(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $this->client->getMouse()->contextClick($this->toCoordinates($xpath));
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function attachFile($xpath, $path) : void
     {
-        $fileInput = $this->findElementOrThrow($xpath);
-        $this->ensureInputType($fileInput, $xpath, 'file', 'attach a file on');
+        $field = $this->getFormField($this->findElement($xpath));
 
-        $this->attachFileTo($fileInput, $path);
+        if (! $field instanceof FileFormField) {
+            throw new DriverException(
+                'Impossible to attach a file on the element as it is not a file input'
+            );
+        }
+
+        $field->setValue($path);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isVisible($xpath) : bool
     {
-        return $this->findElementOrThrow($xpath)->isDisplayed();
+        return $this->getFilteredCrawlerBy($xpath)->isDisplayed();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function mouseOver($xpath) : void
     {
-        $this->createWebDriverAction()->moveToElement(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $this->client->getMouse()->mouseMove($this->toCoordinates($xpath));
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function focus($xpath) : void
     {
-        $this->createWebDriverAction()->click(
-            $this->findElementOrThrow($xpath)
-        )->perform();
+        $this->client->getMouse()->click($this->toCoordinates($xpath));
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function blur($xpath) : void
     {
-        $this->createWebDriverAction()->sendKeys(
-            $this->findElementOrThrow($xpath),
-            WebDriverKeys::TAB
-        )->perform();
+        $this->executeScriptOn(
+            $this->findElement($xpath),
+            'arguments[0].focus();arguments[0].blur();'
+        );
     }
 
     /**
      * @param string|null $modifier
      *
-     * @inheritdoc
+     * @inheritDoc
      */
     public function keyPress($xpath, $char, $modifier = null) : void
     {
-        $this->dispatchKeyboardEventOn($xpath, 'keypress', $char, $modifier);
+        $this->focus($xpath);
+        $keyboard = $this->client->getKeyboard();
+
+        if ($modifier !== null) {
+            $keyboard->sendKeys(self::getModifierKey($modifier));
+        }
+
+        $keyboard->sendKeys(self::getCharKey($char));
     }
 
     /**
      * @param string|null $modifier
      *
-     * @inheritdoc
+     * @inheritDoc
      */
     public function keyDown($xpath, $char, $modifier = null) : void
     {
-        $this->dispatchKeyboardEventOn($xpath, 'keydown', $char, $modifier);
+        $this->focus($xpath);
+        $keyboard = $this->client->getKeyboard();
+
+        if ($modifier !== null) {
+            $keyboard->pressKey(self::getModifierKey($modifier));
+        }
+
+        $keyboard->pressKey(self::getCharKey($char));
     }
 
     /**
      * @param string|null $modifier
      *
-     * @inheritdoc
+     * @inheritDoc
      */
     public function keyUp($xpath, $char, $modifier = null) : void
     {
-        $this->dispatchKeyboardEventOn($xpath, 'keyup', $char, $modifier);
+        $this->focus($xpath);
+        $keyboard = $this->client->getKeyboard();
+
+        if ($modifier !== null) {
+            $keyboard->releaseKey(self::getModifierKey($modifier));
+        }
+
+        $keyboard->releaseKey(self::getCharKey($char));
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function dragTo($sourceXpath, $destinationXpath) : void
     {
         $this->createWebDriverAction()->dragAndDrop(
-            $this->findElementOrThrow($sourceXpath),
-            $this->findElementOrThrow($destinationXpath)
+            $this->findElement($sourceXpath),
+            $this->findElement($destinationXpath)
         )->perform();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function executeScript($script) : void
     {
@@ -684,7 +632,7 @@ JS
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function evaluateScript($script)
     {
@@ -700,7 +648,7 @@ JS
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function wait($timeout, $condition) : bool
     {
@@ -723,7 +671,7 @@ JS
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function resizeWindow($width, $height, $name = null) : void
     {
@@ -738,7 +686,7 @@ JS
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function maximizeWindow($name = null) : void
     {
@@ -753,37 +701,83 @@ JS
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function submitForm($xpath) : void
     {
-        $this->findElementOrThrow($xpath)->submit();
+        $this->client->submit(
+            $this->getFilteredCrawlerBy($xpath)->form()
+        );
+        $this->client->refreshCrawler();
     }
 
     /**
      * @throws DriverException
      */
-    private function findElementOrThrow(string $xpath) : WebDriverElement
+    private function findElement(string $xpath) : WebDriverElement
     {
-        try {
-            return $this->client->findElement(WebDriverBy::xpath($xpath));
-        } catch (WebDriverException $e) {
-            throw new DriverException($e->getMessage(), 0, $e);
+        $element = $this->getFilteredCrawlerBy($xpath)->getElement(0);
+        if ($element === null) {
+            throw new DriverException('The element does not exist');
         }
+
+        return $element;
     }
 
     /**
      * @throws DriverException
      */
-    private function ensureInputType(WebDriverElement $element, string $xpath, string $type, string $action) : void
+    private function getFilteredCrawlerBy(string $xpath) : Crawler
     {
-        if (strtolower($element->getTagName()) !== 'input'
-            || $type !== strtolower($element->getAttribute('type') ?? '')
-        ) {
-            $message = 'Impossible to %s the element with XPath "%s" as it is not a %s input';
+        return $this->getCrawler()->filterXPath($xpath);
+    }
 
-            throw new DriverException(sprintf($message, $action, $xpath, $type));
+    /**
+     * @throws DriverException
+     */
+    private function getCrawler() : Crawler
+    {
+        $crawler = $this->client->getCrawler();
+
+        if ($crawler === null) {
+            throw new DriverException('Unable to access the response content before visiting a page');
         }
+
+        return $crawler;
+    }
+
+    /**
+     * @throws DriverException
+     */
+    private function toCoordinates(string $xpath) : WebDriverCoordinates
+    {
+        $element = $this->findElement($xpath);
+
+        if (! $element instanceof WebDriverLocatable) {
+            throw new RuntimeException(sprintf('The element of "%s" XPath does not implement "%s".', $xpath, WebDriverLocatable::class));
+        }
+
+        return $element->getCoordinates();
+    }
+
+    private function getFormField(WebDriverElement $element) : FormField
+    {
+        $tagName = $element->getTagName();
+
+        if ($tagName === 'textarea') {
+            return new TextareaFormField($element);
+        }
+
+        $type = $element->getAttribute('type');
+        if ($tagName === 'select' || ($tagName === 'input' && ($type === 'radio' || $type === 'checkbox'))) {
+            return new ChoiceFormField($element);
+        }
+
+        if ($tagName === 'input' && $type === 'file') {
+            return new FileFormField($element);
+        }
+
+        return new InputFormField($element);
     }
 
     /**
@@ -800,54 +794,6 @@ JS
     }
 
     /**
-     * @param string|int $char
-     *
-     * @throws DriverException
-     * @throws UnsupportedDriverActionException
-     */
-    private function dispatchKeyboardEventOn(string $xpath, string $type, $char, ?string $modifier) : void
-    {
-        $this->executeScriptOn(
-            $this->findElementOrThrow($xpath),
-            'arguments[0].dispatchEvent(new KeyboardEvent(arguments[1], arguments[2]));',
-            $type,
-            self::keyboardEventsOptions($char, $modifier)
-        );
-    }
-
-    /**
-     * @param string|int $char
-     *
-     * @return mixed[]
-     */
-    private static function keyboardEventsOptions($char, ?string $modifier) : array
-    {
-        return [
-            'key' => is_int($char) ? chr($char) : $char,
-            'keyCode' => is_string($char) ? ord($char) : $char,
-            'which' => is_string($char) ? ord($char) : $char,
-            'ctrlKey' => $modifier === 'ctrl',
-            'shiftKey' => $modifier === 'shift',
-            'altKey' => $modifier === 'alt',
-            'metaKey' => $modifier === 'meta',
-        ];
-    }
-
-    /**
-     * @throws UnsupportedDriverActionException
-     */
-    private function attachFileTo(WebDriverElement $element, string $path) : void
-    {
-        if (! $element instanceof RemoteWebElement) {
-            throw new UnsupportedDriverActionException('Uploading a file is not supported by %s.', $this);
-        }
-
-        $element->setFileDetector(new LocalFileDetector());
-
-        $element->sendKeys($path);
-    }
-
-    /**
      * @param mixed ...$args
      *
      * @return mixed
@@ -861,5 +807,43 @@ JS
         } catch (RuntimeException $e) {
             throw new UnsupportedDriverActionException('JavaScript is not supported by %s.', $this, $e);
         }
+    }
+
+    /**
+     * @param string|int $char
+     */
+    private static function getCharKey($char) : string
+    {
+        if (is_int($char)) {
+            $char = strtolower(chr($char));
+        }
+
+        return $char;
+    }
+
+    /**
+     * @throws DriverException
+     */
+    private static function getModifierKey(string $modifier) : string
+    {
+        switch ($modifier) {
+            case 'alt':
+                return WebDriverKeys::ALT;
+            case 'ctrl':
+                return WebDriverKeys::CONTROL;
+            case 'shift':
+                return WebDriverKeys::SHIFT;
+            case 'meta':
+                return WebDriverKeys::META;
+            default:
+                throw new DriverException(sprintf('Unknown modifier "%s".', $modifier));
+        }
+    }
+
+    private static function getInnerSelector(ChoiceFormField $field) : WebDriverSelectInterface
+    {
+        return Closure::bind(static function (ChoiceFormField $field) : WebDriverSelectInterface {
+            return $field->selector;
+        }, null, ChoiceFormField::class)($field);
     }
 }

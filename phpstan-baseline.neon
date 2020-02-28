@@ -16,12 +16,17 @@ parameters:
 			path: src/PantherDriver.php
 
 		-
-			message: "#^Call to function method_exists\\(\\) with Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\TreeBuilder and 'getRootNode' will always evaluate to true\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between Symfony\\\\Component\\\\Panther\\\\DomCrawler\\\\Crawler and null will always evaluate to false\\.$#"
 			count: 1
-			path: test/Extension/Driver/PantherFactoryTest.php
+			path: src/PantherDriver.php
 
 		-
-			message: "#^Call to deprecated method root\\(\\) of class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\TreeBuilder\\:\nsince Symfony 4\\.3, pass the root name to the constructor instead$#"
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\Test\\\\Custom\\\\EventsTest\\:\\:testKeyboardEvents\\(\\) has parameter \\$eventProperties with no typehint specified\\.$#"
 			count: 1
-			path: test/Extension/Driver/PantherFactoryTest.php
+			path: test/Custom/EventsTest.php
+
+		-
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\Test\\\\Custom\\\\EventsTest\\:\\:testKeyboardEvents\\(\\) has parameter \\$modifier with no typehint specified\\.$#"
+			count: 1
+			path: test/Custom/EventsTest.php
 
