@@ -410,6 +410,7 @@ final class PantherDriver extends CoreDriver
                 case 'date':
                 case 'datetime-local':
                 case 'month':
+                case 'time':
                     Assert::string($value);
 
                     $this->executeScriptOn(
