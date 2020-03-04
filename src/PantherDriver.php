@@ -505,7 +505,7 @@ JS
         if ($tagName === 'input' && strtolower($element->getAttribute('type') ?? '') === 'radio') {
             try {
                 (new WebDriverRadios($element))->selectByValue($value);
-            } catch (WebDriverException $e) {
+            } catch (NoSuchElementException $e) {
                 throw new DriverException($e->getMessage(), 0, $e);
             }
 
@@ -513,20 +513,16 @@ JS
         }
 
         if ($tagName === 'select') {
+            $select = new WebDriverSelect($element);
+
+            if (! $multiple && $select->isMultiple()) {
+                $select->deselectAll();
+            }
+
             try {
-                $select = new WebDriverSelect($element);
-
-                if (! $multiple && $select->isMultiple()) {
-                    $select->deselectAll();
-                }
-
-                try {
-                    $select->selectByValue($value);
-                } catch (NoSuchElementException $e) {
-                    $select->selectByVisibleText($value);
-                }
-            } catch (WebDriverException $e) {
-                throw new DriverException($e->getMessage(), 0, $e);
+                $select->selectByValue($value);
+            } catch (NoSuchElementException $e) {
+                $select->selectByVisibleText($value);
             }
 
             return;
