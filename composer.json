@@ -8,7 +8,7 @@
     "behat/behat": "^3.6.1",
     "behat/mink": "^1.7.1",
     "behat/mink-extension": "^2.3.1",
-    "php-webdriver/webdriver": "^1.8.1",
+    "php-webdriver/webdriver": "^1.8.2",
     "symfony/config": "~3.4.37 || ~4.3.11 || ~4.4.4",
     "symfony/dependency-injection": "~3.4.37 || ~4.3.11 || ~4.4.4",
     "symfony/panther": "^0.6.1",
