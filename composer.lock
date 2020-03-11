@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e47a1ca74a6114f51835bac0a8c90a9c",
+    "content-hash": "b54686e63a6b326126c89d9d101ec4e8",
     "packages": [
         {
             "name": "behat/behat",
@@ -505,16 +505,16 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v4.4.2",
+            "version": "v4.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "e19e465c055137938afd40cfddd687e7511bbbf0"
+                "reference": "090ce406505149d6852a7c03b0346dec3b8cf612"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/e19e465c055137938afd40cfddd687e7511bbbf0",
-                "reference": "e19e465c055137938afd40cfddd687e7511bbbf0",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/090ce406505149d6852a7c03b0346dec3b8cf612",
+                "reference": "090ce406505149d6852a7c03b0346dec3b8cf612",
                 "shasum": ""
             },
             "require": {
@@ -560,7 +560,7 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2019-10-28T20:30:34+00:00"
+            "time": "2020-02-23T10:00:59+00:00"
         },
         {
             "name": "symfony/config",
@@ -830,16 +830,16 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v4.4.2",
+            "version": "v4.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "36bbcab9369fc2f583220890efd43bf262d563fd"
+                "reference": "11dcf08f12f29981bf770f097a5d64d65bce5929"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/36bbcab9369fc2f583220890efd43bf262d563fd",
-                "reference": "36bbcab9369fc2f583220890efd43bf262d563fd",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/11dcf08f12f29981bf770f097a5d64d65bce5929",
+                "reference": "11dcf08f12f29981bf770f097a5d64d65bce5929",
                 "shasum": ""
             },
             "require": {
@@ -887,7 +887,7 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2019-10-29T11:38:30+00:00"
+            "time": "2020-02-29T10:05:28+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1069,16 +1069,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v4.4.2",
+            "version": "v4.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "9ebfc77b5018a05226b38642def82746f3e2ce0f"
+                "reference": "65ccb6ca4a5a7bf7c244b8a28195fa188521b3d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/9ebfc77b5018a05226b38642def82746f3e2ce0f",
-                "reference": "9ebfc77b5018a05226b38642def82746f3e2ce0f",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/65ccb6ca4a5a7bf7c244b8a28195fa188521b3d2",
+                "reference": "65ccb6ca4a5a7bf7c244b8a28195fa188521b3d2",
                 "shasum": ""
             },
             "require": {
@@ -1133,7 +1133,7 @@
             ],
             "description": "Symfony HttpClient component",
             "homepage": "https://symfony.com",
-            "time": "2019-12-19T15:57:49+00:00"
+            "time": "2020-02-25T13:55:11+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -1194,21 +1194,21 @@
         },
         {
             "name": "symfony/panther",
-            "version": "v0.6.1",
+            "version": "v0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/panther.git",
-                "reference": "e774e332bd5ec1d31c774fc4b2a6a72627c37921"
+                "reference": "fcc7cfd2168db167daeb21ac5510fe06f2816a83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/panther/zipball/e774e332bd5ec1d31c774fc4b2a6a72627c37921",
-                "reference": "e774e332bd5ec1d31c774fc4b2a6a72627c37921",
+                "url": "https://api.github.com/repos/symfony/panther/zipball/fcc7cfd2168db167daeb21ac5510fe06f2816a83",
+                "reference": "fcc7cfd2168db167daeb21ac5510fe06f2816a83",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1",
-                "php-webdriver/webdriver": "^1.7.1",
+                "php-webdriver/webdriver": "^1.8.1",
                 "symfony/browser-kit": "^4.3 || ^5.0",
                 "symfony/dom-crawler": "^4.3 || ^5.0",
                 "symfony/http-client": "^4.3 || ^5.0",
@@ -1223,6 +1223,7 @@
                 "guzzlehttp/guzzle": "^6.3",
                 "symfony/css-selector": "^3.4 || ^4.0 || ^5.0",
                 "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0",
+                "symfony/mime": "^4.3 || ^5.0",
                 "symfony/phpunit-bridge": "^4.3.3 || ^5.0"
             },
             "type": "library",
@@ -1261,7 +1262,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2020-01-20T15:24:48+00:00"
+            "time": "2020-02-24T12:05:49+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1382,16 +1383,16 @@
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "v1.13.1",
+            "version": "v1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php72.git",
-                "reference": "66fea50f6cb37a35eea048d75a7d99a45b586038"
+                "reference": "46ecacf4751dd0dc81e4f6bf01dbf9da1dc1dadf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/66fea50f6cb37a35eea048d75a7d99a45b586038",
-                "reference": "66fea50f6cb37a35eea048d75a7d99a45b586038",
+                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/46ecacf4751dd0dc81e4f6bf01dbf9da1dc1dadf",
+                "reference": "46ecacf4751dd0dc81e4f6bf01dbf9da1dc1dadf",
                 "shasum": ""
             },
             "require": {
@@ -1400,7 +1401,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.14-dev"
                 }
             },
             "autoload": {
@@ -1433,7 +1434,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-11-27T13:56:44+00:00"
+            "time": "2020-01-13T11:15:53+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
