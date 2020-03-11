@@ -30,6 +30,7 @@ use Webmozart\Assert\Assert;
 use function array_map;
 use function array_merge;
 use function chr;
+use function count;
 use function in_array;
 use function is_int;
 use function is_string;
@@ -335,6 +336,10 @@ final class PantherDriver extends CoreDriver
 
         if ($tagName === 'select') {
             $select = new WebDriverSelect($element);
+
+            if (count($select->getOptions()) === 0) {
+                return '';
+            }
 
             if (! $select->isMultiple()) {
                 try {
