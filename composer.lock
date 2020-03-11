@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4b473310c2ff29066770b95792b27e5",
+    "content-hash": "a383e6f4593655b12976b8e95012c2b2",
     "packages": [
         {
             "name": "behat/behat",
@@ -3079,16 +3079,16 @@
         },
         {
             "name": "ondram/ci-detector",
-            "version": "3.2.0",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OndraM/ci-detector.git",
-                "reference": "5356952b4234a5b2123e4ac35075e69ac334ad39"
+                "reference": "14ccb5401b25f774f99dfdc2c651c2a66b5f253d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OndraM/ci-detector/zipball/5356952b4234a5b2123e4ac35075e69ac334ad39",
-                "reference": "5356952b4234a5b2123e4ac35075e69ac334ad39",
+                "url": "https://api.github.com/repos/OndraM/ci-detector/zipball/14ccb5401b25f774f99dfdc2c651c2a66b5f253d",
+                "reference": "14ccb5401b25f774f99dfdc2c651c2a66b5f253d",
                 "shasum": ""
             },
             "require": {
@@ -3096,9 +3096,9 @@
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.2",
-                "jakub-onderka/php-parallel-lint": "^1.0",
-                "lmc/coding-standard": "^1.0",
+                "lmc/coding-standard": "^1.3 || ^2.0",
                 "php-coveralls/php-coveralls": "^2.2",
+                "php-parallel-lint/php-parallel-lint": "^1.1",
                 "phpstan/extension-installer": "^1.0.3",
                 "phpstan/phpstan": "^0.12.0",
                 "phpstan/phpstan-phpunit": "^0.12.1",
@@ -3138,7 +3138,7 @@
                 "teamcity",
                 "travis"
             ],
-            "time": "2020-02-18T14:48:31+00:00"
+            "time": "2020-03-06T17:28:48+00:00"
         },
         {
             "name": "openlss/lib-array2xml",
