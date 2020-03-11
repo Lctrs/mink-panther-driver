@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.9.3@2e4154d76e24d1b4e59e6cc2bebef7790cb9e550">
+<files psalm-version="3.9.5@0cfe565d0afbcd31eadcc281b9017b5692911661">
   <file src="src/Extension/Driver/PantherFactory.php">
     <MixedArrayAccess occurrences="5">
       <code>$config['chrome']['binary']</code>
@@ -66,16 +66,6 @@
     </PossiblyUndefinedMethod>
   </file>
   <file src="src/PantherDriver.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! $multiple &amp;&amp; $select-&gt;isMultiple()</code>
-    </DocblockTypeContradiction>
-    <ImplementedReturnTypeMismatch occurrences="5">
-      <code>bool</code>
-      <code>array&lt;array-key, string&gt;|string|bool|null</code>
-      <code>bool</code>
-      <code>bool</code>
-      <code>bool</code>
-    </ImplementedReturnTypeMismatch>
     <MissingClosureReturnType occurrences="1">
       <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
     </MissingClosureReturnType>

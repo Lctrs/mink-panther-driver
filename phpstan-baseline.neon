@@ -11,16 +11,6 @@ parameters:
 			path: src/PantherDriver.php
 
 		-
-			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:getValue\\(\\) should return array\\|bool\\|string but returns string\\|null\\.$#"
-			count: 4
-			path: src/PantherDriver.php
-
-		-
-			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:getValue\\(\\) should return array\\|bool\\|string but returns null\\.$#"
-			count: 2
-			path: src/PantherDriver.php
-
-		-
 			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:setValue\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/PantherDriver.php
