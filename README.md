@@ -28,7 +28,23 @@ use Lctrs\MinkPantherDriver\PantherDriver;
 
 $mink = new Mink([
     'panther' => new Session(
-        PantherDriver::createChromeDriver('/path/to/executable', ['some', 'arguments'], ['scheme' => 'https'])
+        PantherDriver::createChromeDriver('/path/to/chromedriver', ['--some', '--arguments'], ['scheme' => 'https'])
+    ),
+]);
+```
+
+### With geckodriver
+
+```php
+<?php
+
+use Behat\Mink\Mink;
+use Behat\Mink\Session;
+use Lctrs\MinkPantherDriver\PantherDriver;
+
+$mink = new Mink([
+    'panther' => new Session(
+        PantherDriver::createFirefoxDriver('/path/to/geckodriver', ['--some', '--arguments'], ['scheme' => 'https'])
     ),
 ]);
 ```

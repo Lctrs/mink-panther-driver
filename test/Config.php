@@ -33,9 +33,9 @@ final class Config extends AbstractConfig implements AfterLastTestHook
      */
     public function createDriver() : PantherDriver
     {
-        if ($_SERVER['SELENIUM_HOST'] ?? false) {
-            $browser = $_SERVER['BROWSER_NAME'] ?? WebDriverBrowserType::FIREFOX;
+        $browser = $_SERVER['BROWSER_NAME'] ?? WebDriverBrowserType::CHROME;
 
+        if ($_SERVER['SELENIUM_HOST'] ?? false) {
             if ($browser === WebDriverBrowserType::FIREFOX) {
                 $desiredCapabilities = DesiredCapabilities::firefox();
             } elseif ($browser === WebDriverBrowserType::CHROME) {
@@ -56,6 +56,10 @@ final class Config extends AbstractConfig implements AfterLastTestHook
                 sprintf('http://%s:%s/wd/hub', $_SERVER['SELENIUM_HOST'], $_SERVER['SELENIUM_PORT']),
                 $desiredCapabilities
             ));
+        }
+
+        if ($browser === WebDriverBrowserType::FIREFOX) {
+            return DriverRegistry::register(PantherDriver::createFirefoxDriver());
         }
 
         return DriverRegistry::register(PantherDriver::createChromeDriver());

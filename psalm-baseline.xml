@@ -66,11 +66,20 @@
     </PossiblyUndefinedMethod>
   </file>
   <file src="src/PantherDriver.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>$crawler === null</code>
+    </DocblockTypeContradiction>
+    <InaccessibleProperty occurrences="1">
+      <code>$field-&gt;selector</code>
+    </InaccessibleProperty>
+    <InvalidOperand occurrences="1">
+      <code>$key</code>
+    </InvalidOperand>
     <MissingClosureReturnType occurrences="1">
       <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
     </MissingClosureReturnType>
     <MixedArgument occurrences="7">
-      <code>$val</code>
+      <code>$key+1</code>
       <code>$xpath</code>
       <code>$char</code>
       <code>$xpath</code>
@@ -79,22 +88,21 @@
       <code>$char</code>
     </MixedArgument>
     <MixedAssignment occurrences="1">
-      <code>$val</code>
+      <code>$element</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="3">
-      <code>string</code>
-      <code>string</code>
-      <code>bool</code>
+    <MixedInferredReturnType occurrences="2">
+      <code>WebDriverSelectInterface</code>
+      <code>WebDriverSelectInterface</code>
     </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="3">
-      <code>$this-&gt;executeScriptOn($this-&gt;findElementOrThrow($xpath), 'return arguments[0].innerHTML;')</code>
-      <code>$this-&gt;executeScriptOn($this-&gt;findElementOrThrow($xpath), 'return arguments[0].outerHTML;')</code>
-      <code>$this-&gt;executeScriptOn($element, 'return arguments[0].hasAttribute(arguments[1]);', $name)</code>
-    </MixedReturnStatement>
-    <MixedReturnTypeCoercion occurrences="2">
+    <MixedReturnStatement occurrences="1"/>
+    <MixedReturnTypeCoercion occurrences="5">
       <code>$this-&gt;client-&gt;getWindowHandles()</code>
       <code>list&lt;string&gt;</code>
+      <code>$value</code>
+      <code>$formField-&gt;getValue()</code>
+      <code>list&lt;string&gt;|string|bool|null</code>
     </MixedReturnTypeCoercion>
+    <PossiblyInvalidFunctionCall occurrences="1"/>
   </file>
   <file src="test/Config.php">
     <MixedArgument occurrences="2">

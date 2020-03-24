@@ -19,7 +19,6 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use function assert;
-use function method_exists;
 
 final class PantherFactoryTest extends AbstractExtensionTestCase
 {
@@ -323,15 +322,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
             public function getConfigTreeBuilder() : TreeBuilder
             {
                 $treeBuilder = new TreeBuilder('panther');
-
-                /** @psalm-suppress RedundantCondition */
-                if (method_exists($treeBuilder, 'getRootNode')) {
-                    $rootNode = $treeBuilder->getRootNode();
-                } else {
-                    // BC layer for symfony/config 4.1 and older
-                    /** @psalm-suppress DeprecatedMethod */
-                    $rootNode = $treeBuilder->root('panther');
-                }
+                $rootNode    = $treeBuilder->getRootNode();
 
                 assert($rootNode instanceof ArrayNodeDefinition);
 

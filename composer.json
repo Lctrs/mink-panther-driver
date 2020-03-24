@@ -9,8 +9,10 @@
     "behat/mink": "^1.8.1",
     "behat/mink-extension": "^2.3.1",
     "php-webdriver/webdriver": "^1.8.2",
-    "symfony/config": "~3.4.37 || ~4.3.11 || ~4.4.4",
-    "symfony/dependency-injection": "~3.4.37 || ~4.3.11 || ~4.4.4",
+    "symfony/browser-kit": "^4.4.5",
+    "symfony/config": "^4.4.5",
+    "symfony/dependency-injection": "^4.4.5",
+    "symfony/dom-crawler": "^4.4.5",
     "symfony/panther": "^0.7.1",
     "webmozart/assert": "^1.7.0"
   },
