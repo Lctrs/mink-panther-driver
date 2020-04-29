@@ -1,7 +1,8 @@
 # mink-panther-driver
 
-[![Continuous Deployment](https://github.com/Lctrs/mink-panther-driver/workflows/Continuous%20Deployment/badge.svg)](https://github.com/Lctrs/mink-panther-driver/actions)
-[![Continuous Integration](https://github.com/Lctrs/mink-panther-driver/workflows/Continuous%20Integration/badge.svg)](https://github.com/Lctrs/mink-panther-driver/actions)
+[![Integrate](https://github.com/Lctrs/mink-panther-driver/workflows/Integrate/badge.svg?branch=master)](https://github.com/Lctrs/mink-panther-driver/actions)
+[![Release](https://github.com/Lctrs/mink-panther-driver/workflows/Release/badge.svg?branch=master)](https://github.com/Lctrs/mink-panther-driver/actions)
+[![Renew](https://github.com/Lctrs/mink-panther-driver/workflows/Renew/badge.svg?branch=master)](https://github.com/Lctrsmink-panther-driver/actions)
 
 [![Code Coverage](https://codecov.io/gh/Lctrs/mink-panther-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/Lctrs/mink-panther-driver)
 [![Type Coverage](https://shepherd.dev/github/Lctrs/mink-panther-driver/coverage.svg)](https://shepherd.dev/github/Lctrs/mink-panther-driver)

@@ -6,4 +6,5 @@ parameters:
 	paths:
 		- src/
 		- test/
-	tmpDir: %currentWorkingDirectory%/.build/phpstan
+		- update-license.php
+	tmpDir: .build/phpstan/
