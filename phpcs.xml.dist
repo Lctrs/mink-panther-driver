@@ -14,4 +14,5 @@
 
     <file>src/</file>
     <file>test/</file>
+    <file>update-license.php</file>
 </ruleset>

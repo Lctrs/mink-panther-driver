@@ -2,9 +2,15 @@
 
 We are using [GitHub Actions](https://github.com/features/actions) as a continuous integration system.
 
-For details, see [`workflows/continuous-integration.yml`](workflows/continuous-integration.yml).
+For details, take a look at the following workflow configuration files:
+
+- [`workflows/integrate.yaml`](workflows/integrate.yaml)
+- [`workflows/release.yaml`](workflows/release.yaml)
+- [`workflows/renew.yaml`](workflows/renew.yaml)
 
 ## Coding Standards
+
+We are using [`yamllint`](https://github.com/adrienverge/yamllint) to enforce coding standards in YAML files.
 
 We are using [`doctrine/coding-standard`](https://github.com/doctrine-coding-standard) to enforce coding standards.
 

@@ -43,18 +43,7 @@ branches:
           - "Tests on Selenium (chrome, 7.4, lowest)"
           - "Tests on Selenium (chrome, 7.4, locked)"
           - "Tests on Selenium (chrome, 7.4, highest)"
-#          - "Tests on Selenium (firefox, 7.2, lowest)"
-#          - "Tests on Selenium (firefox, 7.2, locked)"
-#          - "Tests on Selenium (firefox, 7.2, highest)"
-#          - "Tests on Selenium (firefox, 7.3, lowest)"
-#          - "Tests on Selenium (firefox, 7.3, locked)"
-#          - "Tests on Selenium (firefox, 7.3, highest)"
-#          - "Tests on Selenium (firefox, 7.4, lowest)"
-#          - "Tests on Selenium (firefox, 7.4, locked)"
-#          - "Tests on Selenium (firefox, 7.4, highest)"
           - "Code Coverage (7.4, locked)"
-          - "codecov/patch"
-          - "codecov/project"
         strict: false
       restrictions: null
 
@@ -72,6 +61,10 @@ labels:
 
   - name: "enhancement"
     color: "0e8a16"
+    description: ""
+
+  - name: "merge"
+    color: "6f42c1"
     description: ""
 
   - name: "question"
