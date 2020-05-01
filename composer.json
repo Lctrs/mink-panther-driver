@@ -4,15 +4,15 @@
   "description": "Panther (WebDriver) driver for Mink framework",
   "license": "MIT",
   "require": {
-    "php": "^7.2",
+    "php": "^7.2.5",
     "behat/behat": "^3.6.1",
     "behat/mink": "^1.8.1",
-    "behat/mink-extension": "^2.3.1",
+    "friends-of-behat/mink-extension": "^2.4.0",
     "php-webdriver/webdriver": "^1.8.2",
-    "symfony/browser-kit": "^4.4.8",
-    "symfony/config": "^4.4.8",
-    "symfony/dependency-injection": "^4.4.8",
-    "symfony/dom-crawler": "^4.4.8",
+    "symfony/browser-kit": "^5.0.8",
+    "symfony/config": "^5.0.8",
+    "symfony/dependency-injection": "^5.0.8",
+    "symfony/dom-crawler": "^5.0.8",
     "symfony/panther": "^0.7.1",
     "webmozart/assert": "^1.8.0"
   },
@@ -20,10 +20,10 @@
     "doctrine/coding-standard": "^7.0.2",
     "ergebnis/composer-normalize": "^2.5.1",
     "ergebnis/license": "^0.1.0",
+    "friends-of-behat/mink-driver-testsuite": "dev-fix/phpunit8-compatibility",
     "maglnet/composer-require-checker": "^2.0.0",
     "matthiasnoback/symfony-config-test": "^4.1.0",
-    "matthiasnoback/symfony-dependency-injection-test": "^3.1.0",
-    "mink/driver-testsuite": "dev-master",
+    "matthiasnoback/symfony-dependency-injection-test": "^4.1.1",
     "ondram/ci-detector": "^3.3.0",
     "phpstan/extension-installer": "^1.0.4",
     "phpstan/phpstan": "^0.12.19",
@@ -31,7 +31,7 @@
     "phpstan/phpstan-phpunit": "^0.12.8",
     "phpstan/phpstan-strict-rules": "^0.12.2",
     "phpstan/phpstan-webmozart-assert": "^0.12.3",
-    "phpunit/phpunit": "^7.5.20",
+    "phpunit/phpunit": "^8.5.4",
     "psalm/plugin-phpunit": "^0.10.0",
     "vimeo/psalm": "^3.11.2"
   },
@@ -52,5 +52,11 @@
     "psr-4": {
       "Lctrs\\MinkPantherDriver\\Test\\": "test/"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Lctrs/driver-testsuite.git"
+    }
+  ]
 }

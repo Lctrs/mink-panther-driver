@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.9.5@0cfe565d0afbcd31eadcc281b9017b5692911661">
+<files psalm-version="3.11.2@d470903722cfcbc1cd04744c5491d3e6d13ec3d9">
   <file src="src/Extension/Driver/PantherFactory.php">
     <MixedArrayAccess occurrences="5">
       <code>$config['chrome']['binary']</code>
@@ -90,8 +90,7 @@
     <MixedAssignment occurrences="1">
       <code>$element</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
-      <code>WebDriverSelectInterface</code>
+    <MixedInferredReturnType occurrences="1">
       <code>WebDriverSelectInterface</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1"/>
@@ -102,6 +101,9 @@
       <code>$formField-&gt;getValue()</code>
       <code>list&lt;string&gt;|string|bool|null</code>
     </MixedReturnTypeCoercion>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$value</code>
+    </PossiblyInvalidArgument>
     <PossiblyInvalidFunctionCall occurrences="1"/>
   </file>
   <file src="test/Config.php">
@@ -113,10 +115,25 @@
       <code>$browser</code>
     </MixedAssignment>
   </file>
+  <file src="test/Custom/EventsTest.php">
+    <MissingParamType occurrences="2">
+      <code>$modifier</code>
+      <code>$eventProperties</code>
+    </MissingParamType>
+  </file>
   <file src="test/Extension/Driver/PantherFactoryTest.php">
     <MixedInferredReturnType occurrences="2">
       <code>iterable|mixed[]</code>
       <code>iterable|mixed[]</code>
     </MixedInferredReturnType>
+  </file>
+  <file src="test/Extension/PantherExtensionTest.php">
+    <InternalMethod occurrences="5">
+      <code>method</code>
+      <code>willReturn</code>
+      <code>method</code>
+      <code>with</code>
+      <code>method</code>
+    </InternalMethod>
   </file>
 </files>
