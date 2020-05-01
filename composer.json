@@ -18,7 +18,7 @@
   },
   "require-dev": {
     "doctrine/coding-standard": "^7.0.2",
-    "ergebnis/composer-normalize": "^2.5.0",
+    "ergebnis/composer-normalize": "^2.5.1",
     "ergebnis/license": "^0.1.0",
     "maglnet/composer-require-checker": "^2.0.0",
     "matthiasnoback/symfony-config-test": "^4.1.0",
