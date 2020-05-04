@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Lctrs\MinkPantherDriver\Test\Extension\Driver;
+namespace Lctrs\MinkPantherDriver\Test\Unit\Extension;
 
 use Behat\Mink\Driver\DriverInterface;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\WebDriverCapabilities;
-use Lctrs\MinkPantherDriver\Extension\Driver\PantherFactory;
+use Lctrs\MinkPantherDriver\Extension\PantherFactory;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -20,6 +20,9 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use function assert;
 
+/**
+ * @covers \Lctrs\MinkPantherDriver\Extension\PantherFactory
+ */
 final class PantherFactoryTest extends AbstractExtensionTestCase
 {
     use ConfigurationTestCaseTrait;
@@ -65,38 +68,19 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         $this->assertConfigurationIsInvalid($config, $expectedMessage);
     }
 
-    public function testItBuildsChromeDriver() : void
+    public function testItBuildsDriver() : void
     {
-        $this->load([
-            'chrome' => [
-                'binary' => '/usr/lib/chromium/chromedriver',
-                'arguments' => ['--no-sandbox'],
-                'options' => [
-                    'scheme' => 'http',
-                    'host' => '127.0.0.1',
-                    'port' => 9515,
-                    'path' => '/status',
-                ],
-            ],
-        ]);
+        $this->load(['driver' => 'chrome']);
 
         $this->assertContainerBuilderHasService(DriverInterface::class, PantherDriver::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 0, '/usr/lib/chromium/chromedriver');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 1, ['--no-sandbox']);
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 2, [
-            'scheme' => 'http',
-            'host' => '127.0.0.1',
-            'port' => 9515,
-            'path' => '/status',
-        ]);
-
-        $definition = $this->container->getDefinition(DriverInterface::class);
-        self::assertSame([PantherDriver::class, 'createChromeDriver'], $definition->getFactory());
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 0, 'chrome');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 1, ['hostname' => null]);
     }
 
     public function testItBuildsSeleniumDriver() : void
     {
         $this->load([
+            'driver' => 'selenium',
             'selenium' => [
                 'host' => 'http://127.0.0.1:4444/wd/hub',
                 'browser' => 'firefox',
@@ -104,27 +88,16 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         ]);
 
         $this->assertContainerBuilderHasService(DriverInterface::class, PantherDriver::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 0, 'http://127.0.0.1:4444/wd/hub');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 0, 'selenium');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(
             DriverInterface::class,
             1,
-            (new Definition(WebDriverCapabilities::class))
-                ->setFactory([DesiredCapabilities::class, 'firefox'])
+            [
+                'host' => 'http://127.0.0.1:4444/wd/hub',
+                'capabilities' => (new Definition(WebDriverCapabilities::class))
+                    ->setFactory([DesiredCapabilities::class, 'firefox']),
+            ]
         );
-
-        $definition = $this->container->getDefinition(DriverInterface::class);
-        self::assertSame([PantherDriver::class, 'createSeleniumDriver'], $definition->getFactory());
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Unable to build a Lctrs\MinkPantherDriver\PantherDriver instance with the given config.
-     */
-    public function testItThrowsExceptionWhenBuildingDriverWithInvalidConfiguration() : void
-    {
-        $this->factory->buildDriver([
-            'invalid' => [],
-        ]);
     }
 
     /**
@@ -133,113 +106,40 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     public function validConfigurationProvider() : iterable
     {
         yield [
-            [[]],
             [
-                'chrome' => [
-                    'binary' => null,
-                    'arguments' => null,
-                    'options' => [],
-                ],
+                ['driver' => 'chrome'],
             ],
-        ];
-
-        yield [
-            [['chrome' => null]],
             [
-                'chrome' => [
-                    'binary' => null,
-                    'arguments' => null,
-                    'options' => [],
+                'driver' => 'chrome',
+                'options' => ['hostname' => null],
+                'selenium' => [
+                    'host' => null,
+                    'browser' => 'chrome',
                 ],
             ],
         ];
 
         yield [
             [
-                [
-                    'chrome' => [
-                        'binary' => null,
-                        'arguments' => [],
-                        'options' => [],
-                    ],
-                ],
+                ['driver' => 'firefox'],
             ],
             [
-                'chrome' => [
-                    'binary' => null,
-                    'arguments' => [],
-                    'options' => [],
+                'driver' => 'firefox',
+                'options' => ['hostname' => null],
+                'selenium' => [
+                    'host' => null,
+                    'browser' => 'chrome',
                 ],
             ],
         ];
 
         yield [
             [
-                [
-                    'chrome' => [
-                        'binary' => null,
-                        'arguments' => null,
-                    ],
-                ],
+                ['driver' => 'selenium'],
             ],
             [
-                'chrome' => [
-                    'binary' => null,
-                    'arguments' => null,
-                    'options' => [],
-                ],
-            ],
-        ];
-
-        yield [
-            [
-                [
-                    'chrome' => [
-                        'options' => ['scheme' => 'https'],
-                    ],
-                ],
-            ],
-            [
-                'chrome' => [
-                    'binary' => null,
-                    'arguments' => null,
-                    'options' => ['scheme' => 'https'],
-                ],
-            ],
-        ];
-
-        yield [
-            [
-                [
-                    'chrome' => [
-                        'binary' => '/usr/lib/chromium/chromedriver',
-                        'arguments' => ['--no-sandbox'],
-                        'options' => [
-                            'scheme' => 'http',
-                            'host' => '127.0.0.1',
-                            'port' => 9515,
-                            'path' => '/status',
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'chrome' => [
-                    'binary' => '/usr/lib/chromium/chromedriver',
-                    'arguments' => ['--no-sandbox'],
-                    'options' => [
-                        'scheme' => 'http',
-                        'host' => '127.0.0.1',
-                        'port' => 9515,
-                        'path' => '/status',
-                    ],
-                ],
-            ],
-        ];
-
-        yield [
-            [['selenium' => null]],
-            [
+                'driver' => 'selenium',
+                'options' => ['hostname' => null],
                 'selenium' => [
                     'host' => null,
                     'browser' => 'chrome',
@@ -250,6 +150,24 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         yield [
             [
                 [
+                    'driver' => 'chrome',
+                    'options' => ['hostname' => '127.0.0.1'],
+                ],
+            ],
+            [
+                'driver' => 'chrome',
+                'options' => ['hostname' => '127.0.0.1'],
+                'selenium' => [
+                    'host' => null,
+                    'browser' => 'chrome',
+                ],
+            ],
+        ];
+
+        yield [
+            [
+                [
+                    'driver' => 'selenium',
                     'selenium' => [
                         'host' => 'http://127.0.0.1:4444/wd/hub',
                         'browser' => 'firefox',
@@ -257,6 +175,8 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
                 ],
             ],
             [
+                'driver' => 'selenium',
+                'options' => ['hostname' => null],
                 'selenium' => [
                     'host' => 'http://127.0.0.1:4444/wd/hub',
                     'browser' => 'firefox',
@@ -271,39 +191,25 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     public function invalidConfigurationProvider() : iterable
     {
         yield [
+            [[]],
+            'The child node "driver" at path "panther" must be configured.',
+        ];
+
+        yield [
             [
-                [
-                    'chrome' => ['arguments' => '--test'],
-                ],
+                ['driver' => 'invalid-driver'],
             ],
-            '"arguments" must be an array of strings or null.',
+            'The value "invalid-driver" is not allowed for path "panther.driver". Permissible values: "chrome", "firefox", "selenium"',
         ];
 
         yield [
             [
                 [
-                    'chrome' => ['arguments' => ['--no-sandbox', 1]],
-                ],
-            ],
-            '"arguments" must be an array of strings or null.',
-        ];
-
-        yield [
-            [
-                [
+                    'driver' => 'selenium',
                     'selenium' => ['browser' => 'invalid-browser'],
                 ],
             ],
             '"invalid-browser" is not a valid or supported browser.',
-        ];
-
-        yield [
-            [
-                [
-                    'selenium' => ['browser' => 1],
-                ],
-            ],
-            '1 is not a valid or supported browser.',
         ];
     }
 

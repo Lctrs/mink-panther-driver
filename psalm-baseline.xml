@@ -1,37 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.9.5@0cfe565d0afbcd31eadcc281b9017b5692911661">
-  <file src="src/Extension/Driver/PantherFactory.php">
-    <MixedArrayAccess occurrences="5">
-      <code>$config['chrome']['binary']</code>
-      <code>$config['chrome']['arguments']</code>
-      <code>$config['chrome']['options']</code>
-      <code>$config['selenium']['host']</code>
+<files psalm-version="3.11.2@d470903722cfcbc1cd04744c5491d3e6d13ec3d9">
+  <file src="src/Extension/PantherFactory.php">
+    <MixedArrayAccess occurrences="2">
+      <code>$config['selenium']['browser']</code>
       <code>$config['selenium']['browser']</code>
     </MixedArrayAccess>
-    <MixedMethodCall occurrences="48">
+    <MixedArrayAssignment occurrences="1">
+      <code>$config['selenium']['capabilities']</code>
+    </MixedArrayAssignment>
+    <MixedMethodCall occurrences="23">
+      <code>addDefaultsIfNotSet</code>
+      <code>children</code>
+      <code>scalarNode</code>
       <code>defaultNull</code>
-      <code>validate</code>
-      <code>ifTrue</code>
-      <code>thenInvalid</code>
+      <code>end</code>
       <code>end</code>
       <code>end</code>
       <code>arrayNode</code>
       <code>addDefaultsIfNotSet</code>
-      <code>children</code>
-      <code>scalarNode</code>
-      <code>end</code>
-      <code>scalarNode</code>
-      <code>end</code>
-      <code>integerNode</code>
-      <code>end</code>
-      <code>scalarNode</code>
-      <code>end</code>
-      <code>end</code>
-      <code>end</code>
-      <code>end</code>
-      <code>end</code>
-      <code>arrayNode</code>
-      <code>canBeEnabled</code>
       <code>children</code>
       <code>scalarNode</code>
       <code>defaultNull</code>
@@ -46,23 +32,12 @@
       <code>end</code>
       <code>end</code>
       <code>end</code>
-      <code>validate</code>
-      <code>ifTrue</code>
-      <code>then</code>
-      <code>end</code>
-      <code>validate</code>
-      <code>ifTrue</code>
-      <code>then</code>
-      <code>end</code>
-      <code>validate</code>
-      <code>always</code>
-      <code>end</code>
     </MixedMethodCall>
     <PossiblyNullReference occurrences="1">
-      <code>variableNode</code>
+      <code>arrayNode</code>
     </PossiblyNullReference>
     <PossiblyUndefinedMethod occurrences="1">
-      <code>variableNode</code>
+      <code>arrayNode</code>
     </PossiblyUndefinedMethod>
   </file>
   <file src="src/PantherDriver.php">
@@ -90,30 +65,28 @@
     <MixedAssignment occurrences="1">
       <code>$element</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
-      <code>WebDriverSelectInterface</code>
+    <MixedInferredReturnType occurrences="1">
       <code>WebDriverSelectInterface</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1"/>
-    <MixedReturnTypeCoercion occurrences="5">
-      <code>$this-&gt;client-&gt;getWindowHandles()</code>
-      <code>list&lt;string&gt;</code>
+    <MixedReturnTypeCoercion occurrences="3">
       <code>$value</code>
       <code>$formField-&gt;getValue()</code>
       <code>list&lt;string&gt;|string|bool|null</code>
     </MixedReturnTypeCoercion>
     <PossiblyInvalidFunctionCall occurrences="1"/>
   </file>
-  <file src="test/Config.php">
+  <file src="test/Integration/Config.php">
     <MixedArgument occurrences="2">
       <code>$_SERVER['SELENIUM_HOST']</code>
       <code>$_SERVER['SELENIUM_PORT']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$browser</code>
-    </MixedAssignment>
   </file>
-  <file src="test/Extension/Driver/PantherFactoryTest.php">
+  <file src="test/Unit/Extension/PantherFactoryTest.php">
+    <InternalMethod occurrences="2">
+      <code>configure</code>
+      <code>buildDriver</code>
+    </InternalMethod>
     <MixedInferredReturnType occurrences="2">
       <code>iterable|mixed[]</code>
       <code>iterable|mixed[]</code>

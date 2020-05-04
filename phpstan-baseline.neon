@@ -1,9 +1,9 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method variableNode\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#"
+			message: "#^Cannot call method arrayNode\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#"
 			count: 1
-			path: src/Extension/Driver/PantherFactory.php
+			path: src/Extension/PantherFactory.php
 
 		-
 			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\PantherDriver\\:\\:getValue\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -16,17 +16,22 @@ parameters:
 			path: src/PantherDriver.php
 
 		-
+			message: "#^Cannot call method getKeyboard\\(\\) on Symfony\\\\Component\\\\Panther\\\\Client\\|null\\.$#"
+			count: 3
+			path: src/PantherDriver.php
+
+		-
 			message: "#^Strict comparison using \\=\\=\\= between Symfony\\\\Component\\\\Panther\\\\DomCrawler\\\\Crawler and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/PantherDriver.php
 
 		-
-			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\Test\\\\Custom\\\\EventsTest\\:\\:testKeyboardEvents\\(\\) has parameter \\$eventProperties with no typehint specified\\.$#"
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\Test\\\\Integration\\\\Custom\\\\EventsTest\\:\\:testKeyboardEvents\\(\\) has parameter \\$eventProperties with no typehint specified\\.$#"
 			count: 1
-			path: test/Custom/EventsTest.php
+			path: test/Integration/Custom/EventsTest.php
 
 		-
-			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\Test\\\\Custom\\\\EventsTest\\:\\:testKeyboardEvents\\(\\) has parameter \\$modifier with no typehint specified\\.$#"
+			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\Test\\\\Integration\\\\Custom\\\\EventsTest\\:\\:testKeyboardEvents\\(\\) has parameter \\$modifier with no typehint specified\\.$#"
 			count: 1
-			path: test/Custom/EventsTest.php
+			path: test/Integration/Custom/EventsTest.php
 

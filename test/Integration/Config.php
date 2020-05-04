@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Lctrs\MinkPantherDriver\Test;
+namespace Lctrs\MinkPantherDriver\Test\Integration;
 
 use Behat\Mink\Tests\Driver\AbstractConfig;
 use Facebook\WebDriver\Chrome\ChromeOptions;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
-use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use OndraM\CiDetector\CiDetector;
-use PHPUnit\Runner\AfterLastTestHook;
-use function sprintf;
+use function assert;
+use function is_string;
 use function strpos;
 use const PHP_OS;
 
-final class Config extends AbstractConfig implements AfterLastTestHook
+final class Config extends AbstractConfig
 {
     /**
      * Creates an instance of the config.
@@ -33,36 +31,27 @@ final class Config extends AbstractConfig implements AfterLastTestHook
      */
     public function createDriver() : PantherDriver
     {
-        $browser = $_SERVER['BROWSER_NAME'] ?? WebDriverBrowserType::CHROME;
+        $browser = $_SERVER['BROWSER_NAME'] ?? PantherDriver::CHROME;
 
-        if ($_SERVER['SELENIUM_HOST'] ?? false) {
-            if ($browser === WebDriverBrowserType::FIREFOX) {
-                $desiredCapabilities = DesiredCapabilities::firefox();
-            } elseif ($browser === WebDriverBrowserType::CHROME) {
-                $options = new ChromeOptions();
-                $options->addArguments([
-                    '--headless',
-                    '--window-size=1200,1100',
-                    '--disable-gpu',
-                    '--no-sandbox',
-                ]);
+        assert(is_string($browser));
 
-                $desiredCapabilities = $options->toCapabilities();
-            } else {
-                $desiredCapabilities = new DesiredCapabilities();
-            }
+        if ($browser === PantherDriver::SELENIUM) {
+            $options = new ChromeOptions();
+            $options->addArguments([
+                '--headless',
+                '--window-size=1200,1100',
+                '--disable-gpu',
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+            ]);
 
-            return DriverRegistry::register(PantherDriver::createSeleniumDriver(
-                sprintf('http://%s:%s/wd/hub', $_SERVER['SELENIUM_HOST'], $_SERVER['SELENIUM_PORT']),
-                $desiredCapabilities
-            ));
+            return new PantherDriver($browser, [
+                'host' => (string) $_SERVER['SELENIUM_HOST'],
+                'capabilities' => $options->toCapabilities(),
+            ]);
         }
 
-        if ($browser === WebDriverBrowserType::FIREFOX) {
-            return DriverRegistry::register(PantherDriver::createFirefoxDriver());
-        }
-
-        return DriverRegistry::register(PantherDriver::createChromeDriver());
+        return new PantherDriver($browser);
     }
 
     /**
@@ -94,10 +83,5 @@ final class Config extends AbstractConfig implements AfterLastTestHook
     protected function supportsCss() : bool
     {
         return true;
-    }
-
-    public function executeAfterLastTest() : void
-    {
-        DriverRegistry::stop();
     }
 }

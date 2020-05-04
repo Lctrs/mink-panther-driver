@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Lctrs\MinkPantherDriver\Test\Extension;
+namespace Lctrs\MinkPantherDriver\Test\Unit\Extension;
 
 use Behat\MinkExtension\ServiceContainer\Driver\DriverFactory;
 use Behat\MinkExtension\ServiceContainer\MinkExtension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
-use Lctrs\MinkPantherDriver\Extension\Driver\PantherFactory;
 use Lctrs\MinkPantherDriver\Extension\PantherExtension;
+use Lctrs\MinkPantherDriver\Extension\PantherFactory;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Lctrs\MinkPantherDriver\Extension\PantherExtension
+ */
 final class PantherExtensionTest extends TestCase
 {
     /** @var PantherExtension */
