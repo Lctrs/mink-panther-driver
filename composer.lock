@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c8f85e79fcc10fceb078a682da80c49",
+    "content-hash": "12efdcb2a646843a8120cf67f6e01428",
     "packages": [
         {
             "name": "behat/behat",
@@ -3864,16 +3864,16 @@
         },
         {
             "name": "phpstan/phpstan-webmozart-assert",
-            "version": "0.12.3",
+            "version": "0.12.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-webmozart-assert.git",
-                "reference": "27d5ff48754463f5e9443f351722d0b955f6a27d"
+                "reference": "714e7a6b936931790855c8da958153dfb25fc953"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-webmozart-assert/zipball/27d5ff48754463f5e9443f351722d0b955f6a27d",
-                "reference": "27d5ff48754463f5e9443f351722d0b955f6a27d",
+                "url": "https://api.github.com/repos/phpstan/phpstan-webmozart-assert/zipball/714e7a6b936931790855c8da958153dfb25fc953",
+                "reference": "714e7a6b936931790855c8da958153dfb25fc953",
                 "shasum": ""
             },
             "require": {
@@ -3890,7 +3890,7 @@
                 "phpstan/phpstan-strict-rules": "^0.12.1",
                 "phpunit/phpunit": "^7.5.18",
                 "slevomat/coding-standard": "^4.5.2",
-                "webmozart/assert": "^1.3.0"
+                "webmozart/assert": "^1.7.0"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -3913,7 +3913,7 @@
                 "MIT"
             ],
             "description": "PHPStan webmozart/assert extension",
-            "time": "2020-03-31T15:28:20+00:00"
+            "time": "2020-05-04T08:30:18+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
