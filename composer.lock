@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70f91d0571d3d6d4fcc502fe540d8eb8",
+    "content-hash": "03d7edc7249f3f1b87c7b06863bd54a9",
     "packages": [
         {
             "name": "behat/behat",
@@ -2789,16 +2789,16 @@
         },
         {
             "name": "matthiasnoback/symfony-config-test",
-            "version": "4.1.0",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymfonyTest/SymfonyConfigTest.git",
-                "reference": "9d89aa047f053194a7d7a3211f5ead23210c74c7"
+                "reference": "32de23c14c31820626d65a06a3c11f60b487263d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymfonyTest/SymfonyConfigTest/zipball/9d89aa047f053194a7d7a3211f5ead23210c74c7",
-                "reference": "9d89aa047f053194a7d7a3211f5ead23210c74c7",
+                "url": "https://api.github.com/repos/SymfonyTest/SymfonyConfigTest/zipball/32de23c14c31820626d65a06a3c11f60b487263d",
+                "reference": "32de23c14c31820626d65a06a3c11f60b487263d",
                 "shasum": ""
             },
             "require": {
@@ -2809,7 +2809,7 @@
                 "phpunit/phpunit": "<7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0 || ^8.0"
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
             },
             "type": "library",
             "extra": {
@@ -2840,7 +2840,7 @@
                 "phpunit",
                 "symfony"
             ],
-            "time": "2019-11-23T13:23:58+00:00"
+            "time": "2020-05-08T07:24:53+00:00"
         },
         {
             "name": "matthiasnoback/symfony-dependency-injection-test",
