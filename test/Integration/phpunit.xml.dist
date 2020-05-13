@@ -1,0 +1,44 @@
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../vendor/phpunit/phpunit/phpunit.xsd"
+    beStrictAboutChangesToGlobalState="true"
+    beStrictAboutCoversAnnotation="true"
+    beStrictAboutOutputDuringTests="true"
+    beStrictAboutResourceUsageDuringSmallTests="true"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    beStrictAboutTodoAnnotatedTests="true"
+    bootstrap="../../vendor/autoload.php"
+    cacheResult="true"
+    cacheResultFile="../../.build/phpunit/integration.cache"
+    colors="true"
+    columns="max"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    verbose="true"
+>
+    <php>
+        <var name="driver_config_factory" value="Lctrs\MinkPantherDriver\Test\Integration\Config::getInstance" />
+    </php>
+
+    <testsuites>
+        <testsuite name="Functional tests">
+            <directory>../../vendor/mink/driver-testsuite/tests/</directory>
+            <exclude>../../vendor/mink/driver-testsuite/tests/Js/EventsTest.php</exclude>
+        </testsuite>
+        <!-- if needed to add more tests -->
+        <testsuite name="Driver tests">
+            <directory>./Custom/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../src/</directory>
+        </whitelist>
+    </filter>
+</phpunit>

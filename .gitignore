@@ -1,5 +1,5 @@
 /.build/
+/test/*/phpunit.xml
 /vendor/
 /phpcs.xml
 /phpstan.neon
-/phpunit.xml

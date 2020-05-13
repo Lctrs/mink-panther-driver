@@ -31,6 +31,7 @@
     "phpstan/phpstan-phpunit": "^0.12.8",
     "phpstan/phpstan-strict-rules": "^0.12.2",
     "phpstan/phpstan-webmozart-assert": "^0.12.4",
+    "phpunit/phpcov": "^5.0.0",
     "phpunit/phpunit": "^7.5.20",
     "psalm/plugin-phpunit": "^0.10.0",
     "vimeo/psalm": "^3.11.4"
@@ -50,6 +51,7 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "Lctrs\\MinkPantherDriver\\PHPStan\\": "phpstan/",
       "Lctrs\\MinkPantherDriver\\Test\\": "test/"
     }
   }

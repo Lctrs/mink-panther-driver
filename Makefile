@@ -1,5 +1,5 @@
 .PHONY: it
-it: coding-standards dependency-analysis static-code-analysis ## Runs the coding-standards, dependency-analysis, static-code-analysis, and tests targets
+it: coding-standards dependency-analysis static-code-analysis tests ## Runs the coding-standards, dependency-analysis, static-code-analysis, and tests targets
 
 .PHONY: coding-standards
 coding-standards: vendor ## Fixes code style issues with doctrine/coding-standard
@@ -30,6 +30,11 @@ static-code-analysis-baseline: vendor ## Generates a baseline for static code an
 	vendor/bin/phpstan analyze --configuration=phpstan.neon.dist --error-format=baselineNeon > phpstan-baseline.neon || true
 	mkdir -p .build/psalm
 	vendor/bin/psalm --config=psalm.xml --set-baseline=psalm-baseline.xml
+
+.PHONY: tests
+tests: vendor ## Runs unit tests with phpunit/phpunit
+	mkdir -p .build/phpunit
+	vendor/bin/phpunit --configuration=test/Unit/phpunit.xml.dist
 
 vendor: composer.json composer.lock
 	composer validate --strict

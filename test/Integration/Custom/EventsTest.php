@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lctrs\MinkPantherDriver\Test\Custom;
+namespace Lctrs\MinkPantherDriver\Test\Integration\Custom;
 
 use Behat\Mink\Tests\Driver\Js\EventsTest as MinkEventsTest;
 
