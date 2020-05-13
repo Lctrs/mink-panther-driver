@@ -344,7 +344,6 @@ final class PantherDriver extends CoreDriver
      * @return string[]|string|bool|null
      *
      * @inheritDoc
-     * @psalm-return list<string>|string|bool|null
      */
     public function getValue($xpath)
     {
