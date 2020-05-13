@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.11.2@d470903722cfcbc1cd04744c5491d3e6d13ec3d9">
+<files psalm-version="3.11.4@58e1d8e68e5098bf4fbfdfb420c38d563f882549">
   <file src="src/Extension/PantherFactory.php">
     <MixedArrayAccess occurrences="2">
       <code>$config['selenium']['browser']</code>
@@ -72,15 +72,9 @@
     <MixedReturnTypeCoercion occurrences="3">
       <code>$value</code>
       <code>$formField-&gt;getValue()</code>
-      <code>list&lt;string&gt;|string|bool|null</code>
+      <code>string[]|string|bool|null</code>
     </MixedReturnTypeCoercion>
     <PossiblyInvalidFunctionCall occurrences="1"/>
-  </file>
-  <file src="test/Integration/Config.php">
-    <MixedArgument occurrences="2">
-      <code>$_SERVER['SELENIUM_HOST']</code>
-      <code>$_SERVER['SELENIUM_PORT']</code>
-    </MixedArgument>
   </file>
   <file src="test/Unit/Extension/PantherFactoryTest.php">
     <InternalMethod occurrences="2">
