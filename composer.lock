@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86fb8850b14eab838f180dd4287caa69",
+    "content-hash": "9077a12d89bd62975bb09a38620685a0",
     "packages": [
         {
             "name": "behat/behat",
@@ -2901,12 +2901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/driver-testsuite.git",
-                "reference": "9ce01154e5331640d2a4f2b9791baf19bb0f4a5d"
+                "reference": "40022e03e6916f31f5674669d7c2c776b985bf95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/driver-testsuite/zipball/9ce01154e5331640d2a4f2b9791baf19bb0f4a5d",
-                "reference": "9ce01154e5331640d2a4f2b9791baf19bb0f4a5d",
+                "url": "https://api.github.com/repos/minkphp/driver-testsuite/zipball/40022e03e6916f31f5674669d7c2c776b985bf95",
+                "reference": "40022e03e6916f31f5674669d7c2c776b985bf95",
                 "shasum": ""
             },
             "require": {
@@ -2945,7 +2945,7 @@
             ],
             "description": "Functional testsuite for Mink drivers",
             "homepage": "http://mink.behat.org/",
-            "time": "2020-03-10T17:16:01+00:00"
+            "time": "2020-05-30T09:16:51+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3710,16 +3710,16 @@
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
-            "version": "0.12.3",
+            "version": "0.12.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-deprecation-rules.git",
-                "reference": "6f87f9c733d13bc069bc58f1735933b50dac32cb"
+                "reference": "9b4b8851fb5d59fd0eed00fbe9c22cfc328e0187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-deprecation-rules/zipball/6f87f9c733d13bc069bc58f1735933b50dac32cb",
-                "reference": "6f87f9c733d13bc069bc58f1735933b50dac32cb",
+                "url": "https://api.github.com/repos/phpstan/phpstan-deprecation-rules/zipball/9b4b8851fb5d59fd0eed00fbe9c22cfc328e0187",
+                "reference": "9b4b8851fb5d59fd0eed00fbe9c22cfc328e0187",
                 "shasum": ""
             },
             "require": {
@@ -3757,7 +3757,7 @@
                 "MIT"
             ],
             "description": "PHPStan rules for detecting usage of deprecated classes, methods, properties, constants and traits.",
-            "time": "2020-05-20T20:57:34+00:00"
+            "time": "2020-05-30T18:02:31+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",

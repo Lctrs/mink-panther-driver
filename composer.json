@@ -27,7 +27,7 @@
     "ondram/ci-detector": "^3.4.0",
     "phpstan/extension-installer": "^1.0.4",
     "phpstan/phpstan": "^0.12.25",
-    "phpstan/phpstan-deprecation-rules": "^0.12.3",
+    "phpstan/phpstan-deprecation-rules": "^0.12.4",
     "phpstan/phpstan-phpunit": "^0.12.8",
     "phpstan/phpstan-strict-rules": "^0.12.2",
     "phpstan/phpstan-webmozart-assert": "^0.12.4",
