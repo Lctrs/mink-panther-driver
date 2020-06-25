@@ -21,7 +21,7 @@ use PHPStan\Type\TypeCombinator;
 /**
  * @internal
  */
-final class EnsureClientIsStartedTypeSpecifyingExtension implements MethodTypeSpecifyingExtension, TypeSpecifierAwareExtension
+final class StartTypeSpecifyingExtension implements MethodTypeSpecifyingExtension, TypeSpecifierAwareExtension
 {
     /** @var TypeSpecifier */
     private $typeSpecifier;
@@ -38,7 +38,7 @@ final class EnsureClientIsStartedTypeSpecifyingExtension implements MethodTypeSp
 
     public function isMethodSupported(MethodReflection $methodReflection, MethodCall $node, TypeSpecifierContext $context) : bool
     {
-        return $methodReflection->getName() === 'ensureClientIsStarted';
+        return $methodReflection->getName() === 'start' && $context->null();
     }
 
     public function specifyTypes(MethodReflection $methodReflection, MethodCall $node, Scope $scope, TypeSpecifierContext $context) : SpecifiedTypes

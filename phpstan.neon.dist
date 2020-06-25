@@ -5,12 +5,12 @@ services:
 			- phpstan.typeSpecifier.staticMethodTypeSpecifyingExtension
 
 	-
-		class: Lctrs\MinkPantherDriver\PHPStan\Type\EnsureClientIsStartedTypeSpecifyingExtension
+		class: Lctrs\MinkPantherDriver\PHPStan\Type\IsStartedTypeSpecifyingExtension
 		tags:
 			- phpstan.typeSpecifier.methodTypeSpecifyingExtension
 
 	-
-		class: Lctrs\MinkPantherDriver\PHPStan\Type\IsStartedTypeSpecifyingExtension
+		class: Lctrs\MinkPantherDriver\PHPStan\Type\StartTypeSpecifyingExtension
 		tags:
 			- phpstan.typeSpecifier.methodTypeSpecifyingExtension
 

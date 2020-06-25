@@ -263,7 +263,7 @@ jobs:
       - name: "Run integration tests with phpunit/phpunit"
         env:
           BROWSER_NAME: "${{ matrix.browser }}"
-          PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage --remote-debugging-port=9222 --disable-infobars --disable-extensions"
+          PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage"
           PANTHER_CHROME_DRIVER_BINARY: "/usr/bin/chromedriver"
           PANTHER_NO_SANDBOX: "1"
           PANTHER_WEB_SERVER_DIR: "./vendor/mink/driver-testsuite/web-fixtures"
@@ -331,7 +331,7 @@ jobs:
         env:
           BROWSER_NAME: "chrome"
           PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage"
-          PANTHER_CHROME_DRIVER_BINARY: "${{ env.CHROMEWEBDRIVER }}"
+          PANTHER_CHROME_DRIVER_BINARY: "/usr/bin/chromedriver"
           PANTHER_NO_SANDBOX: "1"
           PANTHER_WEB_SERVER_DIR: "./vendor/mink/driver-testsuite/web-fixtures"
           PANTHER_WEB_SERVER_PORT: "8002"

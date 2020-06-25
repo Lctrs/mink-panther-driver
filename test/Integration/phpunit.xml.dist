@@ -41,4 +41,8 @@
             <directory suffix=".php">../../src/</directory>
         </whitelist>
     </filter>
+
+    <extensions>
+        <extension class="Lctrs\MinkPantherDriver\Test\Integration\Config" />
+    </extensions>
 </phpunit>
