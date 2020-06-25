@@ -44,7 +44,8 @@
     <DocblockTypeContradiction occurrences="1">
       <code>$crawler === null</code>
     </DocblockTypeContradiction>
-    <InaccessibleProperty occurrences="1">
+    <InaccessibleProperty occurrences="2">
+      <code>$client-&gt;webDriver</code>
       <code>$field-&gt;selector</code>
     </InaccessibleProperty>
     <InvalidOperand occurrences="1">
@@ -74,7 +75,7 @@
       <code>$formField-&gt;getValue()</code>
       <code>string[]|string|bool|null</code>
     </MixedReturnTypeCoercion>
-    <PossiblyInvalidFunctionCall occurrences="1"/>
+    <PossiblyInvalidFunctionCall occurrences="2"/>
   </file>
   <file src="test/Unit/Extension/PantherFactoryTest.php">
     <InternalMethod occurrences="2">

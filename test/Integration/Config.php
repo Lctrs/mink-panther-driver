@@ -8,12 +8,13 @@ use Behat\Mink\Tests\Driver\AbstractConfig;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use OndraM\CiDetector\CiDetector;
+use PHPUnit\Runner\AfterLastTestHook;
 use function assert;
 use function is_string;
 use function strpos;
 use const PHP_OS;
 
-final class Config extends AbstractConfig
+final class Config extends AbstractConfig implements AfterLastTestHook
 {
     /**
      * Creates an instance of the config.
@@ -86,5 +87,10 @@ final class Config extends AbstractConfig
     protected function supportsCss() : bool
     {
         return true;
+    }
+
+    public function executeAfterLastTest() : void
+    {
+        PantherDriver::stopWebServer();
     }
 }
