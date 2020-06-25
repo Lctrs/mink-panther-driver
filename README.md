@@ -12,7 +12,7 @@
 
 ## Installation
 
-```
+```sh
 $ composer require --dev lctrs/mink-panther-driver
 ```
 
