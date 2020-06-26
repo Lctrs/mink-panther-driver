@@ -16,6 +16,7 @@ use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Internal\WebDriverLocatable;
 use Facebook\WebDriver\JavaScriptExecutor;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverCapabilities;
 use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverElement;
 use Facebook\WebDriver\WebDriverHasInputDevices;
@@ -34,6 +35,7 @@ use Symfony\Component\Panther\DomCrawler\Field\FileFormField;
 use Symfony\Component\Panther\DomCrawler\Field\InputFormField;
 use Symfony\Component\Panther\DomCrawler\Field\TextareaFormField;
 use Symfony\Component\Panther\PantherTestCaseTrait;
+
 use function array_merge;
 use function chr;
 use function count;
@@ -49,6 +51,7 @@ use function strpos;
 use function strtolower;
 use function trim;
 use function urldecode;
+
 use const PHP_EOL;
 
 final class PantherDriver extends CoreDriver
@@ -63,14 +66,14 @@ final class PantherDriver extends CoreDriver
     private $driver;
     /**
      * @var mixed[]
-     * @psalm-var array{host?: string|null, capabilities?: \Facebook\WebDriver\WebDriverCapabilities|null}
+     * @psalm-var array{host?: (string|null), capabilities?: (WebDriverCapabilities|null)}
      */
     private $options;
 
     /**
      * @param mixed[] $options
      *
-     * @psalm-param array{host?: string|null, capabilities?: \Facebook\WebDriver\WebDriverCapabilities|null} $options
+     * @psalm-param array{host?: (string|null), capabilities?: (WebDriverCapabilities|null)} $options
      */
     public function __construct(string $driver = self::CHROME, array $options = [])
     {
@@ -82,7 +85,7 @@ final class PantherDriver extends CoreDriver
         $this->options = $options;
     }
 
-    public function start() : void
+    public function start(): void
     {
         if (self::$pantherClient === null) {
             if ($this->driver === self::SELENIUM) {
@@ -95,14 +98,14 @@ final class PantherDriver extends CoreDriver
         self::$pantherClient->start();
     }
 
-    public function isStarted() : bool
+    public function isStarted(): bool
     {
-        return self::$pantherClient !== null && Closure::bind(static function (Client $client) : bool {
+        return self::$pantherClient !== null && Closure::bind(static function (Client $client): bool {
             return $client->webDriver !== null;
         }, null, Client::class)(self::$pantherClient);
     }
 
-    public function stop() : void
+    public function stop(): void
     {
         if (self::$pantherClient === null) {
             return;
@@ -111,7 +114,7 @@ final class PantherDriver extends CoreDriver
         self::$pantherClient->quit();
     }
 
-    public function reset() : void
+    public function reset(): void
     {
         if (! $this->isStarted()) {
             return;
@@ -124,7 +127,8 @@ final class PantherDriver extends CoreDriver
             $history->clear();
         }
 
-        if (! (self::$pantherClient->getWebDriver() instanceof JavaScriptExecutor)
+        if (
+            ! (self::$pantherClient->getWebDriver() instanceof JavaScriptExecutor)
             || in_array(self::$pantherClient->getCurrentURL(), ['', 'about:blank', 'data:,'], true)
         ) {
             return;
@@ -136,35 +140,35 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function visit($url) : void
+    public function visit($url): void
     {
         $this->start();
 
         self::$pantherClient->get($url);
     }
 
-    public function getCurrentUrl() : string
+    public function getCurrentUrl(): string
     {
         $this->start();
 
         return self::$pantherClient->getCurrentURL();
     }
 
-    public function reload() : void
+    public function reload(): void
     {
         $this->start();
 
         self::$pantherClient->reload();
     }
 
-    public function forward() : void
+    public function forward(): void
     {
         $this->start();
 
         self::$pantherClient->forward();
     }
 
-    public function back() : void
+    public function back(): void
     {
         $this->start();
 
@@ -174,7 +178,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function switchToWindow($name = null) : void
+    public function switchToWindow($name = null): void
     {
         $this->start();
 
@@ -185,7 +189,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function switchToIFrame($name = null) : void
+    public function switchToIFrame($name = null): void
     {
         $this->start();
 
@@ -209,7 +213,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function setCookie($name, $value = null) : void
+    public function setCookie($name, $value = null): void
     {
         $this->start();
 
@@ -225,7 +229,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function getCookie($name) : ?string
+    public function getCookie($name): ?string
     {
         $this->start();
 
@@ -237,7 +241,7 @@ final class PantherDriver extends CoreDriver
         return urldecode($cookie->getValue());
     }
 
-    public function getContent() : string
+    public function getContent(): string
     {
         $this->start();
 
@@ -248,7 +252,7 @@ final class PantherDriver extends CoreDriver
         );
     }
 
-    public function getScreenshot() : string
+    public function getScreenshot(): string
     {
         $this->start();
 
@@ -258,14 +262,14 @@ final class PantherDriver extends CoreDriver
     /**
      * @return mixed[]
      */
-    public function getWindowNames() : array
+    public function getWindowNames(): array
     {
         $this->start();
 
         return self::$pantherClient->getWindowHandles();
     }
 
-    public function getWindowName() : string
+    public function getWindowName(): string
     {
         $this->start();
 
@@ -275,13 +279,13 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    protected function findElementXpaths($xpath) : array
+    protected function findElementXpaths($xpath): array
     {
         $elements = $this->getFilteredCrawlerBy($xpath);
 
         $xPaths = [];
         foreach ($elements as $key => $element) {
-            $xPaths[] = sprintf('(%s)[%d]', $xpath, $key+1);
+            $xPaths[] = sprintf('(%s)[%d]', $xpath, $key + 1);
         }
 
         return $xPaths;
@@ -290,7 +294,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function getTagName($xpath) : string
+    public function getTagName($xpath): string
     {
         return $this->getFilteredCrawlerBy($xpath)->getTagName();
     }
@@ -298,7 +302,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function getText($xpath) : string
+    public function getText($xpath): string
     {
         return str_replace(
             ["\r", "\r\n", "\n"],
@@ -310,7 +314,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function getHtml($xpath) : string
+    public function getHtml($xpath): string
     {
         return $this->getFilteredCrawlerBy($xpath)->getAttribute('innerHTML') ?? '';
     }
@@ -318,7 +322,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function getOuterHtml($xpath) : string
+    public function getOuterHtml($xpath): string
     {
         return $this->getFilteredCrawlerBy($xpath)->html();
     }
@@ -326,7 +330,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function getAttribute($xpath, $name) : ?string
+    public function getAttribute($xpath, $name): ?string
     {
         $element = $this->findElement($xpath);
 
@@ -346,7 +350,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @throws UnsupportedDriverActionException
      */
-    private function hasAttribute(WebDriverElement $element, string $name) : bool
+    private function hasAttribute(WebDriverElement $element, string $name): bool
     {
         return (bool) $this->executeScriptOn($element, 'return arguments[0].hasAttribute(arguments[1]);', $name);
     }
@@ -399,7 +403,7 @@ final class PantherDriver extends CoreDriver
     /**
      * @inheritDoc
      */
-    public function setValue($xpath, $value) : void
+    public function setValue($xpath, $value): void
     {
         $this->start();
 
@@ -439,7 +443,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function check($xpath) : void
+    public function check($xpath): void
     {
         $field = $this->getFormField($this->findElement($xpath));
 
@@ -455,7 +459,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function uncheck($xpath) : void
+    public function uncheck($xpath): void
     {
         $field = $this->getFormField($this->findElement($xpath));
 
@@ -471,7 +475,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function isChecked($xpath) : bool
+    public function isChecked($xpath): bool
     {
         return $this->isSelected($xpath);
     }
@@ -479,7 +483,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function selectOption($xpath, $value, $multiple = false) : void
+    public function selectOption($xpath, $value, $multiple = false): void
     {
         $field = $this->getFormField($this->findElement($xpath));
 
@@ -507,7 +511,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function isSelected($xpath) : bool
+    public function isSelected($xpath): bool
     {
         return $this->getFilteredCrawlerBy($xpath)->isSelected();
     }
@@ -515,7 +519,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function click($xpath) : void
+    public function click($xpath): void
     {
         $this->start();
 
@@ -526,7 +530,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function doubleClick($xpath) : void
+    public function doubleClick($xpath): void
     {
         $this->start();
 
@@ -536,7 +540,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function rightClick($xpath) : void
+    public function rightClick($xpath): void
     {
         $this->start();
 
@@ -546,7 +550,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function attachFile($xpath, $path) : void
+    public function attachFile($xpath, $path): void
     {
         $field = $this->getFormField($this->findElement($xpath));
 
@@ -562,7 +566,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function isVisible($xpath) : bool
+    public function isVisible($xpath): bool
     {
         return $this->getFilteredCrawlerBy($xpath)->isDisplayed();
     }
@@ -570,7 +574,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function mouseOver($xpath) : void
+    public function mouseOver($xpath): void
     {
         $this->start();
 
@@ -580,7 +584,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function focus($xpath) : void
+    public function focus($xpath): void
     {
         $this->start();
 
@@ -590,7 +594,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function blur($xpath) : void
+    public function blur($xpath): void
     {
         $this->executeScriptOn(
             $this->findElement($xpath),
@@ -603,7 +607,7 @@ JS
      *
      * @inheritDoc
      */
-    public function keyPress($xpath, $char, $modifier = null) : void
+    public function keyPress($xpath, $char, $modifier = null): void
     {
         $this->focus($xpath);
         $keyboard = self::$pantherClient->getKeyboard();
@@ -620,7 +624,7 @@ JS
      *
      * @inheritDoc
      */
-    public function keyDown($xpath, $char, $modifier = null) : void
+    public function keyDown($xpath, $char, $modifier = null): void
     {
         $this->focus($xpath);
         $keyboard = self::$pantherClient->getKeyboard();
@@ -637,7 +641,7 @@ JS
      *
      * @inheritDoc
      */
-    public function keyUp($xpath, $char, $modifier = null) : void
+    public function keyUp($xpath, $char, $modifier = null): void
     {
         $this->focus($xpath);
         $keyboard = self::$pantherClient->getKeyboard();
@@ -652,7 +656,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function dragTo($sourceXpath, $destinationXpath) : void
+    public function dragTo($sourceXpath, $destinationXpath): void
     {
         $this->createWebDriverAction()->dragAndDrop(
             $this->findElement($sourceXpath),
@@ -663,7 +667,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function executeScript($script) : void
+    public function executeScript($script): void
     {
         $this->start();
 
@@ -700,7 +704,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function wait($timeout, $condition) : bool
+    public function wait($timeout, $condition): bool
     {
         $this->start();
 
@@ -725,7 +729,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function resizeWindow($width, $height, $name = null) : void
+    public function resizeWindow($width, $height, $name = null): void
     {
         $this->start();
 
@@ -742,7 +746,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function maximizeWindow($name = null) : void
+    public function maximizeWindow($name = null): void
     {
         $this->start();
 
@@ -759,7 +763,7 @@ JS
     /**
      * @inheritDoc
      */
-    public function submitForm($xpath) : void
+    public function submitForm($xpath): void
     {
         $this->start();
 
@@ -772,7 +776,7 @@ JS
     /**
      * @throws DriverException
      */
-    private function findElement(string $xpath) : WebDriverElement
+    private function findElement(string $xpath): WebDriverElement
     {
         $element = $this->getFilteredCrawlerBy($xpath)->getElement(0);
         if ($element === null) {
@@ -785,7 +789,7 @@ JS
     /**
      * @throws DriverException
      */
-    private function getFilteredCrawlerBy(string $xpath) : Crawler
+    private function getFilteredCrawlerBy(string $xpath): Crawler
     {
         return $this->getCrawler()->filterXPath($xpath);
     }
@@ -793,7 +797,7 @@ JS
     /**
      * @throws DriverException
      */
-    private function getCrawler() : Crawler
+    private function getCrawler(): Crawler
     {
         $this->start();
 
@@ -810,7 +814,7 @@ JS
     /**
      * @throws DriverException
      */
-    private function toCoordinates(string $xpath) : WebDriverCoordinates
+    private function toCoordinates(string $xpath): WebDriverCoordinates
     {
         $element = $this->findElement($xpath);
 
@@ -821,7 +825,7 @@ JS
         return $element->getCoordinates();
     }
 
-    private function getFormField(WebDriverElement $element) : FormField
+    private function getFormField(WebDriverElement $element): FormField
     {
         $tagName = $element->getTagName();
 
@@ -844,7 +848,7 @@ JS
     /**
      * @throws UnsupportedDriverActionException
      */
-    private function createWebDriverAction() : WebDriverActions
+    private function createWebDriverAction(): WebDriverActions
     {
         $this->start();
 
@@ -877,7 +881,7 @@ JS
     /**
      * @param string|int $char
      */
-    private static function getCharKey($char) : string
+    private static function getCharKey($char): string
     {
         if (is_int($char)) {
             $char = strtolower(chr($char));
@@ -889,25 +893,29 @@ JS
     /**
      * @throws DriverException
      */
-    private static function getModifierKey(string $modifier) : string
+    private static function getModifierKey(string $modifier): string
     {
         switch ($modifier) {
             case 'alt':
                 return WebDriverKeys::ALT;
+
             case 'ctrl':
                 return WebDriverKeys::CONTROL;
+
             case 'shift':
                 return WebDriverKeys::SHIFT;
+
             case 'meta':
                 return WebDriverKeys::META;
+
             default:
                 throw new DriverException(sprintf('Unknown modifier "%s".', $modifier));
         }
     }
 
-    private static function getInnerSelector(ChoiceFormField $field) : WebDriverSelectInterface
+    private static function getInnerSelector(ChoiceFormField $field): WebDriverSelectInterface
     {
-        return Closure::bind(static function (ChoiceFormField $field) : WebDriverSelectInterface {
+        return Closure::bind(static function (ChoiceFormField $field): WebDriverSelectInterface {
             return $field->selector;
         }, null, ChoiceFormField::class)($field);
     }

@@ -26,22 +26,22 @@ final class CreatePantherClientTypeSpecifyingExtension implements StaticMethodTy
     /** @var TypeSpecifier */
     private $typeSpecifier;
 
-    public function setTypeSpecifier(TypeSpecifier $typeSpecifier) : void
+    public function setTypeSpecifier(TypeSpecifier $typeSpecifier): void
     {
         $this->typeSpecifier = $typeSpecifier;
     }
 
-    public function getClass() : string
+    public function getClass(): string
     {
         return PantherDriver::class;
     }
 
-    public function isStaticMethodSupported(MethodReflection $staticMethodReflection, StaticCall $node, TypeSpecifierContext $context) : bool
+    public function isStaticMethodSupported(MethodReflection $staticMethodReflection, StaticCall $node, TypeSpecifierContext $context): bool
     {
         return $staticMethodReflection->getName() === 'createPantherClient';
     }
 
-    public function specifyTypes(MethodReflection $staticMethodReflection, StaticCall $node, Scope $scope, TypeSpecifierContext $context) : SpecifiedTypes
+    public function specifyTypes(MethodReflection $staticMethodReflection, StaticCall $node, Scope $scope, TypeSpecifierContext $context): SpecifiedTypes
     {
         $expr = new StaticPropertyFetch(new Name('self'), new VarLikeIdentifier('pantherClient'));
 
