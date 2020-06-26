@@ -76,6 +76,9 @@
       <code>string[]|string|bool|null</code>
     </MixedReturnTypeCoercion>
     <PossiblyInvalidFunctionCall occurrences="2"/>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>$history !== null</code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/Unit/Extension/PantherFactoryTest.php">
     <InternalMethod occurrences="2">
