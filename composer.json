@@ -5,7 +5,7 @@
   "license": "MIT",
   "require": {
     "php": "^7.2",
-    "behat/behat": "^3.6.1",
+    "behat/behat": "^3.7.0",
     "behat/mink": "^1.8.1",
     "behat/mink-extension": "^2.3.1",
     "php-webdriver/webdriver": "^1.8.2",
