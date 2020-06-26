@@ -124,7 +124,9 @@ final class PantherDriver extends CoreDriver
             $history->clear();
         }
 
-        if (! (self::$pantherClient->getWebDriver() instanceof JavaScriptExecutor)) {
+        if (! (self::$pantherClient->getWebDriver() instanceof JavaScriptExecutor)
+            || in_array(self::$pantherClient->getCurrentURL(), ['', 'about:blank', 'data:,'], true)
+        ) {
             return;
         }
 
