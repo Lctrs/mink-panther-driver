@@ -7,8 +7,11 @@ For details, take a look at the following workflow configuration files:
 - [`workflows/integrate.yaml`](workflows/integrate.yaml)
 - [`workflows/release.yaml`](workflows/release.yaml)
 - [`workflows/renew.yaml`](workflows/renew.yaml)
+- [`workflows/triage.yaml`](workflows/triage.yaml)
 
 ## Coding Standards
+
+We are using [`ergebnis/composer-normalize`](https://github.com/ergebnis/composer-normalize) to normalize `composer.json`.
 
 We are using [`yamllint`](https://github.com/adrienverge/yamllint) to enforce coding standards in YAML files.
 
@@ -16,7 +19,7 @@ We are using [`doctrine/coding-standard`](https://github.com/doctrine-coding-sta
 
 Run
 
-```
+```sh
 $ make coding-standards
 ```
 
@@ -28,7 +31,7 @@ We are using [`maglnet/composer-require-checker`](https://github.com/maglnet/Com
 
 Run
 
-```
+```sh
 $ make dependency-analysis
 ```
 
@@ -40,7 +43,7 @@ We are using [`phpstan/phpstan`](https://github.com/phpstan/phpstan) and [`vimeo
 
 Run
 
-```
+```sh
 $ make static-code-analysis
 ```
 
@@ -50,7 +53,7 @@ We are also using the baseline features of [`phpstan/phpstan`](https://medium.co
 
 Run
 
-```
+```sh
 $ make static-code-analysis-baseline
 ```
 
@@ -66,7 +69,7 @@ We are using [`phpunit/phpunit`](https://github.com/sebastianbergmann/phpunit) t
 
 Run
 
-```
+```sh
 $ make
 ```
 
@@ -76,7 +79,7 @@ to enforce coding standards, run a dependency analysis, and run a static code an
 
 :bulb: Run
 
-```
+```sh
 $ make help
 ```
 

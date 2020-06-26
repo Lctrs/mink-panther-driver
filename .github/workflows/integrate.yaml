@@ -9,7 +9,7 @@ on: # yamllint disable-line rule:truthy
       - "master"
 
 env:
-  REQUIRED_PHP_EXTENSIONS: "dom, gd, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
+  PHP_EXTENSIONS: "dom, gd, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
 
 jobs:
   coding-standards:
@@ -27,20 +27,20 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v2.3.1"
 
       - name: "Lint YAML files"
-        uses: "ibiqlik/action-yamllint@v1"
+        uses: "ibiqlik/action-yamllint@v1.0.0"
         with:
           config_file: ".yamllint.yaml"
           file_or_dir: "."
           strict: true
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup-php@2.3.1"
         with:
           coverage: "none"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
       - name: "Validate composer.json and composer.lock"
@@ -51,7 +51,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+        uses: "actions/cache@v2.0.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -76,7 +76,7 @@ jobs:
         run: "mkdir -p .build/php_codesniffer"
 
       - name: "Cache cache directory for squizlabs/php_codesniffer"
-        uses: "actions/cache@v1"
+        uses: "actions/cache@v2.0.0"
         with:
           path: ".build/php_codesniffer"
           key: "php-${{ matrix.php-version }}-php_codesniffer-${{ hashFiles('composer.lock') }}"
@@ -100,13 +100,13 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v2.3.1"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup-php@2.3.1"
         with:
           coverage: "none"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
       - name: "Determine composer cache directory"
@@ -114,7 +114,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+        uses: "actions/cache@v2.0.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -150,13 +150,13 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v2.3.1"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup-php@2.3.1"
         with:
           coverage: "none"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
       - name: "Determine composer cache directory"
@@ -164,7 +164,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+        uses: "actions/cache@v2.0.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -185,14 +185,28 @@ jobs:
       - name: "Create cache directory for phpstan/phpstan"
         run: "mkdir -p .build/phpstan"
 
+      - name: "Cache cache directory for phpstan/phpstan"
+        uses: "actions/cache@v2.0.0"
+        with:
+          path: ".build/phpstan"
+          key: "php-${{ matrix.php-version }}-phpstan-${{ github.sha }}"
+          restore-keys: "php-${{ matrix.php-version }}-phpstan-"
+
       - name: "Run phpstan/phpstan"
         run: "vendor/bin/phpstan analyse --configuration=phpstan.neon.dist"
 
       - name: "Create cache directory for vimeo/psalm"
         run: "mkdir -p .build/psalm"
 
+      - name: "Cache cache directory for vimeo/psalm"
+        uses: "actions/cache@v2.0.0"
+        with:
+          path: ".build/psalm"
+          key: "php-${{ matrix.php-version }}-psalm-${{ github.sha }}"
+          restore-keys: "php-${{ matrix.php-version }}-psalm-"
+
       - name: "Run vimeo/psalm"
-        run: "vendor/bin/psalm --config=psalm.xml --shepherd --show-info=false --stats"
+        run: "vendor/bin/psalm --config=psalm.xml --diff --diff-methods --shepherd --show-info=false --stats --threads=4"
 
   tests:
     name: "Tests"
@@ -221,13 +235,13 @@ jobs:
         run: "java -jar $SELENIUM_JAR_PATH &"
 
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v2.3.1"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup-php@2.3.1"
         with:
           coverage: "none"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
       - name: "Determine composer cache directory"
@@ -235,7 +249,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+        uses: "actions/cache@v2.0.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -286,13 +300,13 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v2.3.1"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup-php@2.3.1"
         with:
           coverage: "pcov"
-          extensions: "${{ env.REQUIRED_PHP_EXTENSIONS }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
 
       - name: "Determine composer cache directory"
@@ -300,7 +314,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+        uses: "actions/cache@v2.0.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -364,14 +378,15 @@ jobs:
         github.event.action == 'reopened' ||
         github.event.action == 'synchronize'
       ) && (
-        (github.actor == 'dependabot-preview[bot]' && startsWith(github.event.pull_request.title, 'Build(deps-dev)')) ||
+        (github.actor == 'dependabot[bot]' && startsWith(github.event.pull_request.title, 'composer(deps-dev)')) ||
+        (github.actor == 'dependabot[bot]' && startsWith(github.event.pull_request.title, 'github-actions(deps)')) ||
         (github.actor == 'lctrs-bot' && github.event.pull_request.title == 'Enhancement: Update license year') ||
         (github.actor == 'Lctrs' && contains(github.event.pull_request.labels.*.name, 'merge'))
       )
 
     steps:
       - name: "Request review from @lctrs-bot"
-        uses: "actions/github-script@0.8.0"
+        uses: "actions/github-script@v2.0.0"
         with:
           github-token: "${{ secrets.LCTRS_BOT_TOKEN }}"
           script: |
@@ -390,7 +405,7 @@ jobs:
             })
 
       - name: "Assign @lctrs-bot"
-        uses: "actions/github-script@0.8.0"
+        uses: "actions/github-script@v2.0.0"
         with:
           github-token: "${{ secrets.LCTRS_BOT_TOKEN }}"
           script: |
@@ -409,7 +424,7 @@ jobs:
             })
 
       - name: "Approve pull request"
-        uses: "actions/github-script@0.8.0"
+        uses: "actions/github-script@v2.0.0"
         if: "github.actor != 'lctrs-bot'"
         with:
           github-token: "${{ secrets.LCTRS_BOT_TOKEN }}"
@@ -425,7 +440,7 @@ jobs:
             })
 
       - name: "Merge pull request"
-        uses: "actions/github-script@0.8.0"
+        uses: "actions/github-script@v2.0.0"
         with:
           github-token: "${{ secrets.LCTRS_BOT_TOKEN }}"
           script: |

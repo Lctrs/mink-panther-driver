@@ -2,7 +2,8 @@
 it: coding-standards dependency-analysis static-code-analysis tests ## Runs the coding-standards, dependency-analysis, static-code-analysis, and tests targets
 
 .PHONY: coding-standards
-coding-standards: vendor ## Fixes code style issues with doctrine/coding-standard
+coding-standards: vendor ## Normalizes composer.json with ergebnis/composer-normalize, lints YAML files with yamllint and fixes code style issues with squizlabs/php_codesniffer
+	composer normalize
 	yamllint -c .yamllint.yaml --strict .
 	mkdir -p .build/php_codesniffer
 	vendor/bin/phpcbf
@@ -39,4 +40,3 @@ tests: vendor ## Runs unit tests with phpunit/phpunit
 vendor: composer.json composer.lock
 	composer validate --strict
 	composer install --no-interaction --no-progress --no-suggest
-	composer normalize

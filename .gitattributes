@@ -1,4 +1,3 @@
-/.dependabot/           export-ignore
 /.github/               export-ignore
 /phpstan/               export-ignore
 /test/                  export-ignore
