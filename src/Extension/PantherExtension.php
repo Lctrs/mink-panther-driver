@@ -15,16 +15,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 final class PantherExtension implements Extension
 {
-    public function process(ContainerBuilder $container) : void
+    public function process(ContainerBuilder $container): void
     {
     }
 
-    public function getConfigKey() : string
+    public function getConfigKey(): string
     {
         return 'panther';
     }
 
-    public function initialize(ExtensionManager $extensionManager) : void
+    public function initialize(ExtensionManager $extensionManager): void
     {
         $minkExtension = $extensionManager->getExtension('mink');
 
@@ -35,14 +35,14 @@ final class PantherExtension implements Extension
         $minkExtension->registerDriverFactory(new PantherFactory());
     }
 
-    public function configure(ArrayNodeDefinition $builder) : void
+    public function configure(ArrayNodeDefinition $builder): void
     {
     }
 
     /**
      * @param mixed[] $config
      */
-    public function load(ContainerBuilder $container, array $config) : void
+    public function load(ContainerBuilder $container, array $config): void
     {
     }
 }

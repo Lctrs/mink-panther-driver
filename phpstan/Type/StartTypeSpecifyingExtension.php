@@ -26,22 +26,22 @@ final class StartTypeSpecifyingExtension implements MethodTypeSpecifyingExtensio
     /** @var TypeSpecifier */
     private $typeSpecifier;
 
-    public function setTypeSpecifier(TypeSpecifier $typeSpecifier) : void
+    public function setTypeSpecifier(TypeSpecifier $typeSpecifier): void
     {
         $this->typeSpecifier = $typeSpecifier;
     }
 
-    public function getClass() : string
+    public function getClass(): string
     {
         return PantherDriver::class;
     }
 
-    public function isMethodSupported(MethodReflection $methodReflection, MethodCall $node, TypeSpecifierContext $context) : bool
+    public function isMethodSupported(MethodReflection $methodReflection, MethodCall $node, TypeSpecifierContext $context): bool
     {
         return $methodReflection->getName() === 'start' && $context->null();
     }
 
-    public function specifyTypes(MethodReflection $methodReflection, MethodCall $node, Scope $scope, TypeSpecifierContext $context) : SpecifiedTypes
+    public function specifyTypes(MethodReflection $methodReflection, MethodCall $node, Scope $scope, TypeSpecifierContext $context): SpecifiedTypes
     {
         $expr = new StaticPropertyFetch(new Name('self'), new VarLikeIdentifier('pantherClient'));
 

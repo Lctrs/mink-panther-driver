@@ -10,6 +10,7 @@ use Facebook\WebDriver\WebDriverCapabilities;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\Definition;
+
 use function is_string;
 use function method_exists;
 
@@ -18,17 +19,17 @@ use function method_exists;
  */
 final class PantherFactory implements DriverFactory
 {
-    public function getDriverName() : string
+    public function getDriverName(): string
     {
         return 'panther';
     }
 
-    public function supportsJavascript() : bool
+    public function supportsJavascript(): bool
     {
         return true;
     }
 
-    public function configure(ArrayNodeDefinition $builder) : void
+    public function configure(ArrayNodeDefinition $builder): void
     {
         $builder
             ->children()
@@ -54,7 +55,7 @@ final class PantherFactory implements DriverFactory
                                     /**
                                      * @param string|bool|float|int $v
                                      */
-                                    static function ($v) : bool {
+                                    static function ($v): bool {
                                         if (! is_string($v)) {
                                             return true;
                                         }
@@ -73,7 +74,7 @@ final class PantherFactory implements DriverFactory
     /**
      * @param mixed[] $config
      */
-    public function buildDriver(array $config) : Definition
+    public function buildDriver(array $config): Definition
     {
         if ($config['driver'] === PantherDriver::SELENIUM) {
             $config['selenium']['capabilities'] = (new Definition(WebDriverCapabilities::class))

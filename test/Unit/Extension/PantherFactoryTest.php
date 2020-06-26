@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+
 use function assert;
 
 /**
@@ -30,19 +31,19 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     /** @var PantherFactory */
     private $factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->factory = new PantherFactory();
 
         parent::setUp();
     }
 
-    public function testDriverName() : void
+    public function testDriverName(): void
     {
         self::assertSame('panther', $this->factory->getDriverName());
     }
 
-    public function testItSupportsJavascript() : void
+    public function testItSupportsJavascript(): void
     {
         self::assertTrue($this->factory->supportsJavascript());
     }
@@ -53,7 +54,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
      *
      * @dataProvider validConfigurationProvider
      */
-    public function testValidConfigurations(array $config, array $expected) : void
+    public function testValidConfigurations(array $config, array $expected): void
     {
         $this->assertProcessedConfigurationEquals($config, $expected);
     }
@@ -63,12 +64,12 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
      *
      * @dataProvider invalidConfigurationProvider
      */
-    public function testInvalidConfigurations(array $config, string $expectedMessage) : void
+    public function testInvalidConfigurations(array $config, string $expectedMessage): void
     {
         $this->assertConfigurationIsInvalid($config, $expectedMessage);
     }
 
-    public function testItBuildsDriver() : void
+    public function testItBuildsDriver(): void
     {
         $this->load(['driver' => 'chrome']);
 
@@ -77,7 +78,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(DriverInterface::class, 1, ['hostname' => null]);
     }
 
-    public function testItBuildsSeleniumDriver() : void
+    public function testItBuildsSeleniumDriver(): void
     {
         $this->load([
             'driver' => 'selenium',
@@ -103,7 +104,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     /**
      * @return iterable|mixed[]
      */
-    public function validConfigurationProvider() : iterable
+    public function validConfigurationProvider(): iterable
     {
         yield [
             [
@@ -188,7 +189,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     /**
      * @return iterable|mixed[]
      */
-    public function invalidConfigurationProvider() : iterable
+    public function invalidConfigurationProvider(): iterable
     {
         yield [
             [[]],
@@ -213,9 +214,9 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
         ];
     }
 
-    protected function getConfiguration() : ConfigurationInterface
+    protected function getConfiguration(): ConfigurationInterface
     {
-        return new class($this->factory) implements ConfigurationInterface
+        return new class ($this->factory) implements ConfigurationInterface
         {
             /** @var PantherFactory */
             private $factory;
@@ -225,7 +226,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
                 $this->factory = $factory;
             }
 
-            public function getConfigTreeBuilder() : TreeBuilder
+            public function getConfigTreeBuilder(): TreeBuilder
             {
                 $treeBuilder = new TreeBuilder('panther');
                 $rootNode    = $treeBuilder->getRootNode();
@@ -245,9 +246,9 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
      *
      * @return ExtensionInterface[]
      */
-    protected function getContainerExtensions() : array
+    protected function getContainerExtensions(): array
     {
-        $extension = new class($this->getConfiguration(), $this->factory) extends Extension
+        $extension = new class ($this->getConfiguration(), $this->factory) extends Extension
         {
             /** @var ConfigurationInterface */
             private $configuration;
@@ -264,14 +265,14 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
             /**
              * @param mixed[] $configs
              */
-            public function load(array $configs, ContainerBuilder $container) : void
+            public function load(array $configs, ContainerBuilder $container): void
             {
                 $configs = $this->processConfiguration($this->configuration, $configs);
 
                 $container->setDefinition(DriverInterface::class, $this->factory->buildDriver($configs));
             }
 
-            public function getAlias() : string
+            public function getAlias(): string
             {
                 return 'panther';
             }

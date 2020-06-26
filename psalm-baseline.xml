@@ -55,7 +55,7 @@
       <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
     </MissingClosureReturnType>
     <MixedArgument occurrences="7">
-      <code>$key+1</code>
+      <code>$key + 1</code>
       <code>$xpath</code>
       <code>$char</code>
       <code>$xpath</code>
