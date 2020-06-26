@@ -84,10 +84,6 @@ final class PantherDriver extends CoreDriver
 
     public function start() : void
     {
-        if ($this->isStarted()) {
-            return;
-        }
-
         if (self::$pantherClient === null) {
             if ($this->driver === self::SELENIUM) {
                 self::$pantherClients[0] = self::$pantherClient = Client::createSeleniumClient($this->options['host'] ?? null, $this->options['capabilities'] ?? null);
@@ -108,7 +104,7 @@ final class PantherDriver extends CoreDriver
 
     public function stop() : void
     {
-        if (! $this->isStarted()) {
+        if (self::$pantherClient === null) {
             return;
         }
 
@@ -121,8 +117,18 @@ final class PantherDriver extends CoreDriver
             return;
         }
 
-        self::$pantherClient->restart();
-        self::$pantherClient->refreshCrawler();
+        self::$pantherClient->getWebDriver()->manage()->deleteAllCookies();
+
+        $history = self::$pantherClient->getHistory();
+        if ($history !== null) {
+            $history->clear();
+        }
+
+        if (! (self::$pantherClient->getWebDriver() instanceof JavaScriptExecutor)) {
+            return;
+        }
+
+        $this->executeScript('localStorage.clear();');
     }
 
     /**
