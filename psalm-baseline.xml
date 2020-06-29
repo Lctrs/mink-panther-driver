@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.11.4@58e1d8e68e5098bf4fbfdfb420c38d563f882549">
+<files psalm-version="3.12.1@9b860214d58c48b5cbe99bdb17914d0eb723c9cd">
   <file src="src/Extension/PantherFactory.php">
     <MixedArrayAccess occurrences="2">
       <code>$config['selenium']['browser']</code>
@@ -41,7 +41,9 @@
     </PossiblyUndefinedMethod>
   </file>
   <file src="src/PantherDriver.php">
-    <DocblockTypeContradiction occurrences="1">
+    <DocblockTypeContradiction occurrences="3">
+      <code>self::$pantherClient === null</code>
+      <code>self::$pantherClient === null</code>
       <code>$crawler === null</code>
     </DocblockTypeContradiction>
     <InaccessibleProperty occurrences="2">
@@ -54,7 +56,9 @@
     <MissingClosureReturnType occurrences="1">
       <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
     </MissingClosureReturnType>
-    <MixedArgument occurrences="7">
+    <MixedArgument occurrences="9">
+      <code>$name</code>
+      <code>$name</code>
       <code>$key + 1</code>
       <code>$xpath</code>
       <code>$char</code>
@@ -63,7 +67,8 @@
       <code>$xpath</code>
       <code>$char</code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
+    <MixedAssignment occurrences="2">
+      <code>$name</code>
       <code>$element</code>
     </MixedAssignment>
     <MixedInferredReturnType occurrences="1">
@@ -76,7 +81,11 @@
       <code>string[]|string|bool|null</code>
     </MixedReturnTypeCoercion>
     <PossiblyInvalidFunctionCall occurrences="2"/>
-    <RedundantConditionGivenDocblockType occurrences="1">
+    <PropertyNotSetInConstructor occurrences="1">
+      <code>$rootWindow</code>
+    </PropertyNotSetInConstructor>
+    <RedundantConditionGivenDocblockType occurrences="2">
+      <code>self::$pantherClient !== null</code>
       <code>$history !== null</code>
     </RedundantConditionGivenDocblockType>
   </file>

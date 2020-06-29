@@ -46,9 +46,6 @@ final class Config extends AbstractConfig implements AfterLastTestHook
                 '--disable-gpu',
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
-                '--remote-debugging-port=9222',
-                '--disable-infobars',
-                '--disable-extensions',
             ]);
 
             return new PantherDriver($browser, [

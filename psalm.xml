@@ -10,11 +10,6 @@
 >
     <issueHandlers>
         <LessSpecificReturnType errorLevel="info" />
-        <MissingConstructor>
-            <errorLevel type="suppress">
-                <directory name="phpstan/" />
-            </errorLevel>
-        </MissingConstructor>
 
         <!-- Temporary until https://github.com/vimeo/psalm/issues/3307 is fixed -->
         <PossiblyNullReference>
@@ -29,7 +24,6 @@
     </plugins>
 
     <projectFiles>
-        <directory name="phpstan/" />
         <directory name="src/" />
         <directory name="test/" />
         <file name="update-license.php" />

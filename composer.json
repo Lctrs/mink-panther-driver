@@ -51,7 +51,6 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Lctrs\\MinkPantherDriver\\PHPStan\\": "phpstan/",
       "Lctrs\\MinkPantherDriver\\Test\\": "test/"
     }
   }
