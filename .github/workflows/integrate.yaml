@@ -9,6 +9,13 @@ on: # yamllint disable-line rule:truthy
       - "master"
 
 env:
+  PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage"
+  PANTHER_CHROME_DRIVER_BINARY: "/usr/bin/chromedriver"
+  PANTHER_GECKO_DRIVER_BINARY: "/usr/bin/geckodriver"
+  PANTHER_NO_SANDBOX: "1"
+  PANTHER_WEB_SERVER_DIR: "./vendor/mink/driver-testsuite/web-fixtures"
+  PANTHER_WEB_SERVER_PORT: "8002"
+  SELENIUM_HOST: "http://127.0.0.1:5555/wd/hub"
   PHP_EXTENSIONS: "dom, gd, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
 
 jobs:
@@ -217,6 +224,7 @@ jobs:
       matrix:
         browser:
           - "chrome"
+          - "firefox"
           - "selenium"
 
         php-version:
@@ -232,7 +240,7 @@ jobs:
     steps:
       - name: "Start Selenium"
         if: "matrix.browser == 'selenium'"
-        run: "java -jar $SELENIUM_JAR_PATH &"
+        run: "java -jar $SELENIUM_JAR_PATH -port 5555 &"
 
       - name: "Checkout"
         uses: "actions/checkout@v2.3.1"
@@ -270,19 +278,9 @@ jobs:
       - name: "Run unit tests with phpunit/phpunit"
         run: "vendor/bin/phpunit --configuration=test/Unit/phpunit.xml.dist"
 
-      - name: "Start web server"
-        if: "matrix.browser == 'selenium'"
-        run: "vendor/bin/mink-test-server > /dev/null 2>&1 &"
-
       - name: "Run integration tests with phpunit/phpunit"
         env:
           BROWSER_NAME: "${{ matrix.browser }}"
-          PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage"
-          PANTHER_CHROME_DRIVER_BINARY: "/usr/bin/chromedriver"
-          PANTHER_NO_SANDBOX: "1"
-          PANTHER_WEB_SERVER_DIR: "./vendor/mink/driver-testsuite/web-fixtures"
-          PANTHER_WEB_SERVER_PORT: "8002"
-          SELENIUM_HOST: "http://127.0.0.1:4444/wd/hub"
         run: "vendor/bin/phpunit --configuration=test/Integration/phpunit.xml.dist"
 
   code-coverage:
@@ -299,6 +297,9 @@ jobs:
           - "locked"
 
     steps:
+      - name: "Start Selenium"
+        run: "java -jar $SELENIUM_JAR_PATH -port 5555 &"
+
       - name: "Checkout"
         uses: "actions/checkout@v2.3.1"
 
@@ -341,15 +342,20 @@ jobs:
       - name: "Collect unit code coverage with pcov and phpunit/phpunit"
         run: "vendor/bin/phpunit --configuration=test/Unit/phpunit.xml.dist --coverage-php=.build/logs/coverage/unit.cov"
 
-      - name: "Collect integration code coverage with pcov and phpunit/phpunit"
+      - name: "Collect integration code coverage with pcov and phpunit/phpunit against Chrome"
         env:
           BROWSER_NAME: "chrome"
-          PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage"
-          PANTHER_CHROME_DRIVER_BINARY: "/usr/bin/chromedriver"
-          PANTHER_NO_SANDBOX: "1"
-          PANTHER_WEB_SERVER_DIR: "./vendor/mink/driver-testsuite/web-fixtures"
-          PANTHER_WEB_SERVER_PORT: "8002"
-        run: "vendor/bin/phpunit --configuration=test/Integration/phpunit.xml.dist --coverage-php=.build/logs/coverage/integration.cov"
+        run: "vendor/bin/phpunit --configuration=test/Integration/phpunit.xml.dist --coverage-php=.build/logs/coverage/integration-chrome.cov"
+
+      - name: "Collect integration code coverage with pcov and phpunit/phpunit against Firefox"
+        env:
+          BROWSER_NAME: "firefox"
+        run: "vendor/bin/phpunit --configuration=test/Integration/phpunit.xml.dist --coverage-php=.build/logs/coverage/integration-firefox.cov"
+
+      - name: "Collect integration code coverage with pcov and phpunit/phpunit against Selenium"
+        env:
+          BROWSER_NAME: "selenium"
+        run: "vendor/bin/phpunit --configuration=test/Integration/phpunit.xml.dist --coverage-php=.build/logs/coverage/integration-selenium.cov"
 
       - name: "Merge code coverage reports with phpunit/phpcov"
         run: "vendor/bin/phpcov merge .build/logs/coverage --clover .build/logs/clover.xml"

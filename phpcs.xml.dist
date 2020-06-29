@@ -12,7 +12,6 @@
         <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>
     </rule>
 
-    <file>phpstan/</file>
     <file>src/</file>
     <file>test/</file>
     <file>update-license.php</file>
