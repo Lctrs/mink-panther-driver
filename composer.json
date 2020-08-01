@@ -28,7 +28,7 @@
     "phpstan/extension-installer": "^1.0.4",
     "phpstan/phpstan": "^0.12.34",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
-    "phpstan/phpstan-phpunit": "^0.12.11",
+    "phpstan/phpstan-phpunit": "^0.12.15",
     "phpstan/phpstan-strict-rules": "^0.12.4",
     "phpstan/phpstan-webmozart-assert": "^0.12.7",
     "phpunit/phpcov": "^5.0.0",
