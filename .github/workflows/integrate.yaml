@@ -58,7 +58,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -83,7 +83,7 @@ jobs:
         run: "mkdir -p .build/php_codesniffer"
 
       - name: "Cache cache directory for squizlabs/php_codesniffer"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: ".build/php_codesniffer"
           key: "php-${{ matrix.php-version }}-php_codesniffer-${{ hashFiles('composer.lock') }}"
@@ -121,7 +121,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -171,7 +171,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -193,7 +193,7 @@ jobs:
         run: "mkdir -p .build/phpstan"
 
       - name: "Cache cache directory for phpstan/phpstan"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: ".build/phpstan"
           key: "php-${{ matrix.php-version }}-phpstan-${{ github.sha }}"
@@ -206,7 +206,7 @@ jobs:
         run: "mkdir -p .build/psalm"
 
       - name: "Cache cache directory for vimeo/psalm"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: ".build/psalm"
           key: "php-${{ matrix.php-version }}-psalm-${{ github.sha }}"
@@ -257,7 +257,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -315,7 +315,7 @@ jobs:
         run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.0.0"
+        uses: "actions/cache@v2.1.0"
         with:
           path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
