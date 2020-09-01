@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5dd1937850eb47449f0e358a1d69cf98",
+    "content-hash": "c4d6de9a9db16b3db710ef8bd5bf620f",
     "packages": [
         {
             "name": "behat/behat",
@@ -4071,16 +4071,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.34",
+            "version": "0.12.40",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ad75388d71fb0b4a954f71a852fd989915a51cb7"
+                "reference": "dce7293ad7b59fc09a9ab9b0b5b44902c092ca17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ad75388d71fb0b4a954f71a852fd989915a51cb7",
-                "reference": "ad75388d71fb0b4a954f71a852fd989915a51cb7",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dce7293ad7b59fc09a9ab9b0b5b44902c092ca17",
+                "reference": "dce7293ad7b59fc09a9ab9b0b5b44902c092ca17",
                 "shasum": ""
             },
             "require": {
@@ -4123,7 +4123,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-30T15:31:10+00:00"
+            "time": "2020-08-26T19:06:20+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -4586,6 +4586,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
@@ -5101,6 +5102,7 @@
             ],
             "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
             "homepage": "https://github.com/sebastianbergmann/finder-facade",
+            "abandoned": true,
             "time": "2020-01-16T08:08:45+00:00"
         },
         {
