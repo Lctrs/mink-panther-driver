@@ -33,7 +33,7 @@
     "phpstan/phpstan-webmozart-assert": "^0.12.7",
     "phpunit/phpcov": "^5.0.0",
     "phpunit/phpunit": "^7.5.20",
-    "psalm/plugin-phpunit": "^0.10.1",
+    "psalm/plugin-phpunit": "^0.12.1",
     "vimeo/psalm": "^3.13.1"
   },
   "config": {
