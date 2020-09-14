@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7ecf3c554f6503cc871201fd3db53dc",
+    "content-hash": "f9c18518df3b9cbda8be52beae169a66",
     "packages": [
         {
             "name": "behat/behat",
@@ -768,16 +768,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.4.12",
+            "version": "v4.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "54bbe10ed0aae7eb38484eb4656442c02509e0e0"
+                "reference": "384c2601e5a6228d60b041911d63f010e0885ffb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/54bbe10ed0aae7eb38484eb4656442c02509e0e0",
-                "reference": "54bbe10ed0aae7eb38484eb4656442c02509e0e0",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/384c2601e5a6228d60b041911d63f010e0885ffb",
+                "reference": "384c2601e5a6228d60b041911d63f010e0885ffb",
                 "shasum": ""
             },
             "require": {
@@ -851,7 +851,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-17T09:56:45+00:00"
+            "time": "2020-09-01T17:42:15+00:00"
         },
         {
             "name": "symfony/dom-crawler",
