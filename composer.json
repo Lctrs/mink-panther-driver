@@ -24,7 +24,7 @@
     "matthiasnoback/symfony-config-test": "^4.2.0",
     "matthiasnoback/symfony-dependency-injection-test": "^3.1.0",
     "mink/driver-testsuite": "dev-master",
-    "ondram/ci-detector": "^3.4.0",
+    "ondram/ci-detector": "^3.5.1",
     "phpstan/extension-installer": "^1.0.5",
     "phpstan/phpstan": "^0.12.42",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
