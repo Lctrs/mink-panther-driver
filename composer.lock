@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "771ea8e62e49ecec978977ea4882bea6",
+    "content-hash": "8aab00e08b575b303dcae5955de39ac0",
     "packages": [
         {
             "name": "behat/behat",
@@ -546,7 +546,7 @@
         },
         {
             "name": "symfony/config",
-            "version": "v4.4.12",
+            "version": "v4.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -1072,7 +1072,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v4.4.12",
+            "version": "v4.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
