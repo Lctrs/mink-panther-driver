@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fc472caedb21cd3464f25f141e4a121",
+    "content-hash": "1b809a17d7ce707374a94f3fa6defac1",
     "packages": [
         {
             "name": "behat/behat",
@@ -473,7 +473,7 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v4.4.12",
+            "version": "v4.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
