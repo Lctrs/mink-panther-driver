@@ -711,7 +711,7 @@ JS
      */
     public function focus($xpath): void
     {
-        $this->click($xpath);
+        self::$pantherClient->getMouse()->click($this->toCoordinates($xpath));
     }
 
     /**
@@ -726,54 +726,61 @@ JS
     }
 
     /**
-     * @param string|null $modifier
-     *
      * @inheritDoc
      */
     public function keyPress($xpath, $char, $modifier = null): void
     {
-        $this->focus($xpath);
-        $keyboard = self::$pantherClient->getKeyboard();
+        $element = $this->findElement($xpath);
 
         if ($modifier !== null) {
-            $keyboard->sendKeys(self::getModifierKey($modifier));
+            $modifier = self::getModifierKey($modifier);
+
+            $this->createWebDriverAction()
+                ->keyDown($element, $modifier)
+                ->sendKeys($element, self::getCharKey($char))
+                ->keyUp($element, $modifier)
+                ->perform();
+
+            return;
         }
 
-        $keyboard->sendKeys(self::getCharKey($char));
+        $this->createWebDriverAction()
+            ->sendKeys($element, self::getCharKey($char))
+            ->perform();
     }
 
     /**
-     * @param string|null $modifier
-     *
      * @inheritDoc
      */
     public function keyDown($xpath, $char, $modifier = null): void
     {
-        $this->focus($xpath);
-        $keyboard = self::$pantherClient->getKeyboard();
+        $element = $this->findElement($xpath);
+        $action  = $this->createWebDriverAction();
 
         if ($modifier !== null) {
-            $keyboard->pressKey(self::getModifierKey($modifier));
+            $action->keyDown($element, self::getModifierKey($modifier));
         }
 
-        $keyboard->pressKey(self::getCharKey($char));
+        $action
+            ->keyDown($element, self::getCharKey($char))
+            ->perform();
     }
 
     /**
-     * @param string|null $modifier
-     *
      * @inheritDoc
      */
     public function keyUp($xpath, $char, $modifier = null): void
     {
-        $this->focus($xpath);
-        $keyboard = self::$pantherClient->getKeyboard();
+        $element = $this->findElement($xpath);
+        $action  = $this->createWebDriverAction();
+
+        $action->keyUp($element, self::getCharKey($char));
 
         if ($modifier !== null) {
-            $keyboard->releaseKey(self::getModifierKey($modifier));
+            $action->keyUp($element, self::getModifierKey($modifier));
         }
 
-        $keyboard->releaseKey(self::getCharKey($char));
+        $action->perform();
     }
 
     /**

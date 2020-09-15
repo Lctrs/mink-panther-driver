@@ -72,7 +72,7 @@ final class PantherFactory implements DriverFactory
     }
 
     /**
-     * @param mixed[] $config
+     * @param array{driver: string, options: array{hostname: string|null}, selenium: array{host: string|null, browser: string}} $config
      */
     public function buildDriver(array $config): Definition
     {

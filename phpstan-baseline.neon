@@ -6,6 +6,11 @@ parameters:
 			path: src/Extension/PantherFactory.php
 
 		-
+			message: "#^Parameter \\#1 \\$config \\(array\\('driver' \\=\\> string, 'options' \\=\\> array\\('hostname' \\=\\> string\\|null\\), 'selenium' \\=\\> array\\('host' \\=\\> string\\|null, 'browser' \\=\\> string\\)\\)\\) of method Lctrs\\\\MinkPantherDriver\\\\Extension\\\\PantherFactory\\:\\:buildDriver\\(\\) should be contravariant with parameter \\$config \\(array\\) of method Behat\\\\MinkExtension\\\\ServiceContainer\\\\Driver\\\\DriverFactory\\:\\:buildDriver\\(\\)$#"
+			count: 1
+			path: src/Extension/PantherFactory.php
+
+		-
 			message: "#^Strict comparison using \\!\\=\\= between Symfony\\\\Component\\\\BrowserKit\\\\History and null will always evaluate to true\\.$#"
 			count: 1
 			path: src/PantherDriver.php
@@ -29,4 +34,9 @@ parameters:
 			message: "#^Method Lctrs\\\\MinkPantherDriver\\\\Test\\\\Integration\\\\Custom\\\\EventsTest\\:\\:testKeyboardEvents\\(\\) has parameter \\$modifier with no typehint specified\\.$#"
 			count: 1
 			path: test/Integration/Custom/EventsTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$config of method Lctrs\\\\MinkPantherDriver\\\\Extension\\\\PantherFactory\\:\\:buildDriver\\(\\) expects array\\('driver' \\=\\> string, 'options' \\=\\> array\\('hostname' \\=\\> string\\|null\\), 'selenium' \\=\\> array\\('host' \\=\\> string\\|null, 'browser' \\=\\> string\\)\\), array given\\.$#"
+			count: 1
+			path: test/Unit/Extension/PantherFactoryTest.php
 
