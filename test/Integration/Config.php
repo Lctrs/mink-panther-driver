@@ -7,6 +7,7 @@ namespace Lctrs\MinkPantherDriver\Test\Integration;
 use Behat\Mink\Tests\Driver\AbstractConfig;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Lctrs\MinkPantherDriver\PantherDriver;
+use Lctrs\MinkPantherDriver\Test\Integration\Custom\EventsTest;
 use OndraM\CiDetector\CiDetector;
 use PHPUnit\Runner\AfterLastTestHook;
 
@@ -69,6 +70,14 @@ final class Config extends AbstractConfig implements AfterLastTestHook
             && ($headless || (new CiDetector())->isCiDetected())
         ) {
             return 'Maximizing the window does not work when running the browser in Xvfb/Headless.';
+        }
+
+        if (
+            ($_SERVER['BROWSER_NAME'] ?? PantherDriver::CHROME) === PantherDriver::FIREFOX
+            && $testCase === EventsTest::class
+            && strpos($test, 'testKeyboardEvents') === 0
+        ) {
+            return 'Keyboard events tests need some works on Firefox.';
         }
 
         if (

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="3.15@de6e7f324f44dde540ebe7ebd4eb481b97c86f30">
   <file src="src/Extension/PantherFactory.php">
-    <MixedArrayAccess occurrences="2">
-      <code>$config['selenium']['browser']</code>
-      <code>$config['selenium']['browser']</code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="1">
-      <code>$config['selenium']['capabilities']</code>
-    </MixedArrayAssignment>
     <MixedMethodCall occurrences="23">
       <code>addDefaultsIfNotSet</code>
       <code>children</code>
@@ -33,6 +26,9 @@
       <code>end</code>
       <code>end</code>
     </MixedMethodCall>
+    <MoreSpecificImplementedParamType occurrences="1">
+      <code>$config</code>
+    </MoreSpecificImplementedParamType>
     <PossiblyNullReference occurrences="1">
       <code>arrayNode</code>
     </PossiblyNullReference>
@@ -57,16 +53,10 @@
     <MissingClosureReturnType occurrences="1">
       <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
     </MissingClosureReturnType>
-    <MixedArgument occurrences="9">
+    <MixedArgument occurrences="3">
       <code>$name</code>
       <code>$name</code>
       <code>$key + 1</code>
-      <code>$xpath</code>
-      <code>$char</code>
-      <code>$xpath</code>
-      <code>$char</code>
-      <code>$xpath</code>
-      <code>$char</code>
     </MixedArgument>
     <MixedAssignment occurrences="2">
       <code>$name</code>
@@ -97,6 +87,9 @@
     </UnusedVariable>
   </file>
   <file src="test/Unit/Extension/PantherFactoryTest.php">
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$configs</code>
+    </MixedArgumentTypeCoercion>
     <MixedInferredReturnType occurrences="2">
       <code>iterable|mixed[]</code>
       <code>iterable|mixed[]</code>
