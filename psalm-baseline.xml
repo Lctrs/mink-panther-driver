@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.12.1@9b860214d58c48b5cbe99bdb17914d0eb723c9cd">
+<files psalm-version="3.15@de6e7f324f44dde540ebe7ebd4eb481b97c86f30">
   <file src="src/Extension/PantherFactory.php">
     <MixedArrayAccess occurrences="2">
       <code>$config['selenium']['browser']</code>
@@ -50,8 +50,9 @@
       <code>$client-&gt;webDriver</code>
       <code>$field-&gt;selector</code>
     </InaccessibleProperty>
-    <InvalidOperand occurrences="1">
+    <InvalidOperand occurrences="2">
       <code>$key</code>
+      <code>$timeout / 1000.0</code>
     </InvalidOperand>
     <MissingClosureReturnType occurrences="1">
       <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
@@ -88,12 +89,14 @@
       <code>self::$pantherClient !== null</code>
       <code>$history !== null</code>
     </RedundantConditionGivenDocblockType>
+    <UnusedParam occurrences="1">
+      <code>$field</code>
+    </UnusedParam>
+    <UnusedVariable occurrences="1">
+      <code>$element</code>
+    </UnusedVariable>
   </file>
   <file src="test/Unit/Extension/PantherFactoryTest.php">
-    <InternalMethod occurrences="2">
-      <code>configure</code>
-      <code>buildDriver</code>
-    </InternalMethod>
     <MixedInferredReturnType occurrences="2">
       <code>iterable|mixed[]</code>
       <code>iterable|mixed[]</code>
