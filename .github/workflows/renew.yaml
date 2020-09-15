@@ -1,4 +1,4 @@
-# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+# https://docs.github.com/en/actions
 
 name: "Renew"
 
@@ -7,6 +7,8 @@ on: # yamllint disable-line rule:truthy
     - cron: "1 0 1 1 *"
 
 env:
+  LCTRS_BOT_EMAIL: "shurtmaiden@gmail.com"
+  LCTRS_BOT_NAME: "lctrs-bot"
   PHP_EXTENSIONS: "dom, gd, iconv, json, libxml, mbstring, Phar, SimpleXML, tokenizer, xml, xmlwriter, zip"
 
 jobs:
@@ -35,27 +37,19 @@ jobs:
           php-version: "${{ matrix.php-version }}"
 
       - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+        uses: "./.github/actions/composer/composer/determine-cache-directory"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v2.1.1"
         with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
-      - name: "Install lowest dependencies from composer.json"
-        if: "matrix.dependencies == 'lowest'"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
-
-      - name: "Install locked dependencies from composer.lock"
-        if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install highest dependencies from composer.json"
-        if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+      - name: "Install ${{ matrix.dependencies }} dependencies with composer"
+        uses: "./.github/actions/composer/composer/install"
+        with:
+          dependencies: "${{ matrix.dependencies }}"
 
       - name: "Run update license script"
         run: "php update-license.php"
@@ -63,7 +57,7 @@ jobs:
       - name: "Open pull request updating license year"
         uses: "gr2m/create-or-update-pull-request-action@v1.2.10"
         with:
-          author: "lctrs-bot <shurtmaiden@gmail.com>"
+          author: "${{ env.LCTRS_BOT_NAME }} <${{ env.LCTRS_BOT_EMAIL }}>"
           branch: "feature/license-year"
           body: |
             This PR

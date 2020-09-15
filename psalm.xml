@@ -6,17 +6,12 @@
     cacheDirectory=".build/psalm"
     errorBaseline="psalm-baseline.xml"
     errorLevel="1"
+    findUnusedVariablesAndParams="true"
     resolveFromConfigFile="true"
+    strictBinaryOperands="true"
 >
     <issueHandlers>
         <LessSpecificReturnType errorLevel="info" />
-
-        <!-- Temporary until https://github.com/vimeo/psalm/issues/3307 is fixed -->
-        <PossiblyNullReference>
-            <errorLevel type="suppress">
-                <file name="src/PantherDriver.php" />
-            </errorLevel>
-        </PossiblyNullReference>
     </issueHandlers>
 
     <plugins>
