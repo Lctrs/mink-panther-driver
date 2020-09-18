@@ -79,7 +79,7 @@ jobs:
         uses: "actions/cache@v2.1.1"
         with:
           path: ".build/php_codesniffer"
-          key: "php-${{ matrix.php-version }}-php_codesniffer-${{ hashFiles('composer.lock') }}"
+          key: "php-${{ matrix.php-version }}-php_codesniffer-${{ github.sha }}"
           restore-keys: "php-${{ matrix.php-version }}-php_codesniffer-"
 
       - name: "Run squizlabs/php_codesniffer"
