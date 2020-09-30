@@ -34,7 +34,7 @@
     "phpunit/phpcov": "^5.0.0",
     "phpunit/phpunit": "^7.5.20",
     "psalm/plugin-phpunit": "^0.12.2",
-    "vimeo/psalm": "^3.15"
+    "vimeo/psalm": "^3.16"
   },
   "config": {
     "sort-packages": true
