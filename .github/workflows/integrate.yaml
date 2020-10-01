@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v2.3.3"
 
       - name: "Lint YAML files"
         uses: "ibiqlik/action-yamllint@v1.0.0"
@@ -100,7 +100,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v2.3.3"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.5.0"
@@ -142,7 +142,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v2.3.3"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.5.0"
@@ -220,7 +220,7 @@ jobs:
         run: "java -jar $SELENIUM_JAR_PATH -port 5555 &"
 
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v2.3.3"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.5.0"
@@ -273,7 +273,7 @@ jobs:
         run: "java -jar $SELENIUM_JAR_PATH -port 5555 &"
 
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v2.3.3"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.5.0"
