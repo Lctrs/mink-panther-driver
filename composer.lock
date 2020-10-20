@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e4eee873eec6c32161e93a46f49d8ba",
+    "content-hash": "d1910215592dfe366f4e28564dca9ae5",
     "packages": [
         {
             "name": "behat/behat",
@@ -772,7 +772,7 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.4.14",
+            "version": "v4.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
