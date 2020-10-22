@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.15@de6e7f324f44dde540ebe7ebd4eb481b97c86f30">
+<files psalm-version="3.18.0@a463c894c4323e84121b5978867923efc6f8554a">
   <file src="src/Extension/PantherFactory.php">
     <MixedMethodCall occurrences="23">
       <code>addDefaultsIfNotSet</code>
-      <code>children</code>
-      <code>scalarNode</code>
-      <code>defaultNull</code>
-      <code>end</code>
-      <code>end</code>
-      <code>end</code>
-      <code>arrayNode</code>
       <code>addDefaultsIfNotSet</code>
+      <code>arrayNode</code>
       <code>children</code>
-      <code>scalarNode</code>
+      <code>children</code>
       <code>defaultNull</code>
-      <code>end</code>
-      <code>scalarNode</code>
+      <code>defaultNull</code>
       <code>defaultValue</code>
-      <code>validate</code>
+      <code>end</code>
+      <code>end</code>
+      <code>end</code>
+      <code>end</code>
+      <code>end</code>
+      <code>end</code>
+      <code>end</code>
+      <code>end</code>
+      <code>end</code>
       <code>ifTrue</code>
+      <code>scalarNode</code>
+      <code>scalarNode</code>
+      <code>scalarNode</code>
       <code>thenInvalid</code>
-      <code>end</code>
-      <code>end</code>
-      <code>end</code>
-      <code>end</code>
-      <code>end</code>
+      <code>validate</code>
     </MixedMethodCall>
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$config</code>
@@ -38,9 +38,9 @@
   </file>
   <file src="src/PantherDriver.php">
     <DocblockTypeContradiction occurrences="3">
-      <code>self::$pantherClient === null</code>
-      <code>self::$pantherClient === null</code>
       <code>$crawler === null</code>
+      <code>self::$pantherClient === null</code>
+      <code>self::$pantherClient === null</code>
     </DocblockTypeContradiction>
     <InaccessibleProperty occurrences="2">
       <code>$client-&gt;webDriver</code>
@@ -53,31 +53,29 @@
     <MissingClosureReturnType occurrences="1">
       <code>static function (JavaScriptExecutor $driver) use ($script) {</code>
     </MissingClosureReturnType>
-    <MixedArgument occurrences="3">
+    <MixedArgument occurrences="2">
       <code>$name</code>
       <code>$name</code>
-      <code>$key + 1</code>
     </MixedArgument>
     <MixedAssignment occurrences="2">
-      <code>$name</code>
       <code>$element</code>
+      <code>$name</code>
     </MixedAssignment>
     <MixedInferredReturnType occurrences="1">
       <code>WebDriverSelectInterface</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1"/>
     <MixedReturnTypeCoercion occurrences="3">
-      <code>$value</code>
       <code>$formField-&gt;getValue()</code>
+      <code>$value</code>
       <code>string[]|string|bool|null</code>
     </MixedReturnTypeCoercion>
     <PossiblyInvalidFunctionCall occurrences="2"/>
     <PropertyNotSetInConstructor occurrences="1">
       <code>$rootWindow</code>
     </PropertyNotSetInConstructor>
-    <RedundantConditionGivenDocblockType occurrences="2">
+    <RedundantConditionGivenDocblockType occurrences="1">
       <code>self::$pantherClient !== null</code>
-      <code>$history !== null</code>
     </RedundantConditionGivenDocblockType>
     <UnusedParam occurrences="1">
       <code>$field</code>
