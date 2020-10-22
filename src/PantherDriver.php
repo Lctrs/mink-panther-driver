@@ -150,9 +150,9 @@ final class PantherDriver extends CoreDriver
 
         self::$pantherClient->getWebDriver()->manage()->deleteAllCookies();
 
-        $history = self::$pantherClient->getHistory();
-        if ($history !== null) {
-            $history->clear();
+        try {
+            self::$pantherClient->getHistory()->clear();
+        } catch (LogicException $e) {
         }
 
         if (
