@@ -10,8 +10,8 @@ coding-standards: vendor ## Normalizes composer.json with ergebnis/composer-norm
 	vendor/bin/phpcs
 
 .PHONY: dependency-analysis
-dependency-analysis: vendor ## Runs a dependency analysis with maglnet/composer-require-checker
-	vendor/bin/composer-require-checker check --config-file=$(shell pwd)/composer-require-checker.json
+dependency-analysis: phive ## Runs a dependency analysis with maglnet/composer-require-checker
+	.phive/composer-require-checker check --config-file=$(shell pwd)/composer-require-checker.json
 
 .PHONY: help
 help: ## Displays this list of targets with descriptions
@@ -40,3 +40,6 @@ tests: vendor ## Runs unit tests with phpunit/phpunit
 vendor: composer.json composer.lock
 	composer validate --strict
 	composer install --no-interaction --no-progress --no-suggest
+
+phive: .phive/phars.xml
+	phive install

@@ -94,6 +94,9 @@ final class Config extends AbstractConfig implements AfterLastTestHook
         return parent::skipMessage($testCase, $test);
     }
 
+    /**
+     * @return true
+     */
     protected function supportsCss(): bool
     {
         return true;
