@@ -7,6 +7,7 @@ namespace Lctrs\MinkPantherDriver\Test\Unit\Extension;
 use Behat\Mink\Driver\DriverInterface;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\WebDriverCapabilities;
+use Generator;
 use Lctrs\MinkPantherDriver\Extension\PantherFactory;
 use Lctrs\MinkPantherDriver\PantherDriver;
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
@@ -17,7 +18,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 use function assert;
 
@@ -102,9 +102,9 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     }
 
     /**
-     * @return iterable|mixed[]
+     * @psalm-return Generator<int, array{0: array{0: array{driver: string, selenium?: array{host: string, browser: string}, options?: array{hostname: string}}}, 1: array{driver: string, options: array{hostname: (string|null)}, selenium: array{host: (string|null), browser: string}}}>
      */
-    public function validConfigurationProvider(): iterable
+    public function validConfigurationProvider(): Generator
     {
         yield [
             [
@@ -187,9 +187,9 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     }
 
     /**
-     * @return iterable|mixed[]
+     * @psalm-return Generator<int, array{0: array{0: array{driver?: string, selenium?: array{browser: string}}}, 1: string}>
      */
-    public function invalidConfigurationProvider(): iterable
+    public function invalidConfigurationProvider(): Generator
     {
         yield [
             [[]],
@@ -241,10 +241,7 @@ final class PantherFactoryTest extends AbstractExtensionTestCase
     }
 
     /**
-     * Return an array of container extensions you need to be registered for each test (usually just the container
-     * extension you are testing.
-     *
-     * @return ExtensionInterface[]
+     * @inheritDoc
      */
     protected function getContainerExtensions(): array
     {

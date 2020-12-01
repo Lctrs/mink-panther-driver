@@ -31,7 +31,6 @@ use Facebook\WebDriver\WebDriverSelectInterface;
 use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
-use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
@@ -944,7 +943,10 @@ JS
         return $element->getCoordinates();
     }
 
-    private function getFormField(WebDriverElement $element): FormField
+    /**
+     * @return ChoiceFormField|FileFormField|InputFormField|TextareaFormField
+     */
+    private function getFormField(WebDriverElement $element)
     {
         $tagName = $element->getTagName();
 
