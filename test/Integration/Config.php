@@ -81,6 +81,14 @@ final class Config extends AbstractConfig implements AfterLastTestHook
         }
 
         if (
+            $testCase === EventsTest::class
+            && strpos($test, 'testDoubleClick') === 0
+        ) {
+            // https://github.com/w3c/webdriver/issues/1197
+            return "Double clicks aren't detected as dblclick events anymore in W3C mode";
+        }
+
+        if (
             PHP_OS === 'Darwin'
             && $testCase === 'Behat\Mink\Tests\Driver\Js\EventsTest'
             && strpos($test, 'testKeyboardEvents') === 0
