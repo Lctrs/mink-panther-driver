@@ -38,11 +38,6 @@
   "config": {
     "sort-packages": true
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "0.5.x-dev"
-    }
-  },
   "autoload": {
     "psr-4": {
       "Lctrs\\MinkPantherDriver\\": "src/"
