@@ -11,7 +11,7 @@
     "php-webdriver/webdriver": "^1.9.0",
     "symfony/browser-kit": "^4.4.18",
     "symfony/config": "^4.4.18",
-    "symfony/dependency-injection": "^4.4.17",
+    "symfony/dependency-injection": "^4.4.18",
     "symfony/dom-crawler": "^4.4.18",
     "symfony/panther": "^0.8.0",
     "webmozart/assert": "^1.9.1"
