@@ -13,7 +13,7 @@
     "symfony/config": "^4.4.18",
     "symfony/dependency-injection": "^4.4.18",
     "symfony/dom-crawler": "^4.4.18",
-    "symfony/panther": "^0.8.0",
+    "symfony/panther": "^0.9.0",
     "webmozart/assert": "^1.9.1"
   },
   "require-dev": {

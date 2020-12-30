@@ -11,8 +11,6 @@ on: # yamllint disable-line rule:truthy
 env:
   LCTRS_BOT_NAME: "lctrs-bot"
   PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage"
-  PANTHER_CHROME_DRIVER_BINARY: "/usr/bin/chromedriver"
-  PANTHER_GECKO_DRIVER_BINARY: "/usr/bin/geckodriver"
   PANTHER_NO_SANDBOX: "1"
   PANTHER_WEB_SERVER_DIR: "./vendor/mink/driver-testsuite/web-fixtures"
   PANTHER_WEB_SERVER_PORT: "8002"
