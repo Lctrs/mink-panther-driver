@@ -47,6 +47,5 @@
     "psr-4": {
       "Lctrs\\MinkPantherDriver\\Test\\": "test/"
     }
-  },
-  "abandoned": true
+  }
 }
